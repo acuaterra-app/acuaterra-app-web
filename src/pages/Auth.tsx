@@ -1,8 +1,8 @@
-import type { FunctionComponent } from "react";
-import ButtonComponent from "../components/ui/button/button";
 import InputCustomComponent from "../components/ui/input/input";
-import { useAuth } from "../hooks/useAuth";
 import acuaterraLogo from "../assets/images/logo.png";
+import ButtonComponent from "../components/ui/button/button";
+import type { FunctionComponent } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 export const Auth: FunctionComponent = () => {
   const { email, setEmail, password, setPassword, error, loading, handleLogin } = useAuth();
