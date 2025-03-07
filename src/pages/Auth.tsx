@@ -40,15 +40,8 @@ export const Auth: FunctionComponent = () => {
                 setLocalPasswordError("¡La contraseña debe tener al menos 6 caracteres!");
                 hasError = true;   
 
-          } else if (!/[A-Z]/.test(password)) {
-                setLocalPasswordError("¡La contraseña debe tener al menos una letra mayúscula!");
-                hasError = true;
-
-          } else if (!/[0-9]/.test(password)) {
-                setLocalPasswordError("¡La contraseña debe tener al menos un número!");
-                hasError = true;  
-
-          } else {
+          }
+           else {
                setLocalPasswordError("");
              }
 
@@ -59,13 +52,13 @@ export const Auth: FunctionComponent = () => {
 
     setLocalLoading(true);
     try {
-            const response = await fetch(`${API_BASE_URL}/users/loginMVC`, {
-            method: "POST",
-            headers: {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
             "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-      });
+        },
+        body: JSON.stringify({ email, password }),
+    });
 
       if (!response.ok) {
         throw new Error("Login failed");

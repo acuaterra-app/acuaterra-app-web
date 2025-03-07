@@ -1,16 +1,22 @@
 const API_BASE_URL: string = import.meta.env["VITE_API_BASE_URL"] as string;
 
-interface LoginResponse {
-    message: string;
+interface tokenResponse {
     token: string;
     user: {
         id: number;
-        identificacion: string;
+       
     };
 }
 
+interface LoginResponse {
+    message: string;
+    data: Array<tokenResponse>;
+    errors: Array<string>;
+    metadata: object;
+}
+
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
-    const response = await fetch(`${API_BASE_URL}/users/loginMVC`, {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

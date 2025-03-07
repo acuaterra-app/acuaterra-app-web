@@ -23,7 +23,12 @@ handleLogin: () => Promise<void>
         setLoading(true);
         try {
             const data = await login(email, password);
-            localStorage.setItem("token", data.token);
+            const token = data.data[0]?.token;
+            if (data.errors || !token) {
+                setError(data.errors[0] ?? "An error occurred");
+                return;
+            }
+            localStorage.setItem("token", token);
             await navigate({ to: "/users" });
         } catch (error) {
             setError("Invalid email or password");
