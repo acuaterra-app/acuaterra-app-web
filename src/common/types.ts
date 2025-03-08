@@ -42,7 +42,7 @@ export interface UpdateModuleRequest {
 }
 
 export interface User {
-	id_persona: number;
+	id: number;
 	name: string;
 	email: string;
 	n_documento_identidad: string;
