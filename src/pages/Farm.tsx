@@ -33,6 +33,7 @@ const FarmsPage: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">Granjas</h1>
       <ButtonComponent
         onClick={() => {
+          setSelectedFarm(null); // Asegurarse de que selectedFarm sea null para abrir el modal de creación
           setIsModalOpen(true);
         }}
       >

@@ -2,8 +2,8 @@ import type React from 'react';
 // eslint-disable-next-line no-duplicate-imports
 import { useState, useEffect } from 'react';
 import type { FarmRequest } from '../../../common/types';
-import ButtonComponent from '../../ui/button/button';
-import InputCustomComponent from '../../ui/input/input';
+import ButtonComponent from '../button/button';
+import InputCustomComponent from '../input/input';
 
 interface FarmModalProps {
   farm: FarmRequest | null;
@@ -28,7 +28,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
     }
   }, [farm]);
 
-  const handleSubmit = (): void => {
+  const handleSubmit = ():void => {
     onSave({ name, address, latitude, longitude, users });
   };
 
