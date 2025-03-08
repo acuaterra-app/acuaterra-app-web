@@ -24,6 +24,7 @@ const FarmTable: React.FC<FarmTableProps> = ({ farms, onEdit, onDelete, total, p
 
   const handleEdit = (farm: Farm):void => {
     const farmRequest: FarmRequest = {
+        id: farm.id,
       name: farm.name,
       address: farm.address,
       latitude: farm.latitude,
