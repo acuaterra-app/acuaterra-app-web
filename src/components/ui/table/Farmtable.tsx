@@ -55,6 +55,7 @@ const FarmTable: React.FC<FarmTableProps> = ({ farms, onEdit, onDelete, total, p
       <table className="min-w-full bg-white">
         <thead>
           <tr>
+            <th className="py-2">N</th>
             <th className="py-2">Nombre</th>
             <th className="py-2">Dirección</th>
             <th className="py-2">Latitud</th>
@@ -64,8 +65,9 @@ const FarmTable: React.FC<FarmTableProps> = ({ farms, onEdit, onDelete, total, p
           </tr>
         </thead>
         <tbody>
-          {farms.map((farm) => (
+          {farms.map((farm, index) => (
             <tr key={farm.id}>
+                <td className="py-2">{index +1}</td>
               <td className="py-2">{farm.name}</td>
               <td className="py-2">{farm.address}</td>
               <td className="py-2">{farm.latitude}</td>
