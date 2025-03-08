@@ -3,6 +3,8 @@ import type { Farm, FarmRequest } from "../common/types";
 
 interface ApiResponse {
     message: string;
+    data: Array<Farm>;
+    errors: Array<string>;
 }
 
 export const fetchFarms = async (): Promise<Array<Farm>> => {
@@ -17,7 +19,8 @@ export const fetchFarms = async (): Promise<Array<Farm>> => {
     if (!response.ok) {
         throw new Error("Network response was not ok");
     }
-    return response.json() as Promise<Array<Farm>>;
+    const data = await response.json() as {data : Array<Farm>};
+    return data.data;
 };
 
 export const createFarm = async (farmData: FarmRequest): Promise<ApiResponse> => {
@@ -35,7 +38,7 @@ export const createFarm = async (farmData: FarmRequest): Promise<ApiResponse> =>
     return response.json() as Promise<ApiResponse>;
 };
 
-export const deleteFarm = async (farmId: number): Promise<void> => {
+export const deleteFarm = async (farmId: number): Promise<ApiResponse> => {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}/admin/farms/${farmId}`, {
         method: "DELETE",
@@ -47,9 +50,10 @@ export const deleteFarm = async (farmId: number): Promise<void> => {
     if (!response.ok) {
         throw new Error("Network response was not ok");
     }
+    return response.json() as Promise<ApiResponse>;
 };
 
-export const updateFarm = async (farmId: number, farmData: FarmRequest): Promise<void> => {
+export const updateFarm = async (farmId: number, farmData: FarmRequest): Promise<ApiResponse> => {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}/admin/farms/${farmId}`, {
         method: "PUT",
@@ -62,4 +66,5 @@ export const updateFarm = async (farmId: number, farmData: FarmRequest): Promise
     if (!response.ok) {
         throw new Error("Network response was not ok");
     }
+    return response.json() as Promise<ApiResponse>;
 };

@@ -1,0 +1,84 @@
+import { useState, useEffect } from 'react';
+import { fetchFarms, createFarm, updateFarm, deleteFarm } from '../services/farmSevice';
+import type { Farm, FarmRequest } from '../common/types';
+
+const useFarms = (): {
+  farms: Array<Farm>,
+  loading: boolean,
+  error: string | null,
+  addFarm: (farmData: FarmRequest) => Promise<void>,
+  editFarm: (farmId: number, farmData: FarmRequest) => Promise<void>,
+  removeFarm: (farmId: number) => Promise<void>
+} => {
+  const [farms, setFarms] = useState<Array<Farm>>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async (): Promise<void> => {
+      setLoading(true);
+      try {
+        const data = await fetchFarms();
+        setFarms(data);
+        setError(null);
+      } catch (error_) {
+        setError('Error al cargar las granjas');
+        console.error(error_);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData().catch((error) => {
+      console.error('Error fetching farms:', error);
+    });
+  }, []);
+
+  const addFarm = async (farmData: FarmRequest): Promise<void> => {
+    try {
+      const response = await createFarm(farmData);
+      const Farm = response.data[0];
+      if (response.errors.length === 0 || !Farm) {
+        setFarms([...farms, Farm as Farm]);
+      } else {
+        setError(response.errors[0] as string);
+      }
+    } catch (error_) {
+      setError('Error al agregar la granja');
+      console.error(error_);
+    }
+  };
+
+  const editFarm = async (farmId: number, farmData: FarmRequest): Promise<void> => {
+    try {
+      const response = await updateFarm(farmId, farmData);
+      const responseFarm = response.data[0];
+      if (response.errors.length === 0) {
+        setFarms(farms.map(farm => (farm.id === farmId ? responseFarm : farm)) as Array<Farm>);
+      } else {
+        setError(response.errors[0] as string);
+      }
+    } catch (error_) {
+      setError('Error al editar la granja');
+      console.error(error_);
+    }
+  };
+
+  const removeFarm = async (farmId: number): Promise<void> => {
+    try {
+      const response = await deleteFarm(farmId);
+      if (response.errors.length === 0) {
+        setFarms(farms.filter(farm => farm.id !== farmId));
+      } else {
+        setError(response.errors[0] as string);
+      }
+    } catch (error_) {
+      setError('Error al eliminar la granja');
+      console.error(error_);
+    }
+  };
+
+  return { farms, loading, error, addFarm, editFarm, removeFarm };
+};
+
+export default useFarms;

@@ -43,7 +43,7 @@ export interface UpdateModuleRequest {
 
 export interface User {
 	id_persona: number;
-	nombre: string;
+	name: string;
 	email: string;
 	n_documento_identidad: string;
 	sede: string;
@@ -84,19 +84,22 @@ export interface UpdateBitacoraRequest {
     fecha: string;
     descripcion: string;
 }
-
-
 export interface Farm {
     id: number;
     name: string;
-    location: string;
-    owner: string;
+    address: string;
+    latitude: string;
+    longitude: string;
     createdAt: string;
     updatedAt: string;
+    users: Array<User> | Array<number>;
 }
 
 export interface FarmRequest {
+	id?: number;
     name: string;
-    location: string;
-    owner: string;
+    address: string;
+    latitude: string;
+    longitude: string;
+    users: Array<User> | Array<number>;
 }
