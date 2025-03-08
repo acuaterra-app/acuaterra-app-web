@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { login } from "../services/authService";
 
+
 export const useAuth = (): {
 email: string,
 setEmail: Dispatch<SetStateAction<string>>,
@@ -23,8 +24,15 @@ handleLogin: () => Promise<void>
         setLoading(true);
         try {
             const data = await login(email, password);
-            localStorage.setItem("token", data.token);
-            await navigate({ to: "/users" });
+            const token = data.data[0]?.token;
+            console.log("data", token);
+            if (data.errors.length != 0 || !token) {
+                setError(data.errors[0] ?? "An error occurred");
+                return;
+            }
+            localStorage.setItem("token", token);
+            console.log("Login successful", token);
+            await navigate({ to: "/newHome" });
         } catch (error) {
             setError("Invalid email or password");
             console.error(error);
