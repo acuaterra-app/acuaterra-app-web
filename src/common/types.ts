@@ -84,3 +84,19 @@ export interface UpdateBitacoraRequest {
     fecha: string;
     descripcion: string;
 }
+
+
+export interface Farm {
+    id: number;
+    name: string;
+    location: string;
+    owner: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface FarmRequest {
+    name: string;
+    location: string;
+    owner: string;
+}
