@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react';
 import { fetchFarms, createFarm, updateFarm, deleteFarm } from '../services/farmSevice';
 import type { Farm, FarmRequest } from '../common/types';
 
-const useFarms = (): {
+const useFarms = (initialPage = 1, initialLimit = 10): {
   farms: Array<Farm>,
   loading: boolean,
   error: string | null,
+  total: number,
+  page: number,
+  limit: number,
+  setPage: (page: number) => void,
+  setLimit: (limit: number) => void,
   addFarm: (farmData: FarmRequest) => Promise<void>,
   editFarm: (farmId: number, farmData: FarmRequest) => Promise<void>,
   removeFarm: (farmId: number) => Promise<void>
@@ -13,13 +18,17 @@ const useFarms = (): {
   const [farms, setFarms] = useState<Array<Farm>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(initialPage);
+  const [limit, setLimit] = useState(initialLimit);
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       setLoading(true);
       try {
-        const data = await fetchFarms();
+        const { data, total } = await fetchFarms(page, limit);
         setFarms(data);
+        setTotal(total);
         setError(null);
       } catch (error_) {
         setError('Error al cargar las granjas');
@@ -32,7 +41,7 @@ const useFarms = (): {
     fetchData().catch((error) => {
       console.error('Error fetching farms:', error);
     });
-  }, []);
+  }, [page, limit]);
 
   const addFarm = async (farmData: FarmRequest): Promise<void> => {
     try {
@@ -78,7 +87,7 @@ const useFarms = (): {
     }
   };
 
-  return { farms, loading, error, addFarm, editFarm, removeFarm };
+  return { farms, loading, error, total, page, limit, setPage, setLimit, addFarm, editFarm, removeFarm };
 };
 
 export default useFarms;
