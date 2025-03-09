@@ -11,7 +11,7 @@ interface UpdateUserModalProps {
 }
 
 const UpdateUserModal: React.FC<UpdateUserModalProps> = ({ showModal, setShowModal, user, onUpdate }) => {
-    const [nombre, setNombre] = useState(user.nombre);
+    const [nombre, setNombre] = useState(user.name);
     const [password, setPassword] = useState("");
     const [sede, setSede] = useState(user.sede);
     const [idRol, setIdRol] = useState<number>(Number(user.rol));
@@ -33,7 +33,7 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({ showModal, setShowMod
             // eslint-disable-next-line camelcase
             id_rol: idRol,
         };
-        onUpdate(user.id_persona, updatedUserData);
+        onUpdate(user.id, updatedUserData);
         setShowModal(false);
     };
 
