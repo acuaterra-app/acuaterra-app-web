@@ -103,3 +103,13 @@ export interface FarmRequest {
     longitude: string;
     users: Array<User> | Array<number>;
 }
+
+export interface TableItem {
+	id: number;
+  }
+
+  export interface  TableColumn<T> {
+	header: string;
+	accessor: keyof T;
+	render?: (item: T) => React.ReactNode;
+  }

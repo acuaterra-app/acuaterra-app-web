@@ -1,14 +1,14 @@
-import type React from "react";
-// eslint-disable-next-line no-duplicate-imports
 import { useState } from "react";
+// eslint-disable-next-line no-duplicate-imports
+import type { FunctionComponent } from "react";
 import useFarms from "../hooks/useFarms";
-import FarmTable from "../components/ui/table/Farmtable";
+import TableWithActions from "../components/ui/table/tableWithActions";
 import FarmModal from "../components/ui/modals/FarmModal";
-import ButtonComponent from "../components/ui/button/button";
-import type { FarmRequest } from "../common/types";
+import type { FarmRequest, User } from "../common/types";
+import Layout from "../components/layout/layout";
 
-const FarmsPage: React.FC = () => {
-  const { farms, loading, error, addFarm, editFarm, removeFarm, total, limit, page, setLimit, setPage } = useFarms();
+const FarmsPage: FunctionComponent = () => {
+  const { farms, loading, error, total, page, limit, setPage, setLimit, addFarm, editFarm, removeFarm } = useFarms();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState<FarmRequest | null>(null);
 
@@ -29,41 +29,52 @@ const FarmsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Granjas</h1>
-      <ButtonComponent
-        onClick={() => {
-          setSelectedFarm(null); // Asegurarse de que selectedFarm sea null para abrir el modal de creación
-          setIsModalOpen(true);
-        }}
-      >
-        Agregar Granja
-      </ButtonComponent>
-      {loading && <p>Cargando...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      <FarmTable
-        farms={farms}
-        limit={limit}
-        page={page}
-        setLimit={setLimit}
-        setPage={setPage}
-        total={total}
-        onDelete={handleRemoveFarm}
-        onEdit={(farm: FarmRequest) => {
-          setSelectedFarm(farm);
-          setIsModalOpen(true);
-        }}
-      />
-      {isModalOpen && (
-        <FarmModal
-          farm={selectedFarm}
-          onSave={selectedFarm ? handleEditFarm : handleAddFarm}
-          onClose={() => {
-            setIsModalOpen(false);
+    <Layout>
+      <div className="p-4">
+        <h1 className="text-2xl font-bold mb-4">Granjas</h1>
+        <TableWithActions
+          data={farms}
+          error={error}
+          limit={limit}
+          loading={loading}
+          page={page}
+          setLimit={setLimit}
+          setPage={setPage}
+          total={total}
+          columns={[
+            { header: 'ID', accessor: 'id' },
+            { header: 'Name', accessor: 'name' },
+            { header: 'Latitud', accessor: 'latitude' },
+            { header: 'Longitud', accessor: 'longitude' },
+            { header: 'Dirección', accessor: 'address' },
+            { header: 'Date', accessor: 'createdAt' },
+            { 
+              header: 'Users', 
+              accessor: 'users',
+              render: (farm) => farm.users.map((user) => (user as User).name ).join(', ')
+            },
+          ]}
+          onDelete={handleRemoveFarm}
+          onAdd={() => {
+            setSelectedFarm(null);
+            setIsModalOpen(true);
+          }}
+          onEdit={(farm: FarmRequest) => {
+            setSelectedFarm(farm);
+            setIsModalOpen(true);
           }}
         />
-      )}
-    </div>
+        {isModalOpen && (
+          <FarmModal
+            farm={selectedFarm}
+            onSave={selectedFarm ? handleEditFarm : handleAddFarm}
+            onClose={() => {
+              setIsModalOpen(false);
+            }}
+          />
+        )}
+      </div>
+    </Layout>
   );
 };
 
