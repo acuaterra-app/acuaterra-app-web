@@ -58,6 +58,7 @@ const FarmTable: React.FC<FarmTableProps> = ({ farms, onEdit, onDelete, total, p
             <th className="py-2">N</th>
             <th className="py-2">Nombre</th>
             <th className="py-2">Dirección</th>
+            <th className="py-2">Fecha</th>
             <th className="py-2">Latitud</th>
             <th className="py-2">Longitud</th>
             <th className="py-2">Usuarios</th>
@@ -70,6 +71,7 @@ const FarmTable: React.FC<FarmTableProps> = ({ farms, onEdit, onDelete, total, p
                 <td className="py-2">{index +1}</td>
               <td className="py-2">{farm.name}</td>
               <td className="py-2">{farm.address}</td>
+                <td className="py-2">{new Date(farm.createdAt).toLocaleDateString()}</td>
               <td className="py-2">{farm.latitude}</td>
               <td className="py-2">{farm.longitude}</td>
               <td className="py-2">{farm.users.map(user => (user as User).name).join(', ')}</td>
