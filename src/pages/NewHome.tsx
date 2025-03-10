@@ -56,7 +56,7 @@ const Home: FC = () => {
 
             <li 
                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-               onClick={() => navigate({ to: "/users" })}
+               onClick={() => navigate({ to: "/farm" })}
               
               >
               <img alt="Usuarios" className="h-6 w-6 mr-2" src={moduleIcon} />

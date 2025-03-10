@@ -37,10 +37,10 @@ const Report: FC = () => {
             </li>
             <li
               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
-              onClick={() => navigate({ to: "/module" })}
+              onClick={() => navigate({ to: "/farm" })}
             >
               <img alt="Módulos" className="h-6 w-6 mr-2" src={moduleIcon} />
-              <span className="font-bold">Módulos</span>
+              <span className="font-bold">Granja</span>
             </li>
             <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg">
               <img alt="Reporte" className="h-6 w-6 mr-2" src={reporteIcon} />
