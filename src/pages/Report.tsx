@@ -3,29 +3,23 @@
  * Visual: Formulario basado en el Figma.
  */
 
-
-//Importación de imagenes
+// Importación de imágenes
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import reporteIcon from "../assets/images/reporte.png";
-import userIcon from "../assets/images/userlogo.png";
 import moduleIcon from "../assets/images/module.png";
-import binnacleIcon from "../assets/images/bitacora.png";
-
 
 // src/pages/Report.tsx
 import type { FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
-
-
 const Report: FC = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex min-h-screen font-sans bg-white">
+    <div className="flex flex-col md:flex-row min-h-screen font-sans bg-white">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
+      <aside className="w-full md:w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
         <div className="p-4 flex flex-col items-center">
           <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
           <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
@@ -33,7 +27,7 @@ const Report: FC = () => {
 
         <nav className="flex-1">
           {/* Grupo 1: Elementos principales */}
-          <ul className="space-y-20 mt-20">
+          <ul className="space-y-4 md:space-y-20 mt-4 md:mt-20">
             <li
               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
               onClick={() => navigate({ to: "/newHome" })}
@@ -43,35 +37,18 @@ const Report: FC = () => {
             </li>
             <li
               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
-              onClick={() => navigate({ to: "/users" })}
-            >
-              <img alt="Usuarios" className="h-6 w-6 mr-2" src={userIcon} />
-              <span className="font-bold">Usuarios</span>
-            </li>
-            <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
               onClick={() => navigate({ to: "/module" })}
             >
               <img alt="Módulos" className="h-6 w-6 mr-2" src={moduleIcon} />
               <span className="font-bold">Módulos</span>
             </li>
-            <li
-               className="flex items-center p-2 hover:bg-gray-200 transition">
+            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg">
               <img alt="Reporte" className="h-6 w-6 mr-2" src={reporteIcon} />
               <span className="font-bold">Reporte</span>
             </li>
-
-            <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-              onClick={() => navigate({ to: "/bitacoras" })}
-              >
-              <img alt="Bitácora" className="h-6 w-6 mr-2" src={binnacleIcon} />
-             <span className="font-bold">Bitácoras</span>
-            </li>
-           
           </ul>
           {/* Grupo 2: "Cerrar Sesión" en bloque separado */}
-          <div className="mt-60">
+          <div className="mt-4 md:mt-60">
             <ul className="space-y-4">
               <li
                 className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
@@ -102,4 +79,3 @@ const Report: FC = () => {
 };
 
 export default Report;
-
