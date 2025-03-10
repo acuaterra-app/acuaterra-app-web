@@ -43,7 +43,7 @@ const Welcome: FC = () => {
             focus:outline-none focus:ring-2 focus:ring-[#44cbd3]
           "
           onClick={handleStart}
-        >
+        >   
           ¡Comenzar!
         </button>
   
@@ -65,6 +65,6 @@ const Welcome: FC = () => {
         />
       </div>
     </div>
-  );
+   );
   }
 export default Welcome;
