@@ -36,9 +36,9 @@ const FarmsPage: FunctionComponent = () => {
 //onClick={() => navigate({ to: "/farm" })}
 
   return (
-    <div className="flex min-h-screen font-sans bg-white">
+    <div className="flex flex-col md:flex-row min-h-screen font-sans bg-white">
       {/* Sidebar con fondo gris (bg-gray-200) */}
-      <aside className="w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
+      <aside className="w-full md:w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
         <div className="p-4 flex flex-col items-center">
           <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
           <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
@@ -46,7 +46,7 @@ const FarmsPage: FunctionComponent = () => {
         {/* Menú de navegación */}
         <nav className="flex-1">
           {/* Grupo 1: "Inicio", "Usuarios" y "Módulos" con mayor separación */}
-          <ul className="space-y-20 mt-20">
+          <ul className="space-y-4 md:space-y-20 mt-4 md:mt-20">
             <li
               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
               onClick={() => navigate({ to: "/newHome" })}
@@ -70,8 +70,8 @@ const FarmsPage: FunctionComponent = () => {
           </ul>
 
           {/* Grupo 2: "Cerrar Sesión" en un bloque separado */}
-          <div className="mt-60">
-            <ul className="space-y-4">
+          <div className="mt-4 md:mt-60">
+            <ul className="space-y-4 md:space-y-20 mt-4 md:mt-20">
               <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105">
                 <LogoutButton />
               </li>
