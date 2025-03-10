@@ -1,15 +1,22 @@
 import type { FunctionComponent } from "react";
 import ButtonComponent from "./button";
 import { useLogout } from "../../../hooks/useLogout";
+import closeSessionIcon from "../../../assets/images/cerrar-sesion.png";
 
 const LogoutButton: FunctionComponent = () => {
-    const { loading, handleLogout } = useLogout();
+  const { loading, handleLogout } = useLogout();
 
-    return (
-        <ButtonComponent disabled={loading} type="button" onClick={handleLogout}>
-            {loading ? "Loading..." : "Logout"}
-        </ButtonComponent>
-    );
+  return (
+    <ButtonComponent
+      className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
+      disabled={loading}
+      type="button"
+      onClick={handleLogout}
+    >
+      <img alt="Cerrar Sesión" className="h-6 w-6 mr-2" src={closeSessionIcon} />
+      <span className="font-bold">{loading ? "Cerrando sesión..." : "Cerrar Sesión"}</span>
+    </ButtonComponent>
+  );
 };
 
 export default LogoutButton;

@@ -18,9 +18,9 @@ import { useNavigate } from "@tanstack/react-router"
 // Importación de logos e íconos
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
-import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
+import LogoutButton from "../components/ui/button/logoutButton";
 
 
 // Se elimina la importación del logoSena
@@ -77,16 +77,19 @@ const Home: FC = () => {
           {/* Grupo 2: "Cerrar Sesión" en un bloque separado */}
           <div className="mt-60">
             <ul className="space-y-4">
-              <li 
-               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-               onClick={() => navigate({ to: "/auth" })}
-              >
-                <img alt="Cerrar Sesión" className="h-6 w-6 mr-2" src={closeSessionIcon} />
-                <span className="font-bold">Cerrar Sesión</span>
+            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105">
+                <LogoutButton />
               </li>
             </ul>
           </div>
         </nav>
+
+
+
+
+
+
+        
         {/* Footer: Se sube el texto quitando el mt-auto */}
         <div className="p-0">
           <p className="text-center text-xs mt-2">
