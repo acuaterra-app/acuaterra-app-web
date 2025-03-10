@@ -23,9 +23,9 @@ const UserTable: React.FC<UserTableProps> = ({ users, onDeleteUser, onUpdateUser
 			</thead>
 			<tbody>
 				{users.map((user) => (
-					<tr key={user.id_persona}>
-						<td className="py-2">{user.id_persona}</td>
-						<td className="py-2">{user.nombre}</td>
+					<tr key={user.id}>
+						<td className="py-2">{user.id}</td>
+						<td className="py-2">{user.name}</td>
 						<td className="py-2">{user.email}</td>
 						<td className="py-2">{user.n_documento_identidad}</td>
 						<td className="py-2">{user.sede}</td>
@@ -34,7 +34,7 @@ const UserTable: React.FC<UserTableProps> = ({ users, onDeleteUser, onUpdateUser
 							<button className="bg-primary hover:bg-secondary text-white px-2 py-1 rounded" onClick={() => { onUpdateUser(user); }}>
 								Editar
 							</button>
-							<button className="bg-darkGray hover:bg-veryDark text-white px-2 py-1 rounded ml-2"   onClick={() => { onDeleteUser(user.id_persona); }}>
+							<button className="bg-darkGray hover:bg-veryDark text-white px-2 py-1 rounded ml-2"   onClick={() => { onDeleteUser(user.id); }}>
 								Eliminar
 							</button>
 						</td>

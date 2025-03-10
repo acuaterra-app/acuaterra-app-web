@@ -18,6 +18,7 @@ import { Route as NewHomeImport } from './routes/newHome'
 import { Route as ModuleRegisterImport } from './routes/moduleRegister'
 import { Route as ModuleImport } from './routes/module'
 import { Route as HomeImport } from './routes/home'
+import { Route as FarmImport } from './routes/farm'
 import { Route as BitacorasImport } from './routes/bitacoras'
 import { Route as BitacoraRegisterImport } from './routes/bitacoraRegister'
 import { Route as AuthImport } from './routes/auth'
@@ -58,6 +59,11 @@ const ModuleRoute = ModuleImport.update({
 
 const HomeRoute = HomeImport.update({
   path: '/home',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FarmRoute = FarmImport.update({
+  path: '/farm',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -125,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BitacorasImport
       parentRoute: typeof rootRoute
     }
+    '/farm': {
+      id: '/farm'
+      path: '/farm'
+      fullPath: '/farm'
+      preLoaderRoute: typeof FarmImport
+      parentRoute: typeof rootRoute
+    }
     '/home': {
       id: '/home'
       path: '/home'
@@ -185,6 +198,7 @@ export const routeTree = rootRoute.addChildren({
   AuthRoute,
   BitacoraRegisterRoute,
   BitacorasRoute,
+  FarmRoute,
   HomeRoute,
   ModuleRoute,
   ModuleRegisterRoute,
@@ -207,6 +221,7 @@ export const routeTree = rootRoute.addChildren({
         "/auth",
         "/bitacoraRegister",
         "/bitacoras",
+        "/farm",
         "/home",
         "/module",
         "/moduleRegister",
@@ -230,6 +245,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/bitacoras": {
       "filePath": "bitacoras.ts"
+    },
+    "/farm": {
+      "filePath": "farm.ts"
     },
     "/home": {
       "filePath": "home.ts"
