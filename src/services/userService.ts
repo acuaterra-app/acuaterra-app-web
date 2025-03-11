@@ -1,5 +1,5 @@
 const API_BASE_URL: string = import.meta.env["VITE_API_BASE_URL"] as string;
-import type { UserRequest, ResponseType, UserResponse } from "../common/types";
+import type { UserRequest, ResponseType, UserResponse, UserRequestV2 } from "../common/types";
 
 export const fetchUsers = async (page: number, limit: number): Promise<ResponseType<UserResponse>> => {
     const token = localStorage.getItem("token");
@@ -20,23 +20,23 @@ export const fetchUsers = async (page: number, limit: number): Promise<ResponseT
     return result;
 };
 
-interface ModuleResponse {
-	message: string;
-}
 
-export const createUser = async (userData: UserRequest): Promise<ModuleResponse> => {
-    const response = await fetch(`${API_BASE_URL}/users/registerMVC`, {
+
+export const createUser = async (userData: UserRequestV2): Promise<ResponseType<UserResponse>> => {
+    const token = localStorage.getItem("token");
+    
+    const response = await fetch(`${API_BASE_URL}/shared/users`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `${localStorage.getItem("token")}`,
+            Authorization: `${token}`,
         },
         body: JSON.stringify(userData),
     });
     if (!response.ok) {
         throw new Error("Network response was not ok");
     }
-    return response.json() as Promise<ModuleResponse>;
+    return response.json() as Promise<ResponseType<UserResponse>>;
 }
 
 export const deleteUser = async (userId: number): Promise<void> => {

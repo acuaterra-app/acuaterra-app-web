@@ -66,6 +66,14 @@ export interface UserRequest {
 	jornada?: string;
 	nombre_del_programa?: string;
 }
+
+export interface UserRequestV2 {
+    name: string;
+    email: string;
+    dni: string;
+    id_rol: number;
+    address?: string;
+}
 export interface Bitacora {
 	id_bitacora: number;
 	id_modulo: number;
@@ -117,7 +125,7 @@ export interface TableColumn<T> {
 export interface ResponseType<T> {
 	message: string;
 	data: Array<T>;
-	errors: Array<T>;
+	errors: Array<string>;
 	meta: {
 		pagination: {
 			total: number;

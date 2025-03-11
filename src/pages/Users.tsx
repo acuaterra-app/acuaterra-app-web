@@ -1,7 +1,7 @@
 import type { FunctionComponent } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import { useState } from "react";
-import type { UserRequest, UserResponse } from "../common/types";
+import type { UserRequest, UserRequestV2, UserResponse } from "../common/types";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import useUsers from "../hooks/useUsers";
 import RegisterUserModal from "../components/ui/modals/registerUserModal";
@@ -38,7 +38,7 @@ export const Users: FunctionComponent = () => {
   // Para mostrar un toast cuando se registre un usuario exitosamente
   const [showToast, setShowToast] = useState(false);
 
-  const handleRegisterUser = async (userData: UserRequest): Promise<void> => {
+  const handleRegisterUser = async (userData: UserRequestV2): Promise<void> => {
     try {
       await registerUser(userData);
       setReload(!reload);
