@@ -1,10 +1,10 @@
-import type { FC } from "react";
+import type React from 'react';
 
-const Spinner: FC = () => {
+
+const Spinner: React.FC = () => {
   return (
-    <div className="flex items-center justify-center space-x-2">
-      <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent animate-spin rounded-full" />
-      <span>Cargando...</span>
+    <div className="flex justify-center items-center">
+      <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
     </div>
   );
 };

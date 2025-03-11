@@ -1,7 +1,6 @@
 import type { FunctionComponent } from "react";
-// eslint-disable-next-line no-duplicate-imports
 import { useState } from "react";
-import type { UserRequest, UserRequestV2, UserResponse } from "../common/types";
+import type { User, UserRequest, UserRequestV2, UserResponse } from "../common/types";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import useUsers from "../hooks/useUsers";
 import RegisterUserModal from "../components/ui/modals/registerUserModal";
@@ -29,31 +28,26 @@ export const Users: FunctionComponent = () => {
   const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
   const [reload, setReload] = useState(false);
   const pageSize = 10;
   const { users, loading, error, total } = useUsers(page, pageSize, reload);
   const { registerUser } = useRegisterUser();
-
-  // Para mostrar un toast cuando se registre un usuario exitosamente
   const [showToast, setShowToast] = useState(false);
 
   const handleRegisterUser = async (userData: UserRequestV2): Promise<void> => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await registerUser(userData);
       setReload(!reload);
       setShowModal(false);
-      setShowToast(true); // Mostramos la notificación
+      setShowToast(true);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleDeleteUser = async (userId: number): Promise<void> => {
-    const confirmed = window.confirm('¿Estás seguro de que deseas eliminar este usuario?');
-    if (confirmed) {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
       await deleteUser(userId);
       setReload(!reload);
     }
@@ -64,7 +58,7 @@ export const Users: FunctionComponent = () => {
     setReload(!reload);
   };
 
-  const handleOpenUpdateModal = (user: User): void => {
+  const handleOpenUpdateModal = (user: UserResponse): void => {
     setSelectedUser(user);
     setShowUpdateModal(true);
   };
@@ -72,14 +66,13 @@ export const Users: FunctionComponent = () => {
   return (
     <Layout>
       <div className="flex flex-col md:flex-row min-h-screen bg-white">
-        {/* Sidebar con fondo gris (bg-gray-300) */}
+        {/* Sidebar */}
         <aside className="w-full md:w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
           <div className="p-4 flex flex-col items-center">
             <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
             <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
           </div>
           <nav className="flex-1">
-            {/* Grupo 1: "Inicio", "Usuarios" y "Módulos" */}
             <ul className="space-y-4 md:space-y-20 mt-4 md:mt-20">
               <li
                 className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
@@ -114,7 +107,7 @@ export const Users: FunctionComponent = () => {
                 <span className="font-bold">Reporte</span>
               </li>
             </ul>
-            {/* Grupo 2: "Cerrar Sesión" en un bloque separado */}
+            {/* Grupo 2: Cerrar Sesión */}
             <div className="mt-4 md:mt-20">
               <ul className="space-y-4">
                 <li
@@ -127,7 +120,7 @@ export const Users: FunctionComponent = () => {
               </ul>
             </div>
           </nav>
-          {/* Footer: Texto del footer subido un poco */}
+          {/* Footer de la barra lateral */}
           <div className="p-0">
             <p className="text-center text-xs mt-2">
               versión 1.0 <br />
@@ -139,12 +132,12 @@ export const Users: FunctionComponent = () => {
         {/* Contenido principal */}
         <main className="flex-1 p-6 bg-white">
           <h1 className="text-2xl font-bold mb-4">Lista de Usuarios</h1>
-          {loading && (
-            <div className="mt-4">
+
+          {loading ? (
+            <div className="flex justify-center items-center h-32">
               <Spinner />
             </div>
-          )}
-          {error && (
+          ) : error ? (
             <div className="mt-4 text-red-500 flex items-center">
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -156,66 +149,59 @@ export const Users: FunctionComponent = () => {
               </svg>
               <p>Error: {String(error)}</p>
             </div>
+          ) : (
+            <div className="border border-gray-300 rounded-lg p-4 shadow-md">
+              <TableWithActions
+                data={users}
+                error={error}
+                limit={pageSize}
+                loading={loading}
+                page={page}
+                setLimit={() => {}}
+                setPage={setPage}
+                total={total}
+                columns={[
+                  { header: "ID", accessor: "id" },
+                  { header: "Name", accessor: "name" },
+                  { header: "Email", accessor: "email" },
+                  { header: "DNI", accessor: "dni" },
+                  { header: "Role", accessor: "rol", render: (user: UserResponse) => user.rol.name },
+                  { header: "Address", accessor: "address" },
+                  { header: "Created At", accessor: "createdAt" },
+                  { header: "Updated At", accessor: "updatedAt" },
+                ]}
+                onAdd={() => setShowModal(true)}
+                onDelete={handleDeleteUser}
+                onEdit={handleOpenUpdateModal}
+              />
+            </div>
           )}
-          {!loading && !error && (
-            <TableWithActions
-              data={users}
-              error={error}
-              limit={pageSize}
-              loading={loading}
-              page={page}
-              setLimit={() => {}}
-              setPage={setPage}
-              total={total}
-              columns={[
-                { header: 'ID', accessor: 'id' },
-                { header: 'Name', accessor: 'name' },
-                { header: 'Email', accessor: 'email' },
-                { header: 'DNI', accessor: 'dni' },
-                { header: 'Role', accessor: 'rol', render: (user: UserResponse) => (user.rol).name },
-                { header: 'Address', accessor: 'address' },
-                { header: 'Created At', accessor: 'createdAt' },
-                { header: 'Updated At', accessor: 'updatedAt' },
-              ]}
-              onAdd={() => { setShowModal(true); }}
-              onDelete={handleDeleteUser}
-              onEdit={handleOpenUpdateModal}
-            />
-          )}
+
           <div className="flex justify-between mt-4">
             <button
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300"
               disabled={page === 1}
-              onClick={() => {
-                setPage(page - 1);
-              }}
+              onClick={() => setPage(page - 1)}
             >
               Previous
             </button>
             <div className="flex flex-col items-center mt-4">
               <button
                 className="mb-4 p-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded transition focus:outline-none focus:ring-2 focus:ring-green-300"
-                onClick={() => {
-                  setShowModal(true);
-                }}
+                onClick={() => setShowModal(true)}
               >
                 Register User
               </button>
             </div>
             <button
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300"
-              onClick={() => {
-                setPage(page + 1);
-              }}
+              onClick={() => setPage(page + 1)}
             >
               Next
             </button>
           </div>
-          <RegisterUserModal
-            setShowModal={setShowModal}
-            showModal={showModal}
-            onRegister={handleRegisterUser}
-          />
+
+          <RegisterUserModal setShowModal={setShowModal} showModal={showModal} onRegister={handleRegisterUser} />
           {selectedUser && (
             <UpdateUserModal
               setShowModal={setShowUpdateModal}
@@ -224,15 +210,7 @@ export const Users: FunctionComponent = () => {
               onUpdate={handleUpdateUser}
             />
           )}
-          {/* Toast de confirmación */}
-          {showToast && (
-            <Toast
-              message="Usuario registrado exitosamente"
-              onClose={() => {
-                setShowToast(false);
-              }}
-            />
-          )}
+          {showToast && <Toast message="Usuario registrado exitosamente" onClose={() => setShowToast(false)} />}
         </main>
       </div>
     </Layout>
