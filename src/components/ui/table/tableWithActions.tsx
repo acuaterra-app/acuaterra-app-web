@@ -56,7 +56,7 @@ const TableWithActions = <T extends TableItem>({
         className="bg-quaternary text-white px-6 py-3 rounded hover:bg-quinary transition"
         onClick={onAdd}
       >
-        Agregar Nueva Campo
+        Agregar Nuevo Campo
       </button>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
