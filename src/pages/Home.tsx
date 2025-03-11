@@ -27,48 +27,44 @@ const Welcome: FC = () => {
       {/* Sección izquierda: Logo, texto y botón */}
       <div className="md:w-1/2 flex flex-col items-center justify-center text-center space-y-6">
         {/* Logo de Acuaterra */}
-        <img alt="Acuaterra Logo" className="h-[250px]" src={acuaterraLogo} />
-
+        <img alt="Acuaterra Logo" className="h-[250px] mb-4" src={acuaterraLogo} />
+  
         {/* Título principal */}
-        <h1 className="text-4xl font-bold text-gray-800">
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">
           ¡Bienvenidos a Acuaterra!
         </h1>
-
+  
         {/* Botón para iniciar */}
         <button
           className="
-            bg-green-600 hover:bg-green-700
+            bg-[#44cbd3] hover:bg-[#3cacac]
             text-white font-semibold px-6 py-3 
             rounded-lg transition
-            focus:outline-none focus:ring-2 focus:ring-green-300
+            focus:outline-none focus:ring-2 focus:ring-[#44cbd3]
           "
           onClick={handleStart}
-        >
+        >   
           ¡Comenzar!
         </button>
-
+  
         {/* Footer con logo SENA y versión */}
-        {/*  <img alt="SENA Logo" className="h-8 mx-auto mb-2" src={logoSena} /> */}
         <div className="mt-8">
-         
           <p className="text-xs text-gray-500">
             versión 1.0 - Advanced Aquaponics Monitoring System <br />
             AGUA TERRA © 2023
           </p>
         </div>
       </div>
-
+  
       {/* Sección derecha: Imagen del teléfono con la app */}
       <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
         <img
           alt="Vista de la app en teléfono"
-          //className="max-h-96 object-contain"
           className="max-h-[800px] object-contain"
           src={phoneHome}
         />
       </div>
     </div>
-  );
-};
-
+   );
+  }
 export default Welcome;

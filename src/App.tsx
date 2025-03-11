@@ -4,11 +4,13 @@ import { RouterProvider, type createRouter } from "@tanstack/react-router";
 import type { FunctionComponent } from "./common/types";
 // import { TanStackRouterDevelopmentTools } from "./components/utils/development-tools/TanStackRouterDevelopmentTools";
 
+
 const queryClient = new QueryClient();
 
 type AppProps = { router: ReturnType<typeof createRouter> };
 
 const App = ({ router }: AppProps): FunctionComponent => {
+	
 	return (
 		<QueryClientProvider client={queryClient}>
 			<RouterProvider router={router} />
@@ -23,3 +25,5 @@ const App = ({ router }: AppProps): FunctionComponent => {
 };
 
 export default App;
+
+

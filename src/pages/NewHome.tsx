@@ -17,12 +17,11 @@ import { useNavigate } from "@tanstack/react-router"
 
 // Importación de logos e íconos
 import homeIcon from "../assets/images/home.png";
-import userIcon from "../assets/images/userlogo.png";
 import moduleIcon from "../assets/images/module.png";
-import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
-import binnacleIcon from "../assets/images/bitacora.png";
+import LogoutButton from "../components/ui/button/logoutButton";
+
 
 // Se elimina la importación del logoSena
 
@@ -49,27 +48,21 @@ const Home: FC = () => {
         <nav className="flex-1">
           {/* Grupo 1: "Inicio", "Usuarios" y "Módulos" con mayor separación */}
           <ul className="space-y-20 mt-20">
-            <li className="flex items-center p-2 hover:bg-gray-300 transition">
+                            
+            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg">
               <img alt="Home" className="h-6 w-6 mr-2" src={homeIcon} />
               <span className="font-bold">Inicio</span>
             </li>
-            <li 
-               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-               onClick={() => navigate({ to: "/users" })}
-              
-              >
-              <img alt="Usuarios" className="h-6 w-6 mr-2" src={userIcon} />
-              <span className="font-bold">Usuarios</span>
-            </li>
 
             <li 
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-              onClick={() => navigate({ to: "/module" })}
-              >
+               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
+               onClick={() => navigate({ to: "/farm" })}
               
-              <img alt="Módulos" className="h-6 w-6 mr-2" src={moduleIcon} />
-              <span className="font-bold">Módulos</span>
+              >
+              <img alt="Usuarios" className="h-6 w-6 mr-2" src={moduleIcon} />
+              <span className="font-bold">Granjas</span>
             </li>
+
             <li 
               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
               onClick={() => navigate({ to: "/report" })}
@@ -78,28 +71,25 @@ const Home: FC = () => {
               <img alt="Módulos" className="h-6 w-6 mr-2" src={reportIcon} />
               <span className="font-bold">Reporte</span>
             </li>
-            <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-              onClick={() => navigate({ to: "/bitacoras" })}
-                >
-              <img alt="Reporte" className="h-6 w-6 mr-2" src={binnacleIcon} />
-              <span className="font-bold">Bitacoras</span>
-             </li>
+          
           </ul>
 
           {/* Grupo 2: "Cerrar Sesión" en un bloque separado */}
           <div className="mt-60">
             <ul className="space-y-4">
-              <li 
-               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-               onClick={() => navigate({ to: "/auth" })}
-              >
-                <img alt="Cerrar Sesión" className="h-6 w-6 mr-2" src={closeSessionIcon} />
-                <span className="font-bold">Cerrar Sesión</span>
+            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105">
+                <LogoutButton />
               </li>
             </ul>
           </div>
         </nav>
+
+
+
+
+
+
+        
         {/* Footer: Se sube el texto quitando el mt-auto */}
         <div className="p-0">
           <p className="text-center text-xs mt-2">
@@ -117,7 +107,7 @@ const Home: FC = () => {
         </p>
 
         {/* Sección donde se muestran las 3 fotos */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
           {/* Foto 1 */}
           <div className="border rounded p-2 shadow hover:shadow-md transition hover:scale-105">
             <img alt="Foto de módulo acuapónico 1" src={foto1} />
