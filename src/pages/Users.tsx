@@ -155,13 +155,15 @@ export const Users: FunctionComponent = () => {
           ) : (
             <div className="border border-gray-300 rounded-lg p-4 shadow-md">
               <TableWithActions
-                addButtonText="Agregar Nuevo Usuario" // Pasar el texto del botón como prop
                 data={users}
                 error={error}
                 limit={pageSize}
                 loading={loading}
                 page={page}
                 setLimit={() => {}}
+                setPage={setPage}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                total={total}
                 columns={[
                   { header: "ID", accessor: "id" },
                   { header: "Name", accessor: "name" },
@@ -174,11 +176,7 @@ export const Users: FunctionComponent = () => {
                 ]}
                 onAdd={() => { setShowModal(true); }}
                 onDelete={handleDeleteUser}
-                // eslint-disable-next-line react/jsx-sort-props
                 onEdit={handleOpenUpdateModal}
-                setPage={setPage}
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                total={total}
               />
             </div>
           )}
