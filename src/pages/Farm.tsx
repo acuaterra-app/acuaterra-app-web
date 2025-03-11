@@ -31,7 +31,9 @@ const FarmsPage: FunctionComponent = () => {
 
   const handleEditFarm = async (farmData: FarmRequest): Promise<void> => {
     if (selectedFarm) {
-      await editFarm(selectedFarm.id as number, farmData);
+      const userIds = farmData.users.map((user) => (typeof user === 'object' ? user.id : user));
+      const updatedFarmData = { ...farmData, users: userIds };
+      await editFarm(selectedFarm.id as number, updatedFarmData);
     }
     setIsModalOpen(false);
     toast.success('Granja editada exitosamente!');
