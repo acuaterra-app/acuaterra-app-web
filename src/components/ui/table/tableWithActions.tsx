@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { TableColumn, TableItem } from '../../../common/types';
 
-
 interface TableWithActionsProps<T extends TableItem> {
   data: Array<T>;
   columns: Array<TableColumn<T>>;
@@ -70,8 +69,8 @@ const TableWithActions = <T extends TableItem>({
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
-          {filteredData.map((item) => (
-            <tr key={item.id} className="border-b border-gray-200 hover:bg-gray-100">
+          {filteredData.map((item, index) => (
+            <tr key={item.id} className={`border-b border-gray-200 hover:bg-gray-100 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
               {columns.map((column) => (
                 <td key={String(column.accessor)} className="py-3 px-6 text-left whitespace-nowrap">
                   {column.render ? column.render(item) : String(item[column.accessor])}
