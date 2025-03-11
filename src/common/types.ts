@@ -58,58 +58,87 @@ export interface UserRequest {
 	nombre: string;
 	email: string;
 	password: string;
-	n_documento_identidad: string;
-	sede: string;
-	id_rol: number,
-	rol?: number
-	n_ficha: string;
-	jornada: string;
-	nombre_del_programa: string;
+	n_documento_identidad?: string;
+	sede?: string;
+	id_rol?: number;
+	rol?: number;
+	n_ficha?: string;
+	jornada?: string;
+	nombre_del_programa?: string;
 }
 export interface Bitacora {
-    id_bitacora: number;
-    id_modulo: number;
-    fecha: string;
-    descripcion: string;
+	id_bitacora: number;
+	id_modulo: number;
+	fecha: string;
+	descripcion: string;
 }
 
 export interface CreateBitacoraRequest {
-    id_modulo: number;
-    fecha: string;
-    descripcion: string;
+	id_modulo: number;
+	fecha: string;
+	descripcion: string;
 }
 
 export interface UpdateBitacoraRequest {
-    id_modulo: number;
-    fecha: string;
-    descripcion: string;
+	id_modulo: number;
+	fecha: string;
+	descripcion: string;
 }
 export interface Farm {
-    id: number;
-    name: string;
-    address: string;
-    latitude: string;
-    longitude: string;
-    createdAt: string;
-    updatedAt: string;
-    users: Array<User> | Array<number>;
+	id: number;
+	name: string;
+	address: string;
+	latitude: string;
+	longitude: string;
+	createdAt: string;
+	updatedAt: string;
+	users: Array<User> | Array<number>;
 }
 
 export interface FarmRequest {
 	id?: number;
-    name: string;
-    address: string;
-    latitude: string;
-    longitude: string;
-    users: Array<User> | Array<number>;
+	name: string;
+	address: string;
+	latitude: string;
+	longitude: string;
+	users: Array<User> | Array<number>;
 }
 
 export interface TableItem {
 	id: number;
-  }
+}
 
-  export interface  TableColumn<T> {
+export interface TableColumn<T> {
 	header: string;
 	accessor: keyof T;
 	render?: (item: T) => React.ReactNode;
-  }
+}
+
+export interface ResponseType<T> {
+	message: string;
+	data: Array<T>;
+	errors: Array<T>;
+	meta: {
+		pagination: {
+			total: number;
+			hasNext: boolean;
+			hasPrev: boolean;
+		};
+	};
+}
+
+export interface UserRole {
+	name: string;
+}
+
+export interface UserResponse {
+	id: number;
+	name: string;
+	email: string;
+	dni: string;
+	id_rol: number;
+	address: string;
+	createdAt: string;
+	updatedAt: string;
+	rol: UserRole;
+}

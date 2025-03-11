@@ -1,19 +1,18 @@
 import type React from "react";
 // eslint-disable-next-line no-duplicate-imports
 import { useState } from "react";
-import type { UserRequest, User } from "../../../common/types";
+import type { UserRequest, UserResponse } from "../../../common/types";
 
 interface UpdateUserModalProps {
     showModal: boolean;
     setShowModal: (show: boolean) => void;
-    user: User;
+    user: UserResponse;
     onUpdate: (userId: number, userData: UserRequest) => void;
 }
 
 const UpdateUserModal: React.FC<UpdateUserModalProps> = ({ showModal, setShowModal, user, onUpdate }) => {
     const [nombre, setNombre] = useState(user.name);
     const [password, setPassword] = useState("");
-    const [sede, setSede] = useState(user.sede);
     const [idRol, setIdRol] = useState<number>(Number(user.rol));
 
     const handleSubmit = (event: React.FormEvent): void => {
@@ -22,14 +21,6 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({ showModal, setShowMod
             nombre,
             email: user.email, // Email should not be modified
             password,
-            // eslint-disable-next-line camelcase
-            n_documento_identidad: user.n_documento_identidad, // Identity should not be modified
-            sede,
-            // eslint-disable-next-line camelcase
-            n_ficha: user.usuario_ficha || "",
-            jornada: user.jornada || "",
-            // eslint-disable-next-line camelcase
-            nombre_del_programa: user.usuario_programa || "Test",
             // eslint-disable-next-line camelcase
             id_rol: idRol,
         };
@@ -73,25 +64,7 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({ showModal, setShowMod
                             onChange={(_) => { setPassword(_.target.value); }}
                         />
                     </div>
-                    <div className="mb-4">
-                        <label className="block mb-2">Document ID</label>
-                        <input
-                            readOnly
-                            className="border p-2 w-full bg-gray-200"
-                            type="text"
-                            value={user.n_documento_identidad}
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block mb-2">Sede</label>
-                        <input
-                            required
-                            className="border p-2 w-full"
-                            type="text"
-                            value={sede}
-                            onChange={(_) => { setSede(_.target.value); }}
-                        />
-                    </div>
+                  
                     <div className="mb-4">
                         <label className="block mb-2">Role ID</label>
                         <input

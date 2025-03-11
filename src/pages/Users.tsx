@@ -1,14 +1,8 @@
-/**
- * Página de Usuarios - Acuaterra (Users).
- * Visual: Basado en el diseño de Figma,
- * La lógica de CRUD se mantiene intacta.
- */
-
 import type { FunctionComponent } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import { useState } from "react";
-import type { UserRequest, User } from "../common/types";
-import UserTable from "../components/ui/table/table";
+import type { UserRequest, UserResponse } from "../common/types";
+import TableWithActions from "../components/ui/table/tableWithActions";
 import useUsers from "../hooks/useUsers";
 import RegisterUserModal from "../components/ui/modals/registerUserModal";
 import UpdateUserModal from "../components/ui/modals/updateUserModalProps";
@@ -35,10 +29,10 @@ export const Users: FunctionComponent = () => {
   const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
   const [reload, setReload] = useState(false);
   const pageSize = 10;
-  const { users, loading, error } = useUsers(page, pageSize, reload);
+  const { users, loading, error, total } = useUsers(page, pageSize, reload);
   const { registerUser } = useRegisterUser();
 
   // Para mostrar un toast cuando se registre un usuario exitosamente
@@ -60,22 +54,15 @@ export const Users: FunctionComponent = () => {
     setReload(!reload);
   };
 
-  const handleUpdateUser = async (                                          // Merged Const
-    userId: number,
-    userData: UserRequest
-  ): Promise<void> => {
+  const handleUpdateUser = async (userId: number, userData: UserRequest): Promise<void> => {
     await updateUser(userId, userData);
     setReload(!reload);
   };
 
-  const handleOpenUpdateModal = (user: User): void => {                     // Merged Const
+  const handleOpenUpdateModal = (user: UserResponse): void => {
     setSelectedUser(user);
     setShowUpdateModal(true);
   };
-
-
-
-  // Integración de la página de usuarios
 
   return (
     <Layout>
@@ -87,8 +74,6 @@ export const Users: FunctionComponent = () => {
             <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
           </div>
           <nav className="flex-1">
-
-            
             {/* Grupo 1: "Inicio", "Usuarios" y "Módulos" */}
             <ul className="space-y-20 mt-20">
               <li
@@ -117,13 +102,12 @@ export const Users: FunctionComponent = () => {
                 <span className="font-bold">Reporte</span>
               </li>
               <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-              onClick={() => navigate({ to: "/bitacoras" })}
-                >
-              <img alt="Reporte" className="h-6 w-6 mr-2" src={binnacleIcon} />
-              <span className="font-bold">Bitacoras</span>
-             </li>
-
+                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
+                onClick={() => navigate({ to: "/bitacoras" })}
+              >
+                <img alt="Reporte" className="h-6 w-6 mr-2" src={binnacleIcon} />
+                <span className="font-bold">Bitacoras</span>
+              </li>
             </ul>
             {/* Grupo 2: "Cerrar Sesión" en un bloque separado */}
             <div className="mt-60">
@@ -169,52 +153,30 @@ export const Users: FunctionComponent = () => {
             </div>
           )}
           {!loading && !error && (
-            <div className="overflow-x-auto">
-              <UserTable
-                users={users}
-                onDeleteUser={handleDeleteUser}
-                onUpdateUser={handleOpenUpdateModal}
-              />
-            </div>
+            <TableWithActions
+              data={users}
+              error={error}
+              limit={pageSize}
+              loading={loading}
+              page={page}
+              setLimit={() => {}}
+              setPage={setPage}
+              total={total}
+              columns={[
+                { header: 'ID', accessor: 'id' },
+                { header: 'Name', accessor: 'name' },
+                { header: 'Email', accessor: 'email' },
+                { header: 'DNI', accessor: 'dni' },
+                { header: 'Role', accessor: 'rol', render: (user: UserResponse) => (user.rol).name },
+                { header: 'Address', accessor: 'address' },
+                { header: 'Created At', accessor: 'createdAt' },
+                { header: 'Updated At', accessor: 'updatedAt' },
+              ]}
+              onAdd={() => { setShowModal(true); }}
+              onDelete={handleDeleteUser}
+              onEdit={handleOpenUpdateModal}
+            />
           )}
-          <div className="flex justify-between mt-4">
-            <button
-              disabled={page === 1}
-              className="
-                bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 
-                rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300
-              "
-              onClick={() => {
-                setPage(page - 1);
-              }}
-            >
-              Previous
-            </button>
-            <div className="flex flex-col items-center mt-4">
-              <button
-                className="
-                  mb-4 p-2 bg-green-600 hover:bg-green-700 text-white font-semibold 
-                  rounded transition focus:outline-none focus:ring-2 focus:ring-green-300
-                "
-                onClick={() => {
-                  setShowModal(true);
-                }}
-              >
-                Register User
-              </button>
-            </div>
-            <button
-              className="
-                bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 
-                rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300
-              "
-              onClick={() => {
-                setPage(page + 1);
-              }}
-            >
-              Next
-            </button>
-          </div>
           <RegisterUserModal
             setShowModal={setShowModal}
             showModal={showModal}
