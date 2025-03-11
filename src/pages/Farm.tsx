@@ -120,37 +120,36 @@ const FarmsPage: FunctionComponent = () => {
         ) : (
           <div className="border border-gray-300 rounded-lg p-4 shadow-md">
             <TableWithActions
-              data={farms}
-              error={error}
-              limit={limit}
-              loading={loading}
-              page={page}
-              setLimit={setLimit}
-              setPage={setPage}
-              total={total}
-              columns={[
-                { header: 'ID', accessor: 'id' },
-                { header: 'Name', accessor: 'name' },
-                { header: 'Latitud', accessor: 'latitude' },
-                { header: 'Longitud', accessor: 'longitude' },
-                { header: 'Dirección', accessor: 'address' },
-                { header: 'Date', accessor: 'createdAt' },
-                { 
-                  header: 'Users', 
-                  accessor: 'users',
-                  render: (farm) => farm.users.map((user) => (user as User).name ).join(', ')
-                },
-              ]}
-              onDelete={handleRemoveFarm}
-              onAdd={() => {
-                setSelectedFarm(null);
-                setIsModalOpen(true);
-              }}
-              onEdit={(farm: FarmRequest) => {
-                setSelectedFarm(farm);
-                setIsModalOpen(true);
-              }}
-            />
+                addButtonText={""}
+                data={farms}
+                error={error}
+                limit={limit}
+                loading={loading}
+                page={page}
+                setLimit={setLimit}
+                setPage={setPage}
+                total={total}
+                columns={[
+                  { header: 'ID', accessor: 'id' },
+                  { header: 'Name', accessor: 'name' },
+                  { header: 'Latitud', accessor: 'latitude' },
+                  { header: 'Longitud', accessor: 'longitude' },
+                  { header: 'Dirección', accessor: 'address' },
+                  { header: 'Date', accessor: 'createdAt' },
+                  {
+                    header: 'Users',
+                    accessor: 'users',
+                    render: (farm) => farm.users.map((user) => (user as User).name).join(', ')
+                  },
+                ]}
+                onDelete={handleRemoveFarm}
+                onAdd={() => {
+                  setSelectedFarm(null);
+                  setIsModalOpen(true);
+                } } onEdit={(farm: FarmRequest) => {
+                  setSelectedFarm(farm);
+                  setIsModalOpen(true);
+                } }            />
           </div>
         )}
         {isModalOpen && (

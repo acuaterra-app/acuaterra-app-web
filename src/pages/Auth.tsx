@@ -3,6 +3,7 @@ import acuaterraLogo from "../assets/images/logo.png";
 import ButtonComponent from "../components/ui/button/button";
 import type { FunctionComponent } from "react";
 import { useAuth } from "../hooks/useAuth";
+import Loader from "../components/loaders/Loader"; // Importamos el Loader
 
 export const Auth: FunctionComponent = () => {
   const { email, setEmail, password, setPassword, error, loading, handleLogin } = useAuth();
@@ -13,7 +14,11 @@ export const Auth: FunctionComponent = () => {
     void handleLogin();
   };
 
-  
+  // Si loading es true, se muestra el Loader en lugar del formulario.
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4 md:p-8 lg:p-12">
       <div className="mb-6 flex flex-col items-center">
@@ -22,7 +27,10 @@ export const Auth: FunctionComponent = () => {
 
       <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-9">Login</h1>
 
-      <form className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-6 md:space-y-8 lg:space-y-10" onSubmit={handleSubmit}>
+      <form
+        className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-6 md:space-y-8 lg:space-y-10"
+        onSubmit={handleSubmit}
+      >
         <div className="flex flex-col items-center">
           <InputCustomComponent
             error={error && !email ? "El campo email es requerido" : ""}
@@ -56,7 +64,9 @@ export const Auth: FunctionComponent = () => {
         </div>
       </form>
 
-      <p className="text-gray-500 text-sm mt-20">versión 1.0 - Advanced Aquaponics Monitoring System</p>
+      <p className="text-gray-500 text-sm mt-20">
+        versión 1.0 - Advanced Aquaponics Monitoring System
+      </p>
     </div>
   );
 };
