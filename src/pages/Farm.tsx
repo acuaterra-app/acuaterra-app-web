@@ -14,6 +14,8 @@ import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
 import reportIcon from "../assets/images/reporte.png";
+import userIcon from "../assets/images/userlogo.png";
+import fishIcon from "../assets/images/pez.png";
 
 const FarmsPage: FunctionComponent = () => {
   const { farms, loading, error, total, page, limit, setPage, setLimit, addFarm, editFarm, removeFarm } = useFarms();
@@ -70,6 +72,21 @@ const FarmsPage: FunctionComponent = () => {
               <span className="font-bold">Granjas</span>
             </li>
             <li
+              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+              onClick={() => navigate({ to: "/users" })}
+            >
+              <img alt="Home" className="h-6 w-6 mr-2" src={userIcon} />
+              <span className="font-bold">Usuarios</span>
+            </li>
+            <li
+              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+              onClick={() => navigate({ to: "/module" })}
+            >
+              <img alt="Home" className="h-6 w-6 mr-2" src={fishIcon} />
+              <span className="font-bold">Módulos</span>
+            </li>
+            
+            <li
               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
               onClick={() => navigate({ to: "/report" })}
             >
@@ -79,7 +96,7 @@ const FarmsPage: FunctionComponent = () => {
           </ul>
 
           {/* Grupo 2: "Cerrar Sesión" en un bloque separado */}
-          <div className="mt-4 md:mt-60">
+          <div className="mt-4 md:mt-20">
             <ul className="space-y-4">
               <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105">
                 <LogoutButton />

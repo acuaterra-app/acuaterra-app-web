@@ -24,7 +24,7 @@ import moduleIcon from "../assets/images/module.png";
 import homeIcon from "../assets/images/home.png";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
-import binnacleIcon from "../assets/images/bitacora.png";
+import fishIcon from "../assets/images/pez.png";
 
 // Toast y Spinner
 import Toast from "../components/ui/Toast";
@@ -56,41 +56,35 @@ export const Users: FunctionComponent = () => {
   };
 
   const handleDeleteUser = async (userId: number): Promise<void> => {
-    await deleteUser(userId);
-    setReload(!reload);
+    const confirmed = window.confirm('¿Estás seguro de que deseas eliminar este usuario?');
+    if (confirmed) {
+      await deleteUser(userId);
+      setReload(!reload);
+    }
   };
 
-  const handleUpdateUser = async (                                          // Merged Const
-    userId: number,
-    userData: UserRequest
-  ): Promise<void> => {
+  const handleUpdateUser = async (userId: number, userData: UserRequest): Promise<void> => {
     await updateUser(userId, userData);
     setReload(!reload);
   };
 
-  const handleOpenUpdateModal = (user: User): void => {                     // Merged Const
+  const handleOpenUpdateModal = (user: User): void => {
     setSelectedUser(user);
     setShowUpdateModal(true);
   };
 
-
-
-  // Integración de la página de usuarios
-
   return (
     <Layout>
-      <div className="flex min-h-screen bg-white">
+      <div className="flex flex-col md:flex-row min-h-screen bg-white">
         {/* Sidebar con fondo gris (bg-gray-300) */}
-        <aside className="w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
+        <aside className="w-full md:w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
           <div className="p-4 flex flex-col items-center">
             <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
             <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
           </div>
           <nav className="flex-1">
-
-            
             {/* Grupo 1: "Inicio", "Usuarios" y "Módulos" */}
-            <ul className="space-y-20 mt-20">
+            <ul className="space-y-4 md:space-y-20 mt-4 md:mt-20">
               <li
                 className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
                 onClick={() => navigate({ to: "/newHome" })}
@@ -98,7 +92,14 @@ export const Users: FunctionComponent = () => {
                 <img alt="Inicio" className="h-6 w-6 mr-2" src={homeIcon} />
                 <span className="font-bold">Inicio</span>
               </li>
-              <li className="flex items-center p-2 bg-gray-300 transition">
+              <li
+                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+                onClick={() => navigate({ to: "/farm" })}
+              >
+                <img alt="Granjas" className="h-6 w-6 mr-2" src={moduleIcon} />
+                <span className="font-bold">Granjas</span>
+              </li>
+              <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg">
                 <img alt="Usuarios" className="h-6 w-6 mr-2" src={userIcon} />
                 <span className="font-bold">Usuarios</span>
               </li>
@@ -106,7 +107,7 @@ export const Users: FunctionComponent = () => {
                 className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
                 onClick={() => navigate({ to: "/module" })}
               >
-                <img alt="Módulos" className="h-6 w-6 mr-2" src={moduleIcon} />
+                <img alt="Módulos" className="h-6 w-6 mr-2" src={fishIcon} />
                 <span className="font-bold">Módulos</span>
               </li>
               <li
@@ -116,17 +117,9 @@ export const Users: FunctionComponent = () => {
                 <img alt="Reporte" className="h-6 w-6 mr-2" src={reportIcon} />
                 <span className="font-bold">Reporte</span>
               </li>
-              <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-              onClick={() => navigate({ to: "/bitacoras" })}
-                >
-              <img alt="Reporte" className="h-6 w-6 mr-2" src={binnacleIcon} />
-              <span className="font-bold">Bitacoras</span>
-             </li>
-
             </ul>
             {/* Grupo 2: "Cerrar Sesión" en un bloque separado */}
-            <div className="mt-60">
+            <div className="mt-4 md:mt-20">
               <ul className="space-y-4">
                 <li
                   className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
@@ -148,8 +141,8 @@ export const Users: FunctionComponent = () => {
         </aside>
 
         {/* Contenido principal */}
-        <main className="flex-1 p-6">
-          <p className="text-gray-700 font-semibold">Lista de Usuarios</p>
+        <main className="flex-1 p-6 bg-white">
+          <h1 className="text-2xl font-bold mb-4">Lista de Usuarios</h1>
           {loading && (
             <div className="mt-4">
               <Spinner />
@@ -179,11 +172,8 @@ export const Users: FunctionComponent = () => {
           )}
           <div className="flex justify-between mt-4">
             <button
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300"
               disabled={page === 1}
-              className="
-                bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 
-                rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300
-              "
               onClick={() => {
                 setPage(page - 1);
               }}
@@ -192,10 +182,7 @@ export const Users: FunctionComponent = () => {
             </button>
             <div className="flex flex-col items-center mt-4">
               <button
-                className="
-                  mb-4 p-2 bg-green-600 hover:bg-green-700 text-white font-semibold 
-                  rounded transition focus:outline-none focus:ring-2 focus:ring-green-300
-                "
+                className="mb-4 p-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded transition focus:outline-none focus:ring-2 focus:ring-green-300"
                 onClick={() => {
                   setShowModal(true);
                 }}
@@ -204,10 +191,7 @@ export const Users: FunctionComponent = () => {
               </button>
             </div>
             <button
-              className="
-                bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 
-                rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300
-              "
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300"
               onClick={() => {
                 setPage(page + 1);
               }}

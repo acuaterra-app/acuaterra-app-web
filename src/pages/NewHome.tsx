@@ -19,6 +19,8 @@ import moduleIcon from "../assets/images/module.png";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
 import LogoutButton from "../components/ui/button/logoutButton";
+import userIcon from "../assets/images/userlogo.png";
+import fishIcon from "../assets/images/pez.png";
 
 // Importar las fotos nuevas
 import foto1 from "../assets/images/fotoAcuapico_1.jpg";
@@ -42,6 +44,8 @@ const Home: FC = () => {
           <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
           <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
         </div>
+
+        
         {/* Menú de navegación */}
         <nav className="flex-1">
           <ul className="space-y-20 mt-20">
@@ -56,6 +60,20 @@ const Home: FC = () => {
               <img alt="Usuarios" className="h-6 w-6 mr-2" src={moduleIcon} />
               <span className="font-bold">Granjas</span>
             </li>
+            <li
+              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+              onClick={() => navigate({ to: "/users" })}
+            >
+              <img alt="Home" className="h-6 w-6 mr-2" src={userIcon} />
+              <span className="font-bold">Usuarios</span>
+            </li>
+            <li
+              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+              onClick={() => navigate({ to: "/module" })}
+            >
+              <img alt="Home" className="h-6 w-6 mr-2" src={fishIcon} />
+              <span className="font-bold">Módulos</span>
+            </li>
             <li 
               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
               onClick={() => navigate({ to: "/report" })}
@@ -63,8 +81,10 @@ const Home: FC = () => {
               <img alt="Módulos" className="h-6 w-6 mr-2" src={reportIcon} />
               <span className="font-bold">Reporte</span>
             </li>
+
+
           </ul>
-          <div className="mt-60">
+          <div className="mt-20">
             <ul className="space-y-4">
               <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105">
                 <LogoutButton />
