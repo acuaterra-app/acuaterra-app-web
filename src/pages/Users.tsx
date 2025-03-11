@@ -1,8 +1,7 @@
 import type { FunctionComponent } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import { useState } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { User, UserRequest, UserRequestV2, UserResponse } from "../common/types";
+import type { UserRequestV2, UserResponse } from "../common/types";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import useUsers from "../hooks/useUsers";
 import RegisterUserModal from "../components/ui/modals/registerUserModal";
@@ -56,7 +55,7 @@ export const Users: FunctionComponent = () => {
     }
   };
 
-  const handleUpdateUser = async (userId: number, userData: UserRequest): Promise<void> => {
+  const handleUpdateUser = async (userId: number, userData: UserRequestV2): Promise<void> => {
     await updateUser(userId, userData);
     setReload(!reload);
   };
@@ -162,7 +161,6 @@ export const Users: FunctionComponent = () => {
                 page={page}
                 setLimit={() => {}}
                 setPage={setPage}
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 total={total}
                 columns={[
                   { header: "ID", accessor: "id" },

@@ -14,7 +14,8 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({ showModal, setSho
     name: '',
     email: '',
     dni: '',
-    rol: '',
+    // eslint-disable-next-line camelcase
+    id_rol: 0,
     address: '',
   });
 
@@ -77,7 +78,7 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({ showModal, setSho
                 required
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 name="rol"
-                value={userData.rol}
+                value={userData.id_rol}
                 onChange={handleChange}
               >
                 <option value="">Seleccione un rol</option>

@@ -1,22 +1,24 @@
 import type React from 'react';
 // eslint-disable-next-line no-duplicate-imports
 import { useState, useEffect } from 'react';
-import type { UserRequest, UserResponse } from '../../../common/types';
+import type { UserRequestV2, UserResponse } from '../../../common/types';
 
 interface UpdateUserModalProps {
   showModal: boolean;
   setShowModal: (show: boolean) => void;
   user: UserResponse;
-  onUpdate: (userId: number, userData: UserRequest) => Promise<void>;
+  onUpdate: (userId: number, userData: UserRequestV2) => Promise<void>;
 }
 
 const UpdateUserModal: React.FC<UpdateUserModalProps> = ({ showModal, setShowModal, user, onUpdate }) => {
-  const [userData, setUserData] = useState<UserRequest>({
-    name: '',
-    email: '',
-    dni: '',
-    rol: '',
-    address: '',
+  const [userData, setUserData] = useState<UserRequestV2>({
+  dni: '',
+  address: '',
+  name: '',
+  email: '',
+  // eslint-disable-next-line camelcase
+  id_rol: 0,
+
   });
 
   useEffect(() => {
@@ -26,7 +28,8 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({ showModal, setShowMod
         name: user.name,
         email: user.email,
         dni: user.dni,
-        rol: user.rol.name,
+        // eslint-disable-next-line camelcase
+        id_rol: user.id_rol,
         address: user.address,
       });
     }
@@ -94,7 +97,7 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({ showModal, setShowMod
                 required
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 name="rol"
-                value={userData.rol}
+                value={userData.id_rol}
                 onChange={handleChange}
               >
                 <option value="">Seleccione un rol</option>

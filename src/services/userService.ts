@@ -1,5 +1,5 @@
 const API_BASE_URL: string = import.meta.env["VITE_API_BASE_URL"] as string;
-import type { UserRequest, ResponseType, UserResponse, UserRequestV2 } from "../common/types";
+import type { ResponseType, UserResponse, UserRequestV2 } from "../common/types";
 
 export const fetchUsers = async (page: number, limit: number): Promise<ResponseType<UserResponse>> => {
     const token = localStorage.getItem("token");
@@ -53,7 +53,7 @@ export const deleteUser = async (userId: number): Promise<void> => {
     }
 };
 
-export const updateUser = async (userId: number, userData: UserRequest): Promise<void> => {
+export const updateUser = async (userId: number, userData: UserRequestV2): Promise<void> => {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
         method: "PUT",

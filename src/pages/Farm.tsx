@@ -122,7 +122,6 @@ const FarmsPage: FunctionComponent = () => {
         ) : (
           <div className="border border-gray-300 rounded-lg p-4 shadow-md">
             <TableWithActions
-                addButtonText={""}
                 data={farms}
                 error={error}
                 limit={limit}
