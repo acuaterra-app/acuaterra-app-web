@@ -29,6 +29,7 @@ export const Users: FunctionComponent = () => {
   const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
   const [reload, setReload] = useState(false);
   const pageSize = 10;
@@ -40,6 +41,7 @@ export const Users: FunctionComponent = () => {
 
   const handleRegisterUser = async (userData: UserRequestV2): Promise<void> => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await registerUser(userData);
       setReload(!reload);
       setShowModal(false);
