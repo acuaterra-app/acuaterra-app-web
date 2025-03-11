@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+// eslint-disable-next-line no-duplicate-imports
 import type { FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -21,8 +22,9 @@ const Report: FC = () => {
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer);
+    const timer = setTimeout(() => { setLoading(false); }, 2000);
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    return () => { clearTimeout(timer); };
   }, []);
   
   // Si está en proceso de carga, mostramos el Loader completo
