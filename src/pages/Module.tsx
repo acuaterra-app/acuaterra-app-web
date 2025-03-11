@@ -28,7 +28,7 @@ import moduleIcon from "../assets/images/module.png";
 import homeIcon from "../assets/images/home.png";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
-import binnacleIcon from "../assets/images/bitacora.png";
+import fishIcon from "../assets/images/pez.png";
 
 
 /**
@@ -99,6 +99,15 @@ export const Module: FunctionComponent = () => {
                 <img alt="Inicio" className="h-6 w-6 mr-2" src={homeIcon} />
                 <span className="font-bold">Inicio</span>
               </li>
+
+              <li
+              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+              onClick={() => navigate({ to: "/farm" })}
+            >
+              <img alt="Módulos" className="h-6 w-6 mr-2" src={moduleIcon} />
+              <span className="font-bold">Granjas</span>
+            </li>
+
               <li
                 className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
                 onClick={() => navigate({ to: "/users" })}
@@ -107,10 +116,10 @@ export const Module: FunctionComponent = () => {
                 <span className="font-bold">Usuarios</span>
               </li>
               <li
-                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg"
                 onClick={() => navigate({ to: "/module" })}
               >
-                <img alt="Módulos" className="h-6 w-6 mr-2" src={moduleIcon} />
+                <img alt="Módulos" className="h-6 w-6 mr-2" src={fishIcon} />
                 <span className="font-bold">Módulos</span>
               </li>
               <li
@@ -120,16 +129,10 @@ export const Module: FunctionComponent = () => {
                 <img alt="Reporte" className="h-6 w-6 mr-2" src={reportIcon} />
                 <span className="font-bold">Reporte</span>
               </li>
-              <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-              onClick={() => navigate({ to: "/bitacoras" })}
-                >
-              <img alt="Reporte" className="h-6 w-6 mr-2" src={binnacleIcon} />
-              <span className="font-bold">Bitacoras</span>
-             </li> 
+              
             </ul>
             {/* Grupo 2: "Cerrar Sesión" en bloque separado */}
-            <div className="mt-60">
+            <div className="mt-20">
               <ul className="space-y-4">
                 <li
                   className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
