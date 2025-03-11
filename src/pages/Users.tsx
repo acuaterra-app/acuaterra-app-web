@@ -1,5 +1,7 @@
 import type { FunctionComponent } from "react";
+// eslint-disable-next-line no-duplicate-imports
 import { useState } from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { User, UserRequest, UserRequestV2, UserResponse } from "../common/types";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import useUsers from "../hooks/useUsers";
@@ -47,7 +49,8 @@ export const Users: FunctionComponent = () => {
   };
 
   const handleDeleteUser = async (userId: number): Promise<void> => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+    const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
+    if (confirmed) {
       await deleteUser(userId);
       setReload(!reload);
     }
@@ -152,14 +155,13 @@ export const Users: FunctionComponent = () => {
           ) : (
             <div className="border border-gray-300 rounded-lg p-4 shadow-md">
               <TableWithActions
+                addButtonText="Agregar Nuevo Usuario" // Pasar el texto del botón como prop
                 data={users}
                 error={error}
                 limit={pageSize}
                 loading={loading}
                 page={page}
                 setLimit={() => {}}
-                setPage={setPage}
-                total={total}
                 columns={[
                   { header: "ID", accessor: "id" },
                   { header: "Name", accessor: "name" },
@@ -170,36 +172,16 @@ export const Users: FunctionComponent = () => {
                   { header: "Created At", accessor: "createdAt" },
                   { header: "Updated At", accessor: "updatedAt" },
                 ]}
-                onAdd={() => setShowModal(true)}
+                onAdd={() => { setShowModal(true); }}
                 onDelete={handleDeleteUser}
+                // eslint-disable-next-line react/jsx-sort-props
                 onEdit={handleOpenUpdateModal}
+                setPage={setPage}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                total={total}
               />
             </div>
           )}
-
-          <div className="flex justify-between mt-4">
-            <button
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300"
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            >
-              Previous
-            </button>
-            <div className="flex flex-col items-center mt-4">
-              <button
-                className="mb-4 p-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded transition focus:outline-none focus:ring-2 focus:ring-green-300"
-                onClick={() => setShowModal(true)}
-              >
-                Register User
-              </button>
-            </div>
-            <button
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition focus:outline-none focus:ring-2 focus:ring-blue-300"
-              onClick={() => setPage(page + 1)}
-            >
-              Next
-            </button>
-          </div>
 
           <RegisterUserModal setShowModal={setShowModal} showModal={showModal} onRegister={handleRegisterUser} />
           {selectedUser && (
@@ -210,7 +192,7 @@ export const Users: FunctionComponent = () => {
               onUpdate={handleUpdateUser}
             />
           )}
-          {showToast && <Toast message="Usuario registrado exitosamente" onClose={() => setShowToast(false)} />}
+          {showToast && <Toast message="Usuario registrado exitosamente" onClose={() => { setShowToast(false); }} />}
         </main>
       </div>
     </Layout>

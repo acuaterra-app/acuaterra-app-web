@@ -1,98 +1,121 @@
-import type React from "react";
+import type React from 'react';
 // eslint-disable-next-line no-duplicate-imports
-import { useState } from "react";
-import type { UserRequestV2 } from "../../../common/types";
+import { useState } from 'react';
+import type { UserRequestV2 } from '../../../common/types';
 
 interface RegisterUserModalProps {
-    showModal: boolean;
-    setShowModal: (show: boolean) => void;
-    onRegister: (user: UserRequestV2) => void;
+  showModal: boolean;
+  setShowModal: (show: boolean) => void;
+  onRegister: (userData: UserRequestV2) => Promise<void>;
 }
 
-const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
-    showModal,
-    setShowModal,
-    onRegister,
-}) => {
-    const [newUser, setNewUser] = useState<UserRequestV2>({
-        name: "",
-        email: "",
-        dni: "",
-        // eslint-disable-next-line camelcase
-        id_rol: 3,
-        address: "",
-    });
+const RegisterUserModal: React.FC<RegisterUserModalProps> = ({ showModal, setShowModal, onRegister }) => {
+  const [userData, setUserData] = useState<UserRequestV2>({
+    name: '',
+    email: '',
+    dni: '',
+    rol: '',
+    address: '',
+  });
 
-    const handleRegister = (): void => {
-        onRegister(newUser);
-        setShowModal(false);
-    };
+  // eslint-disable-next-line unicorn/prevent-abbreviations, @typescript-eslint/explicit-function-return-type
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+  };
 
-    if (!showModal) return null;
+  // eslint-disable-next-line unicorn/prevent-abbreviations, @typescript-eslint/explicit-function-return-type
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await onRegister(userData);
+  };
 
-    return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-4 rounded">
-                <h2>Register User</h2>
-                <input
-                    className="mb-2 p-2"
-                    placeholder="Name"
-                    type="text"
-                    value={newUser.name}
-                    onChange={(_) => {
-                        setNewUser({ ...newUser, name: _.target.value });
-                    }}
-                />
-                <input
-                    className="mb-2 p-2"
-                    placeholder="Email"
-                    type="email"
-                    value={newUser.email}
-                    onChange={(_) => {
-                        setNewUser({ ...newUser, email: _.target.value });
-                    }}
-                />
-                <input
-                    className="mb-2 p-2"
-                    placeholder="Document ID"
-                    type="text"
-                    value={newUser.dni}
-                    onChange={(_) => {
-                        setNewUser({ ...newUser, dni: _.target.value });
-                    }}
-                />
-                <input
-                    className="mb-2 p-2"
-                    placeholder="Role ID"
-                    type="number"
-                    value={newUser.id_rol}
-                    onChange={(_) => {
-                        // eslint-disable-next-line camelcase
-                        setNewUser({ ...newUser, id_rol: Number(_.target.value) });
-                    }}
-                />
-                <input
-                    className="mb-2 p-2"
-                    placeholder="Address"
-                    type="text"
-                    value={newUser.address}
-                    onChange={(_) => {
-                        setNewUser({ ...newUser, address: _.target.value });
-                    }}
-                />
-                <button className="bg-blue-500 text-white p-2" onClick={handleRegister}>
-                    Register
-                </button>
-                <button
-                    className="bg-red-500 text-white p-2 ml-2"
-                    onClick={() => {
-                        setShowModal(false);
-                    }}
-                >
-                    Cancel
-                </button>
+  if (!showModal) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg p-8 w-full max-w-3xl">
+        <h2 className="text-3xl font-bold mb-6 text-primary">Registrar Usuario</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Nombre</label>
+              <input
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                name="name"
+                type="text"
+                value={userData.name}
+                onChange={handleChange}
+              />
             </div>
-        </div>
-    );
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                name="email"
+                type="email"
+                value={userData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">DNI</label>
+              <input
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                name="dni"
+                type="text"
+                value={userData.dni}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Rol</label>
+              <select
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                name="rol"
+                value={userData.rol}
+                onChange={handleChange}
+              >
+                <option value="">Seleccione un rol</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700">Dirección</label>
+              <input
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                name="address"
+                type="text"
+                value={userData.address}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="mt-8 flex justify-end space-x-4">
+            <button
+              className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-4 py-2 rounded transition"
+              type="button"
+              onClick={() => { setShowModal(false); }}
+            >
+              Cancelar
+            </button>
+            <button
+              className="bg-primary hover:bg-secondary text-white font-semibold px-4 py-2 rounded transition"
+              type="submit"
+            >
+              Registrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
+
 export default RegisterUserModal;

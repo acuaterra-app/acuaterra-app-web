@@ -55,6 +55,9 @@ export interface User {
 	instructor_programa: string | null;
 }
 export interface UserRequest {
+    name: string | number | ReadonlyArray<string> | undefined;
+    dni: string | number | ReadonlyArray<string> | undefined;
+    address: string | number | ReadonlyArray<string> | undefined;
 	nombre: string;
 	email: string;
 	password: string;
