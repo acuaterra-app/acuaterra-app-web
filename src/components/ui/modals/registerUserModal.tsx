@@ -200,8 +200,8 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"
               type="button"
               style={{
-                background: `linear-gradient(to right, ${colors.lightGray}, #e7ebeb)`,
-                color: colors.veryDark,
+                background: colors.quaternary,
+                color: '#fff',
               }}
               onClick={() => { setShowModal(false); }}
             >
@@ -213,11 +213,11 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"
               type="submit"
               style={{
-                background: `linear-gradient(to right, ${colors.primary}, ${colors.secondary})`,
+                background: colors.primary,
                 color: '#fff',
               }}
             >
-              Registrar
+              Agregar
             </button>
           </div>
         </form>
