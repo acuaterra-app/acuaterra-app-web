@@ -14,7 +14,6 @@ export const Auth: FunctionComponent = () => {
     void handleLogin();
   };
 
-  // Si loading es true, se muestra el Loader en lugar del formulario.
   if (loading) {
     return <Loader />;
   }

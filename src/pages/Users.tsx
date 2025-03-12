@@ -10,8 +10,6 @@ import useRegisterUser from "../hooks/useRegisterUser";
 import { deleteUser, updateUser } from "../services/userService";
 import Layout from "../components/layout/layout";
 import { useNavigate } from "@tanstack/react-router";
-
-// Íconos e imágenes
 import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import userIcon from "../assets/images/userlogo.png";
 import moduleIcon from "../assets/images/module.png";
@@ -19,8 +17,6 @@ import homeIcon from "../assets/images/home.png";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
-
-// Toast y Spinner
 import Toast from "../components/ui/Toast";
 import Spinner from "../components/ui/Spinner";
 
@@ -109,7 +105,8 @@ export const Users: FunctionComponent = () => {
                 <span className="font-bold">Reporte</span>
               </li>
             </ul>
-            {/* Grupo 2: Cerrar Sesión */}
+
+            
             <div className="mt-4 md:mt-20">
               <ul className="space-y-4">
                 <li
@@ -122,7 +119,7 @@ export const Users: FunctionComponent = () => {
               </ul>
             </div>
           </nav>
-          {/* Footer de la barra lateral */}
+
           <div className="p-0">
             <p className="text-center text-xs mt-2">
               versión 1.0 <br />
@@ -131,7 +128,7 @@ export const Users: FunctionComponent = () => {
           </div>
         </aside>
 
-        {/* Contenido principal */}
+       
         <main className="flex-1 p-6 bg-white">
           <h1 className="text-2xl font-bold mb-4">Lista de Usuarios</h1>
 

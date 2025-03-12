@@ -1,9 +1,4 @@
-/**
- * Página de registro de Bitácoras (BitacoraRegister).
- * Visual: Formulario basado en el Figma.
- */
 
-// Importación de imágenes
 import acuaterraLogo from "../assets/images/logo.png";
 import moduleIcon from "../assets/images/module.png";
 import homeIcon from "../assets/images/home.png";
@@ -11,21 +6,19 @@ import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import userIcon from "../assets/images/userlogo.png";
 import reportIcon from "../assets/images/reporte.png";
 import binnacleIcon from "../assets/images/bitacora.png";
-
-// Importaciones de React y tipos
 import type { FC } from "react";
 
 const BitacoraRegister: FC = () => {
   return (
     <div className="flex min-h-screen bg-white">
-      {/* Sidebar con fondo gris (bg-gray-300) */}
+     
       <aside className="w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
         <div className="p-4 flex flex-col items-center">
           <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
           <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
         </div>
         <nav className="flex-1">
-                                               {/* Grupo 1: SIDEBAR "Inicio", "Usuarios" y "Módulos" */}
+                                               
           <ul className="space-y-20 mt-20">
             <li
               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
@@ -65,7 +58,6 @@ const BitacoraRegister: FC = () => {
           </ul>
 
 
-                                                  {/* Grupo 2: "Cerrar Sesión" en un bloque separado */}
           <div className="mt-60">
             <ul className="space-y-4">
               <li
@@ -78,7 +70,7 @@ const BitacoraRegister: FC = () => {
             </ul>
           </div>
         </nav>
-        {/* Footer: Texto del footer subido un poco */}
+      
         <div className="p-0">
           <p className="text-center text-xs mt-2">
             versión 1.0 <br />
@@ -87,7 +79,6 @@ const BitacoraRegister: FC = () => {
         </div>
       </aside>
 
-                                                                  {/* Contenido principal */}
       <main className="flex-1 p-6 space-y-15 bg-white">
         <h1 className="text-2xl font-bold mb-4">Formulario de Bitácoras</h1>
         <p className="text-gray-600 mb-6">Rellene cuidadosamente el formulario de inscripción.</p>

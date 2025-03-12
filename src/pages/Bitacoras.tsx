@@ -9,8 +9,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { updateBitacora, createBitacora, deleteBitacora } from '../services/bitacoraService';
 import type { Bitacora as BitacoraType, UpdateBitacoraRequest, CreateBitacoraRequest } from '../common/types';
 import Layout from '../components/layout/layout';
-
-// Importaciones de íconos e imágenes
 import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import userIcon from "../assets/images/userlogo.png";
 import moduleIcon from "../assets/images/module.png";
@@ -19,14 +17,13 @@ import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
 import binnacleIcon from "../assets/images/bitacora.png";
 
-// Componente principal de la página de Bitácoras
+
 export const Bitacoras: FunctionComponent = () => {
     const navigate = useNavigate();
     const [reload, setReload] = useState(false);
     const { bitacoras, loading, error } = useBitacoras(reload);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const [selectedBitacora, setSelectedBitacora] = useState<BitacoraType>({} as BitacoraType);
 
     // Manejar la edición de una bitácora
@@ -44,14 +41,13 @@ export const Bitacoras: FunctionComponent = () => {
     // Manejar la actualización de una bitácora
     const handleSave = async (bitacoraData: UpdateBitacoraRequest): Promise<void> => {
         if (selectedBitacora) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+             
             await updateBitacora(selectedBitacora.id_bitacora, bitacoraData);
             setEditModalOpen(false);
             setReload(!reload); // Recargar la lista de bitácoras
         }
     };
-
-    // Manejar la creación de una nueva bitácora
+ 
     const handleCreate = async (bitacoraData: CreateBitacoraRequest): Promise<void> => {
         await createBitacora(bitacoraData);
         setCreateModalOpen(false);
@@ -61,14 +57,13 @@ export const Bitacoras: FunctionComponent = () => {
     return (
         <Layout>
             <div className="flex min-h-screen bg-white">
-                {/* Sidebar con fondo gris (bg-gray-300) */}
+                
                 <aside className="w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
                     <div className="p-4 flex flex-col items-center">
                         <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
                         <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
                     </div>
                     <nav className="flex-1">
-                        {/* Grupo 1: "Inicio", "Usuarios" y "Módulos" */}
                         <ul className="space-y-20 mt-20">
                             <li
                                 className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
@@ -105,7 +100,7 @@ export const Bitacoras: FunctionComponent = () => {
                                 <span className="font-bold">Bitácoras</span>
                             </li>
                         </ul>
-                        {/* Grupo 2: "Cerrar Sesión" en un bloque separado */}
+                        
                         <div className="mt-60">
                             <ul className="space-y-4">
                                 <li
@@ -118,7 +113,7 @@ export const Bitacoras: FunctionComponent = () => {
                             </ul>
                         </div>
                     </nav>
-                    {/* Footer: Texto del footer subido un poco */}
+                    
                     <div className="p-0">
                         <p className="text-center text-xs mt-2">
                             versión 1.0 <br />
@@ -127,7 +122,7 @@ export const Bitacoras: FunctionComponent = () => {
                     </div>
                 </aside>
 
-                {/* Contenido principal */}
+                
                 <main className="flex-1 p-6">
                     <h1 className="text-2xl font-bold mb-4">Lista de Bitácoras</h1>
                     <button
@@ -146,7 +141,6 @@ export const Bitacoras: FunctionComponent = () => {
                         />
                     </div>
                     <EditBitacoraModal
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                         bitacora={selectedBitacora}
                         isOpen={isEditModalOpen}
                         setIsOpen={setEditModalOpen}

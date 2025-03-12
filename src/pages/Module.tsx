@@ -16,8 +16,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { updateModule, createModule, deleteModule } from "../services/moduleService";
 import type { Module as ModuleType, UpdateModuleRequest, CreateModuleRequest } from "../common/types";
 import Layout from "../components/layout/layout";
-
-// Importación de íconos del proyecto
 import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import userIcon from "../assets/images/userlogo.png";
 import moduleIcon from "../assets/images/module.png";
@@ -26,13 +24,10 @@ import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
 
-// Importamos el Loader (asegúrate de que la ruta sea la correcta)
+
 import Loader from "../components/loaders/Loader";
 
-/**
- * Página de módulos, estilos actualizados (sidebar, layout, colores).
- * La lógica de CRUD se mantiene intacta.
- */
+
 export const Module: FunctionComponent = () => {
   const navigate = useNavigate();
   const [reload, setReload] = useState(false);
@@ -75,7 +70,7 @@ export const Module: FunctionComponent = () => {
     module.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Si se está cargando, mostramos el Loader completo.
+  
   if (loading) {
     return <Loader />;
   }
@@ -83,14 +78,14 @@ export const Module: FunctionComponent = () => {
   return (
     <Layout>
       <div className="flex min-h-screen bg-white font-sans">
-        {/* Sidebar con fondo gris */}
+        
         <aside className="w-64 bg-gray-300 border-r border-gray-400 flex flex-col">
           <div className="p-4 flex flex-col items-center">
             <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
             <p className="text-gray-800 font-semibold">Bienvenido, usuario!</p>
           </div>
           <nav className="flex-1">
-            {/* Grupo 1: "Inicio", "Usuarios" y "Módulos" */}
+            
             <ul className="space-y-20 mt-20">
               <li
                 className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
@@ -130,7 +125,7 @@ export const Module: FunctionComponent = () => {
                 <span className="font-bold">Reporte</span>
               </li>
             </ul>
-            {/* Grupo 2: "Cerrar Sesión" */}
+            
             <div className="mt-20">
               <ul className="space-y-4">
                 <li
@@ -143,7 +138,7 @@ export const Module: FunctionComponent = () => {
               </ul>
             </div>
           </nav>
-          {/* Footer de la barra lateral */}
+          
           <div className="p-0">
             <p className="text-center text-xs mt-2">
               versión 1.0 <br /> Advanced Aquaponics Monitoring System
@@ -151,7 +146,7 @@ export const Module: FunctionComponent = () => {
           </div>
         </aside>
 
-        {/* Contenido principal */}
+       
         <main className="flex-1 p-6">
           <h1 className="text-2xl font-bold mb-4">Lista de Módulos</h1>
           <SearchModuleInput onSearchChange={handleSearchChange} />

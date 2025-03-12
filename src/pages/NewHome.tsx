@@ -21,32 +21,25 @@ import reportIcon from "../assets/images/reporte.png";
 import LogoutButton from "../components/ui/button/logoutButton";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
-
-// Importar las fotos nuevas
 import foto1 from "../assets/images/fotoAcuapico_1.jpg";
 import foto2 from "../assets/images/fotoAcuapico_2.jpg";
 import foto3 from "../assets/images/fotoAcuapico_3.jpg";
-
-// Importa el componente Slider
 import Slider from "../components/Slider/Slider";
 
 const Home: FC = () => {
   const navigate = useNavigate();
 
-  // Arreglo de imágenes para el slider
   const sliderImages = [foto1, foto2, foto3];
 
   return (
     <div className="flex min-h-screen font-sans bg-white">
-      {/* Sidebar con fondo gris */}
+      
       <aside className="w-64 bg-gray-300 border-r border-gray-300 flex flex-col">
         <div className="p-4 flex flex-col items-center">
           <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
           <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
         </div>
 
-        
-        {/* Menú de navegación */}
         <nav className="flex-1">
           <ul className="space-y-20 mt-20">
             <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg">
@@ -99,7 +92,6 @@ const Home: FC = () => {
         </div>
       </aside>
 
-      {/* Contenido principal */}
       <main className="flex-1 p-6 bg-white">
         <h1 className="text-2xl font-bold mb-4">Acuaterra</h1>
         <p className="text-gray-600 mb-6">
