@@ -3,13 +3,31 @@ import type React from 'react';
 import { useState } from 'react';
 import type { UserRequestV2 } from '../../../common/types';
 
+// Paleta de colores del proyecto (para referencia)
+const colors = {
+  primary: '#44cbd3',
+  secondary: '#3cacac',
+  tertiary: '#34969e',
+  quaternary: '#84bd7d',
+  quinary: '#7fb050',
+  lightGray: '#ccd7d6',
+  greenish: '#6ca09c',
+  teal: '#649c94',
+  darkGray: '#5d7a7e', // ErrorMesagge color
+  veryDark: '#303537',
+};
+
 interface RegisterUserModalProps {
   showModal: boolean;
   setShowModal: (show: boolean) => void;
   onRegister: (userData: UserRequestV2) => Promise<void>;
 }
 
-const RegisterUserModal: React.FC<RegisterUserModalProps> = ({ showModal, setShowModal, onRegister }) => {
+const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
+  showModal,
+  setShowModal,
+  onRegister,
+}) => {
   const [userData, setUserData] = useState<UserRequestV2>({
     name: '',
     email: '',
@@ -19,8 +37,11 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({ showModal, setSho
     address: '',
   });
 
-  // eslint-disable-next-line unicorn/prevent-abbreviations, @typescript-eslint/explicit-function-return-type
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    // eslint-disable-next-line unicorn/prevent-abbreviations
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  ) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
@@ -34,81 +55,167 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({ showModal, setSho
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg p-8 w-full max-w-3xl">
-        <h2 className="text-3xl font-bold mb-6 text-primary">Registrar Usuario</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Nombre</label>
-              <input
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                name="name"
-                type="text"
-                value={userData.name}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <input
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                name="email"
-                type="email"
-                value={userData.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">DNI</label>
-              <input
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                name="dni"
-                type="text"
-                value={userData.dni}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Rol</label>
-              <select
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                name="rol"
-                value={userData.id_rol}
-                onChange={handleChange}
-              >
-                <option value="">Seleccione un rol</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </select>
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Dirección</label>
-              <input
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                name="address"
-                type="text"
-                value={userData.address}
-                onChange={handleChange}
-              />
-            </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      {/* Contenedor del modal */}
+      <div
+        className="w-full max-w-md rounded-lg shadow-lg p-6"
+        style={{ backgroundColor: '#fff' }}
+      >
+        {/* Título del modal */}
+        <h2
+          className="text-center text-xl font-bold mb-4"
+          style={{ color: colors.primary }}
+        >
+          Registrar Usuario
+        </h2>
+
+        {/* Formulario */}
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          {/* Nombre */}
+          <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: colors.veryDark }}
+            >
+              Nombre
+            </label>
+            <input
+              required
+              className="block w-full rounded-md border p-2 shadow-sm focus:ring focus:border"
+              name="name"
+              placeholder="Ingrese nombre del usuario"
+              type="text"
+              value={userData.name}
+              style={{
+                borderColor: colors.lightGray,
+                color: colors.veryDark,
+                outline: 'none',
+              }}
+              onChange={handleChange}
+            />
           </div>
-          <div className="mt-8 flex justify-end space-x-4">
+
+          {/* Email */}
+          <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: colors.veryDark }}
+            >
+              Email
+            </label>
+            <input
+              required
+              className="block w-full rounded-md border p-2 shadow-sm focus:ring focus:border"
+              name="email"
+              placeholder="Ingrese correo electrónico"
+              type="email"
+              value={userData.email}
+              style={{
+                borderColor: colors.lightGray,
+                color: colors.veryDark,
+                outline: 'none',
+              }}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* DNI */}
+          <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: colors.veryDark }}
+            >
+              DNI
+            </label>
+            <input
+              required
+              className="block w-full rounded-md border p-2 shadow-sm focus:ring focus:border"
+              name="dni"
+              placeholder="Ingrese DNI del usuario"
+              type="text"
+              value={userData.dni}
+              style={{
+                borderColor: colors.lightGray,
+                color: colors.veryDark,
+                outline: 'none',
+              }}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Rol */}
+          <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: colors.veryDark }}
+            >
+              Rol
+            </label>
+            <select
+              required
+              className="block w-full rounded-md border p-2 shadow-sm focus:ring focus:border"
+              name="id_rol"
+              value={userData.id_rol}
+              style={{
+                borderColor: colors.lightGray,
+                color: colors.veryDark,
+                outline: 'none',
+              }}
+              onChange={handleChange}
+            >
+              <option value="">Seleccione un rol</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
+          </div>
+
+          {/* Dirección */}
+          <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: colors.veryDark }}
+            >
+              Dirección
+            </label>
+            <input
+              required
+              className="block w-full rounded-md border p-2 shadow-sm focus:ring focus:border"
+              name="address"
+              placeholder="Ingrese la dirección"
+              type="text"
+              value={userData.address}
+              style={{
+                borderColor: colors.lightGray,
+                color: colors.veryDark,
+                outline: 'none',
+              }}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Botones */}
+          <div className="flex justify-end space-x-4 pt-4">
+            {/* Botón Cancelar */}
             <button
-              className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-4 py-2 rounded transition"
+              className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"
               type="button"
+              style={{
+                background: `linear-gradient(to right, ${colors.lightGray}, #e7ebeb)`,
+                color: colors.veryDark,
+              }}
               onClick={() => { setShowModal(false); }}
             >
               Cancelar
             </button>
+
+            {/* Botón Registrar */}
             <button
-              className="bg-primary hover:bg-secondary text-white font-semibold px-4 py-2 rounded transition"
+              className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"
               type="submit"
+              style={{
+                background: `linear-gradient(to right, ${colors.primary}, ${colors.secondary})`,
+                color: '#fff',
+              }}
             >
               Registrar
             </button>
