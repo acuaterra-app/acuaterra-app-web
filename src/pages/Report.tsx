@@ -9,10 +9,7 @@ import reporteIcon from "../assets/images/reporte.png";
 import moduleIcon from "../assets/images/module.png";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
-
-
-import Loader from "../components/loaders/Loader";
-
+import LoaderAcua from "../components/loaders/LoaderAcua";
 const Report: FC = () => {
   const navigate = useNavigate();
   
@@ -27,7 +24,7 @@ const Report: FC = () => {
   
   
   if (loading) {
-    return <Loader />;
+    return <LoaderAcua />;
   }
   
   return (

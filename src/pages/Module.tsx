@@ -23,9 +23,9 @@ import homeIcon from "../assets/images/home.png";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
+import LoaderAcua from "../components/loaders/LoaderAcua";
 
 
-import Loader from "../components/loaders/Loader";
 
 
 export const Module: FunctionComponent = () => {
@@ -72,7 +72,7 @@ export const Module: FunctionComponent = () => {
 
   
   if (loading) {
-    return <Loader />;
+    return <LoaderAcua />;
   }
 
   return (

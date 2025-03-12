@@ -18,7 +18,8 @@ import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
 import Toast from "../components/ui/Toast";
-import Spinner from "../components/ui/Spinner";
+import LoaderAcua from "../components/loaders/LoaderAcua";
+//import Spinner from "../components/ui/Spinner";
 
 export const Users: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -131,11 +132,12 @@ export const Users: FunctionComponent = () => {
        
         <main className="flex-1 p-6 bg-white">
           <h1 className="text-2xl font-bold mb-4">Lista de Usuarios</h1>
-
-          {loading ? (
+          <LoaderAcua />
+          {loading ? ( 
+            
             <div className="flex justify-center items-center h-32">
-              <Spinner />
-            </div>
+              
+            </div> 
           ) : error ? (
             <div className="mt-4 text-red-500 flex items-center">
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

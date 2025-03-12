@@ -7,7 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import useFarms from "../hooks/useFarms";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import FarmModal from "../components/ui/modals/FarmModal";
-import Spinner from "../components/Spinner/Spinner";
 import type { FarmRequest, User } from "../common/types";
 import LogoutButton from "../components/ui/button/logoutButton";
 import acuaterraLogo from "../assets/images/logo.png";
@@ -16,6 +15,7 @@ import moduleIcon from "../assets/images/module.png";
 import reportIcon from "../assets/images/reporte.png";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
+import LoaderAcua from "../components/loaders/LoaderAcua";
 
 const FarmsPage: FunctionComponent = () => {
   const { farms, loading, error, total, page, limit, setPage, setLimit, addFarm, editFarm, removeFarm } = useFarms();
@@ -113,7 +113,7 @@ const FarmsPage: FunctionComponent = () => {
       <main className="flex-1 p-6 bg-white">
         <h1 className="text-2xl font-bold mb-4">Granjas</h1>
         {loading ? (
-          <Spinner />
+          <LoaderAcua />
         ) : (
           <div className="border border-gray-300 rounded-lg p-4 shadow-md">
             <TableWithActions
