@@ -14,27 +14,20 @@ import CreateModuleModal from "../components/ui/modals/createModuleModal";
 import SearchModuleInput from "../components/ui/searchBar/searchBar";
 import { useNavigate } from "@tanstack/react-router";
 import { updateModule, createModule, deleteModule } from "../services/moduleService";
-import type {
-  Module as ModuleType,
-  UpdateModuleRequest,
-  CreateModuleRequest,
-} from "../common/types";
+import type { Module as ModuleType, UpdateModuleRequest, CreateModuleRequest } from "../common/types";
 import Layout from "../components/layout/layout";
-
-// Importación de íconos del proyecto
 import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import userIcon from "../assets/images/userlogo.png";
 import moduleIcon from "../assets/images/module.png";
 import homeIcon from "../assets/images/home.png";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
-import binnacleIcon from "../assets/images/bitacora.png";
+import fishIcon from "../assets/images/pez.png";
 
 
-/**
- * Página de módulos, estilos actualizados (sidebar, layout, colores).
- * La lógica de CRUD se mantiene intacta.
- */
+import Loader from "../components/loaders/Loader";
+
+
 export const Module: FunctionComponent = () => {
   const navigate = useNavigate();
   const [reload, setReload] = useState(false);
@@ -63,34 +56,36 @@ export const Module: FunctionComponent = () => {
     }
   };
 
-  const handleCreate = async (moduleData: CreateModuleRequest): Promise<void> => {          // Merged Const
+  const handleCreate = async (moduleData: CreateModuleRequest): Promise<void> => {
     await createModule(moduleData);
     setCreateModalOpen(false);
     setReload(!reload);
   };
 
-  const handleSearchChange = (term: string): void => {                                      // Merged Const
+  const handleSearchChange = (term: string): void => {
     setSearchTerm(term);
   };
 
-  const filteredModules = modules.filter((module) =>                                        // Merged Const
+  const filteredModules = modules.filter((module) =>
     module.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
-  // integracion de la vista de la pagina de modulos
+  
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <Layout>
       <div className="flex min-h-screen bg-white font-sans">
-        {/* Sidebar con fondo gris (bg-gray-300) */}
+        
         <aside className="w-64 bg-gray-300 border-r border-gray-400 flex flex-col">
           <div className="p-4 flex flex-col items-center">
             <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
             <p className="text-gray-800 font-semibold">Bienvenido, usuario!</p>
           </div>
           <nav className="flex-1">
-            {/* Grupo 1: "Inicio", "Usuarios" y "Módulos" */}
+            
             <ul className="space-y-20 mt-20">
               <li
                 className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
@@ -99,6 +94,15 @@ export const Module: FunctionComponent = () => {
                 <img alt="Inicio" className="h-6 w-6 mr-2" src={homeIcon} />
                 <span className="font-bold">Inicio</span>
               </li>
+
+              <li
+                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+                onClick={() => navigate({ to: "/farm" })}
+              >
+                <img alt="Módulos" className="h-6 w-6 mr-2" src={moduleIcon} />
+                <span className="font-bold">Granjas</span>
+              </li>
+
               <li
                 className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
                 onClick={() => navigate({ to: "/users" })}
@@ -107,10 +111,10 @@ export const Module: FunctionComponent = () => {
                 <span className="font-bold">Usuarios</span>
               </li>
               <li
-                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg"
                 onClick={() => navigate({ to: "/module" })}
               >
-                <img alt="Módulos" className="h-6 w-6 mr-2" src={moduleIcon} />
+                <img alt="Módulos" className="h-6 w-6 mr-2" src={fishIcon} />
                 <span className="font-bold">Módulos</span>
               </li>
               <li
@@ -120,16 +124,9 @@ export const Module: FunctionComponent = () => {
                 <img alt="Reporte" className="h-6 w-6 mr-2" src={reportIcon} />
                 <span className="font-bold">Reporte</span>
               </li>
-              <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-              onClick={() => navigate({ to: "/bitacoras" })}
-                >
-              <img alt="Reporte" className="h-6 w-6 mr-2" src={binnacleIcon} />
-              <span className="font-bold">Bitacoras</span>
-             </li> 
             </ul>
-            {/* Grupo 2: "Cerrar Sesión" en bloque separado */}
-            <div className="mt-60">
+            
+            <div className="mt-20">
               <ul className="space-y-4">
                 <li
                   className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
@@ -141,7 +138,7 @@ export const Module: FunctionComponent = () => {
               </ul>
             </div>
           </nav>
-          {/* Footer: Texto del footer subido un poco */}
+          
           <div className="p-0">
             <p className="text-center text-xs mt-2">
               versión 1.0 <br /> Advanced Aquaponics Monitoring System
@@ -149,7 +146,7 @@ export const Module: FunctionComponent = () => {
           </div>
         </aside>
 
-        {/* Contenido principal */}
+       
         <main className="flex-1 p-6">
           <h1 className="text-2xl font-bold mb-4">Lista de Módulos</h1>
           <SearchModuleInput onSearchChange={handleSearchChange} />
@@ -160,7 +157,6 @@ export const Module: FunctionComponent = () => {
           >
             Registrar Nuevo Módulo
           </button>
-          {loading && <p className="mt-4 text-gray-600">Cargando...</p>}
           {error && <p className="mt-4 text-red-500">Error: {error}</p>}
           <div className="mt-4 overflow-x-auto">
             <ModuleTable modules={filteredModules} onDelete={handleDelete} onEdit={handleEdit} />

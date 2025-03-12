@@ -1,13 +1,10 @@
 const API_BASE_URL: string = import.meta.env["VITE_API_BASE_URL"] as string;
-import type { User, UserRequest } from "../common/types";
+import type { ResponseType, UserResponse, UserRequestV2 } from "../common/types";
 
-//here we create ther server request to get the users(conection to the server)
-
-
-export const fetchUsers = async (): Promise<Array<User>> => {
+export const fetchUsers = async (page: number, limit: number): Promise<ResponseType<UserResponse>> => {
     const token = localStorage.getItem("token");
     const response = await fetch(
-        `${API_BASE_URL}/users/listarpersonasMVC`,
+        `${API_BASE_URL}/admin/users?page=${page}&perPage=${limit}`,
         {
             method: "GET",
             headers: {
@@ -19,26 +16,27 @@ export const fetchUsers = async (): Promise<Array<User>> => {
     if (!response.ok) {
         throw new Error("Network response was not ok");
     }
-    return await response.json() as Array<User>;
+    const result: ResponseType<UserResponse> = await response.json() as ResponseType<UserResponse>;
+    return result;
 };
 
-interface ModuleResponse {
-	message: string;
-}
 
-export const createUser = async (userData: UserRequest): Promise<ModuleResponse> => {
-    const response = await fetch(`${API_BASE_URL}/users/registerMVC`, {
+
+export const createUser = async (userData: UserRequestV2): Promise<ResponseType<UserResponse>> => {
+    const token = localStorage.getItem("token");
+    
+    const response = await fetch(`${API_BASE_URL}/shared/users`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `${localStorage.getItem("token")}`,
+            Authorization: `${token}`,
         },
         body: JSON.stringify(userData),
     });
     if (!response.ok) {
         throw new Error("Network response was not ok");
     }
-    return response.json() as Promise<ModuleResponse>;
+    return response.json() as Promise<ResponseType<UserResponse>>;
 }
 
 export const deleteUser = async (userId: number): Promise<void> => {
@@ -55,7 +53,7 @@ export const deleteUser = async (userId: number): Promise<void> => {
     }
 };
 
-export const updateUser = async (userId: number, userData: UserRequest): Promise<void> => {
+export const updateUser = async (userId: number, userData: UserRequestV2): Promise<void> => {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
         method: "PUT",
