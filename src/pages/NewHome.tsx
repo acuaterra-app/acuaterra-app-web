@@ -23,11 +23,10 @@ const Home: FC = () => {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
-    setIsOpen(false); 
+    setIsOpen(false);
   };
 
   useEffect(() => {
-
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleClickOutside = (event: MouseEvent) => {
       const sidebar = document.getElementById("sidebar");
@@ -51,7 +50,6 @@ const Home: FC = () => {
     };
   }, [isOpen]);
 
-  // Bloquea el scroll vertical cuando el menú está abierto
   useEffect(() => {
     document.body.style.overflowY = isOpen ? "hidden" : "auto";
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -78,7 +76,15 @@ const Home: FC = () => {
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 lg:w-64 lg:relative`}
       >
-        <div className="p-4 flex flex-col items-center">
+        <div className="p-4 flex flex-col items-center relative">
+          {/* Botón de cierre dentro del menú */}
+          <button
+            className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 lg:hidden"
+            onClick={() => { setIsOpen(false); }}
+          >
+            <X size={24} />
+          </button>
+
           <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
           <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
         </div>
