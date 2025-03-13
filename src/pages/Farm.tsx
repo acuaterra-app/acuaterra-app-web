@@ -115,7 +115,7 @@ const FarmsPage: FunctionComponent = () => {
         {loading ? (
           <LoaderAcua />
         ) : (
-          <div className="border border-gray-300 rounded-lg p-4 shadow-md">
+          <div className="border border-gray-300 rounded-lg p-1 shadow-md"> {/* p- 1 */}
             <TableWithActions
                 data={farms}
                 error={error}
