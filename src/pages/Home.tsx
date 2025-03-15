@@ -1,56 +1,46 @@
-/**
- * Página de BIENVENIDA (Welcome).
- *  se sigue el diseño de Figma.
- */
-
-import type { FC } from "react";
+import { useState, type FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
-
-// Importamos imágenes y logos
 import acuaterraLogo from "../assets/images/logo.png";
-import phoneHome from "../assets/images/phone.jpg"; // Imagen del Figma para el celular
-
+import phoneHome from "../assets/images/phone.jpg";
+import LoaderAcua from "../components/loaders/LoaderAcua"; 
 
 const Welcome: FC = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  // Función que se ejecuta al hacer clic en "Comenzar!"
-  // Puedes navegar a la ruta de login (Auth) o Home, según tu proyecto
   const handleStart = (): void => {
-    void navigate({ to: "/auth" }); 
-    // O si usas react-router-dom:
-    // navigate("/auth");
+    setLoading(true); 
+    setTimeout(() => {
+      void navigate({ to: "/auth" });
+    }, 1500); 
   };
+
+  if (loading) {
+    return <LoaderAcua />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-white font-sans p-8">
-      {/* Sección izquierda: Logo, texto y botón */}
       <div className="md:w-1/2 flex flex-col items-center justify-center text-center space-y-6">
-        {/* Logo de Acuaterra */}
-        <img alt="Acuaterra Logo" className="h-[250px]" src={acuaterraLogo} />
+        <img alt="Acuaterra Logo" className="h-[250px] mb-4" src={acuaterraLogo} />
 
-        {/* Título principal */}
-        <h1 className="text-4xl font-bold text-gray-800">
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">
           ¡Bienvenidos a Acuaterra!
         </h1>
 
-        {/* Botón para iniciar */}
         <button
           className="
-            bg-green-600 hover:bg-green-700
+            bg-[#44cbd3] hover:bg-[#3cacac]
             text-white font-semibold px-6 py-3 
             rounded-lg transition
-            focus:outline-none focus:ring-2 focus:ring-green-300
+            focus:outline-none focus:ring-2 focus:ring-[#44cbd3]
           "
           onClick={handleStart}
-        >
+        >   
           ¡Comenzar!
         </button>
 
-        {/* Footer con logo SENA y versión */}
-        {/*  <img alt="SENA Logo" className="h-8 mx-auto mb-2" src={logoSena} /> */}
         <div className="mt-8">
-         
           <p className="text-xs text-gray-500">
             versión 1.0 - Advanced Aquaponics Monitoring System <br />
             AGUA TERRA © 2023
@@ -58,11 +48,9 @@ const Welcome: FC = () => {
         </div>
       </div>
 
-      {/* Sección derecha: Imagen del teléfono con la app */}
       <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
         <img
           alt="Vista de la app en teléfono"
-          //className="max-h-96 object-contain"
           className="max-h-[800px] object-contain"
           src={phoneHome}
         />
