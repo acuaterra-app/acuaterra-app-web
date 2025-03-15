@@ -62,7 +62,7 @@ const Home: FC = () => {
     <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
       {/* Botón de Menú Hamburguesa */}
       <button
-        className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md lg:hidden"
+        className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
         onClick={() => { setIsOpen(!isOpen); }}
       >
