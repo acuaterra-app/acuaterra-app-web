@@ -36,11 +36,10 @@ const FarmsPage: FunctionComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState<FarmRequest | null>(null);
 
-  // Control del menú hamburguesa (solo en móvil)
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Funciones CRUD (agregar, editar, eliminar) sin cambios
+
   const handleAddFarm = async (farmData: FarmRequest): Promise<void> => {
     await addFarm(farmData);
     setIsModalOpen(false);
@@ -69,7 +68,7 @@ const FarmsPage: FunctionComponent = () => {
     }
   };
 
-  // Cerrar menú al hacer clic fuera (solo en móvil)
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleClickOutside = (event: MouseEvent) => {
@@ -92,7 +91,7 @@ const FarmsPage: FunctionComponent = () => {
     };
   }, [isOpen]);
 
-  // Bloquear scroll vertical cuando el menú está abierto (solo móvil)
+  
   useEffect(() => {
     document.body.style.overflowY = isOpen ? "hidden" : "auto";
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -102,12 +101,11 @@ const FarmsPage: FunctionComponent = () => {
   }, [isOpen]);
 
   return (
-    // El contenedor principal con min-h-screen y overflow-x-auto,
-    // tal como se hace en NewHome.tsx
+    
     <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
       <ToastContainer />
 
-      {/* Botón Menú Hamburguesa (móvil) */}
+     
       <button
         className="absolute top-9 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -116,7 +114,7 @@ const FarmsPage: FunctionComponent = () => {
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Sidebar */}
+    
       <aside
         id="sidebar"
         className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-300 flex flex-col transform transition-transform duration-300 ease-in-out z-50
@@ -124,7 +122,7 @@ const FarmsPage: FunctionComponent = () => {
           md:translate-x-0 md:w-64 md:relative`}
       >
         <div className="p-4 flex flex-col items-center relative">
-          {/* Botón de cierre (solo móvil) */}
+        
           <button
             className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 md:hidden"
             onClick={() => { setIsOpen(false); }}
@@ -202,7 +200,7 @@ const FarmsPage: FunctionComponent = () => {
         </div>
       </aside>
 
-      {/* Contenido principal */}
+      
       <main className="flex-1 p-9 bg-white md:ml-0">
         <h1 className="text-2xl font-bold mb-4 text-center">Granjas</h1>
 
