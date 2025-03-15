@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import type { FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
-
-
 import { Menu, X } from "lucide-react";
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
@@ -18,7 +16,6 @@ import LoaderAcua from "../components/loaders/LoaderAcua";
 
 const Report: FC = () => {
   const navigate = useNavigate();
-
  
   const [loading, setLoading] = useState(true);
 
@@ -35,7 +32,7 @@ const Report: FC = () => {
     };
   }, []);
 
-  // Cierra el menú si se hace clic fuera (solo en móvil)
+ 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleClickOutside = (event: MouseEvent) => {
@@ -68,11 +65,12 @@ const Report: FC = () => {
   }, [isOpen]);
 
   return (
+    
     <div className="flex min-h-screen bg-white font-sans relative overflow-x-auto">
       
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
-        id="menu-button" //Imolemented menu for hamburguer menu.
+        id="menu-button" 
         onClick={() => { setIsOpen(!isOpen); }}
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
