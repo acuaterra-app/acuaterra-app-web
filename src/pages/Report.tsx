@@ -19,12 +19,12 @@ import LoaderAcua from "../components/loaders/LoaderAcua";
 const Report: FC = () => {
   const navigate = useNavigate();
 
-  // Control de carga
+ 
   const [loading, setLoading] = useState(true);
-  // Control del menú hamburguesa (solo en móviles)
+
   const [isOpen, setIsOpen] = useState(false);
 
-  // Simulación de carga
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -58,7 +58,7 @@ const Report: FC = () => {
     };
   }, [isOpen]);
 
-  // Bloquea scroll vertical cuando el menú está abierto en móvil
+ 
   useEffect(() => {
     document.body.style.overflowY = isOpen ? "hidden" : "auto";
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -69,7 +69,7 @@ const Report: FC = () => {
 
   return (
     <div className="flex min-h-screen bg-white font-sans relative overflow-x-auto">
-      {/* Botón de Menú Hamburguesa (solo en móvil) */}
+      
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -78,7 +78,7 @@ const Report: FC = () => {
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Sidebar con transformaciones */}
+     
       <aside
         id="sidebar"
         className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-300 flex flex-col transform transition-transform duration-300 ease-in-out z-50
@@ -86,7 +86,7 @@ const Report: FC = () => {
           md:translate-x-0 md:w-64 md:relative`}
       >
         <div className="p-4 flex flex-col items-center relative">
-          {/* Botón de cierre dentro del menú (solo en móvil) */}
+     
           <button
             className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 md:hidden"
             onClick={() => { setIsOpen(false); }}
@@ -166,7 +166,7 @@ const Report: FC = () => {
         </div>
       </aside>
 
-      {/* Contenido principal */}
+   
       <main className="flex-1 p-6 bg-white">
         {loading ? (
           <LoaderAcua />
