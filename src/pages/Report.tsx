@@ -72,7 +72,7 @@ const Report: FC = () => {
       
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
-        id="menu-button" //Imolemented menu for hamburguer menu
+        id="menu-button" //Imolemented menu for hamburguer menu.
         onClick={() => { setIsOpen(!isOpen); }}
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
