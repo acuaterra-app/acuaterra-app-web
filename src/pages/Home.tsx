@@ -15,12 +15,12 @@ const Welcome: FC = () => {
     }, 1500); 
   };
 
-  if (loading) {
+  if (loading) { 
     return <LoaderAcua />;
   }
 
   return (
-    
+
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-white font-sans p-8">
       <div className="md:w-1/2 flex flex-col items-center justify-center text-center space-y-6">
         <img alt="Acuaterra Logo" className="h-[250px] mb-4" src={acuaterraLogo} />

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import type { FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
-// Iconos e imágenes
+
 import { Menu, X } from "lucide-react";
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
@@ -13,7 +13,7 @@ import moduleIcon from "../assets/images/module.png";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
 
-// Loader
+
 import LoaderAcua from "../components/loaders/LoaderAcua";
 
 const Report: FC = () => {
