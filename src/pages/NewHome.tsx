@@ -20,12 +20,14 @@ const Home: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sliderImages = [foto1, foto2, foto3];
 
+  // Navegación
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
     setIsOpen(false);
   };
 
+  // Cerrar el menú al hacer clic fuera
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleClickOutside = (event: MouseEvent) => {
@@ -50,6 +52,7 @@ const Home: FC = () => {
     };
   }, [isOpen]);
 
+  // Bloquea el scroll vertical cuando el menú está abierto
   useEffect(() => {
     document.body.style.overflowY = isOpen ? "hidden" : "auto";
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -90,7 +93,8 @@ const Home: FC = () => {
         </div>
 
         <nav className="flex-1">
-          <ul className="space-y-20 mt-20">
+          {/* Ajuste de espacios: menos separación en móvil, se mantiene en escritorio */}
+          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
             <li
               className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg"
               onClick={() => { handleNavigation("/"); }}
@@ -127,7 +131,9 @@ const Home: FC = () => {
               <span className="font-bold">Reporte</span>
             </li>
           </ul>
-          <div className="mt-20">
+
+          {/* Menos margen superior para el bloque de Logout en móvil */}
+          <div className="mt-4 md:mt-20">
             <ul className="space-y-4">
               <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105">
                 <LogoutButton />
