@@ -100,6 +100,7 @@ const FarmsPage: FunctionComponent = () => {
     };
   }, [isOpen]);
 
+
   return (
     
     <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">

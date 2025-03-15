@@ -109,7 +109,7 @@ export const Users: FunctionComponent = () => {
 
       
       <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
-        {/* Botón de Menú Hamburguesa (móvil) */}
+       
         <button
           className="absolute top-9 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
           id="menu-button"
