@@ -1,25 +1,34 @@
-
-import type { FC } from "react";
+import { useState, type FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import acuaterraLogo from "../assets/images/logo.png";
-import phoneHome from "../assets/images/phone.jpg"; // Imagen del Figma para el celular
+import phoneHome from "../assets/images/phone.jpg";
+import LoaderAcua from "../components/loaders/LoaderAcua"; 
 
 const Welcome: FC = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const handleStart = (): void => {
-    void navigate({ to: "/auth" }); 
-    
+    setLoading(true); 
+    setTimeout(() => {
+      void navigate({ to: "/auth" });
+    }, 1500); 
   };
 
+  if (loading) { 
+    return <LoaderAcua />;
+  }
+
   return (
+
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-white font-sans p-8">
       <div className="md:w-1/2 flex flex-col items-center justify-center text-center space-y-6">
         <img alt="Acuaterra Logo" className="h-[250px] mb-4" src={acuaterraLogo} />
-  
+
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
           ¡Bienvenidos a Acuaterra!
         </h1>
-  
+
         <button
           className="
             bg-[#44cbd3] hover:bg-[#3cacac]
@@ -31,7 +40,7 @@ const Welcome: FC = () => {
         >   
           ¡Comenzar!
         </button>
-  
+
         <div className="mt-8">
           <p className="text-xs text-gray-500">
             versión 1.0 - Advanced Aquaponics Monitoring System <br />
@@ -39,7 +48,7 @@ const Welcome: FC = () => {
           </p>
         </div>
       </div>
-  
+
       <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
         <img
           alt="Vista de la app en teléfono"
@@ -48,6 +57,7 @@ const Welcome: FC = () => {
         />
       </div>
     </div>
-   );
-  }
+  );
+};
+
 export default Welcome;
