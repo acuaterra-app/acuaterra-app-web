@@ -50,7 +50,7 @@ const TableWithActionsMobile = <T extends TableItem>({
       initial={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Input de búsqueda */}
+      {/* Input  */}
       <input
         className="mb-4 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary"
         placeholder={searchPlaceholder}
@@ -60,7 +60,7 @@ const TableWithActionsMobile = <T extends TableItem>({
         onChange={(e) => { setSearchTerm(e.target.value); }}
       />
       
-      {/* Botón Agregar */}
+      {/* Button*/}
       <motion.button
         className="bg-quaternary text-white px-4 py-2 rounded hover:bg-quinary transition duration-200 w-full cursor-pointer"
         whileTap={{ scale: 0.9 }}
@@ -72,7 +72,7 @@ const TableWithActionsMobile = <T extends TableItem>({
       {loading && <p className="text-center mt-4 text-primary">Cargando...</p>}
       {error && <p className="text-red-500 mt-4">{error}</p>}
       
-      {/* Lista de datos en formato de tarjetas */}
+      {/* table with format in cards */}
       <div className="mt-4 space-y-4">
         {filteredData.map((item, index) => (
           <motion.div 
@@ -88,7 +88,7 @@ const TableWithActionsMobile = <T extends TableItem>({
                 <span className="truncate block">{column.render ? column.render(item) : String(item[column.accessor] ?? '')}</span>
               </div>
             ))}
-            {/* Botones de acción */}
+            {/* Buttons */}
             <div className="flex space-x-2 mt-2">
               <motion.button
                 className="bg-primary hover:bg-secondary text-white px-3 py-1 rounded flex items-center transition duration-200 cursor-pointer"
@@ -109,7 +109,7 @@ const TableWithActionsMobile = <T extends TableItem>({
         ))}
       </div>
 
-      {/* Paginación */}
+      {/* Paginatión */}
       <div className="flex justify-between items-center mt-4">
         <motion.button
           className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded transition duration-200 cursor-pointer"

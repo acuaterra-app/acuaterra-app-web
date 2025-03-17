@@ -33,7 +33,7 @@ const TableWithActions = <T extends TableItem>({
   page,
   limit,
   setPage,
-  setLimit, // <- lo recibimos de props, si lo necesitas
+  setLimit, 
 }: TableWithActionsProps<T>): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -54,8 +54,7 @@ const TableWithActions = <T extends TableItem>({
       initial={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Sección ESCRITORIO: Input de búsqueda y botón Agregar 
-          Solo visible en pantallas md en adelante */}
+      {/* Desktop section:  */}
       <div className="hidden md:block">
         <input
           className="mb-4 p-2 border border-lightGray rounded w-full"
@@ -78,7 +77,7 @@ const TableWithActions = <T extends TableItem>({
       {loading && <p>Loading...</p>}
       {error && <p className="text-darkGray">{error}</p>}
 
-      {/* Tabla para ESCRITORIO */}
+      {/* Desktop table */}
       <div className="hidden md:block overflow-x-auto mt-4">
         <table className="min-w-full bg-lightGray border border-gray-300 rounded-lg shadow-md">
           <thead>
@@ -128,7 +127,7 @@ const TableWithActions = <T extends TableItem>({
         </table>
       </div>
 
-      {/* Vista para MÓVILES (usamos TableWithActionsMobile) */}
+      {/* mobile section */}
       <div className="md:hidden mt-4">
         <TableWithActionsMobile
           columns={columns}
@@ -147,7 +146,7 @@ const TableWithActions = <T extends TableItem>({
         />
       </div>
 
-      {/* Paginación (se muestra en ambas vistas) */}
+      {/* Pages controller */}
       <motion.div
         animate={{ opacity: 1 }}
         className="flex justify-between items-center mt-4"
