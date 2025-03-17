@@ -16,6 +16,7 @@ import reportIcon from "../assets/images/reporte.png";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
+import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobile";
 import { Menu, X } from "lucide-react";
 
 const FarmsPage: FunctionComponent = () => {
@@ -35,11 +36,8 @@ const FarmsPage: FunctionComponent = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState<FarmRequest | null>(null);
-
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-
-
   const handleAddFarm = async (farmData: FarmRequest): Promise<void> => {
     await addFarm(farmData);
     setIsModalOpen(false);
@@ -68,6 +66,19 @@ const FarmsPage: FunctionComponent = () => {
     }
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+  
+    window.addEventListener("resize", handleResize);
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    return () => { window.removeEventListener("resize", handleResize); };
+  }, []);
+  
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -206,55 +217,78 @@ const FarmsPage: FunctionComponent = () => {
         <h1 className="text-2xl font-bold mb-4 text-center">Granjas</h1>
 
         {loading ? (
-          <LoaderAcua />
-        ) : (
-          <div className="border border-gray-300 rounded-lg p-1 shadow-md">
-            <TableWithActions
-              data={farms}
-              error={error}
-              limit={limit}
-              loading={loading}
-              page={page}
-              setLimit={setLimit}
-              setPage={setPage}
-              total={total}
-              columns={[
-                { header: "ID", accessor: "id" },
-                { header: "Name", accessor: "name" },
-                { header: "Latitud", accessor: "latitude" },
-                { header: "Longitud", accessor: "longitude" },
-                { header: "Dirección", accessor: "address" },
-                { header: "Date", accessor: "createdAt" },
-                {
-                  header: "Users",
-                  accessor: "users",
-                  render: (farm) =>
-                    farm.users.map((user) => (user as User).name).join(", "),
-                },
-              ]}
-              onDelete={handleRemoveFarm}
-              onAdd={() => {
-                setSelectedFarm(null);
-                setIsModalOpen(true);
-              }}
-              onEdit={(farm: FarmRequest) => {
-                setSelectedFarm(farm);
-                setIsModalOpen(true);
-              }}
-            />
-          </div>
-        )}
+  <LoaderAcua />
+) : (
+  <div className="border border-gray-300 rounded-lg p-1 shadow-md">
+    {isMobile ? (
+      <TableWithActionsMobile
+        data={farms}
+        error={error}
+        limit={limit}
+        loading={loading}
+        page={page}
+        setLimit={setLimit}
+        setPage={setPage}
+        total={total}
+        columns={[
+          { header: "ID", accessor: "id" },
+          { header: "Name", accessor: "name" },
+          { header: "Dirección", accessor: "address" },
+          {
+            header: "Users",
+            accessor: "users",
+            render: (farm) =>
+              farm.users.map((user) => (user as User).name).join(", "),
+          },
+        ]}
+        onDelete={handleRemoveFarm}
+        onAdd={() => {
+          setSelectedFarm(null);
+          setIsModalOpen(true);
+        }}
+        onEdit={(farm: FarmRequest) => {
+          setSelectedFarm(farm);
+          setIsModalOpen(true);
+        }}
+      />
+    ) : (
+      <TableWithActions
+        data={farms}
+        error={error}
+        limit={limit}
+        loading={loading}
+        page={page}
+        setLimit={setLimit}
+        setPage={setPage}
+        total={total}
+        columns={[
+          { header: "ID", accessor: "id" },
+          { header: "Name", accessor: "name" },
+          { header: "Latitud", accessor: "latitude" },
+          { header: "Longitud", accessor: "longitude" },
+          { header: "Dirección", accessor: "address" },
+          { header: "Date", accessor: "createdAt" },
+          {
+            header: "Users",
+            accessor: "users",
+            render: (farm) =>
+              farm.users.map((user) => (user as User).name).join(", "),
+          },
+        ]}
+        onDelete={handleRemoveFarm}
+        onAdd={() => {
+          setSelectedFarm(null);
+          setIsModalOpen(true);
+        }}
+        onEdit={(farm: FarmRequest) => {
+          setSelectedFarm(farm);
+          setIsModalOpen(true);
+        }}
+      />
+    )}
+  </div>
+)}
 
-        {isModalOpen && (
-          <FarmModal
-            farm={selectedFarm}
-            onClose={() => { setIsModalOpen(false); }}
-            onSave={selectedFarm ? handleEditFarm : handleAddFarm}
-          />
-        )}
-      </main>
-    </div>
-  );
 };
 
 export default FarmsPage;
