@@ -14,9 +14,7 @@ import foto1 from "../assets/images/fotoAcuapico_1.jpg";
 import foto2 from "../assets/images/fotoAcuapico_2.jpg";
 import foto3 from "../assets/images/fotoAcuapico_3.jpg";
 import Slider from "../components/Slider/Slider";
-import MobileCarousel from "../components/Slider/MobileCarousel"; 
-
-// 🔹 Importamos el carrusel móvil
+import MobileCarousel from "../components/Slider/MobileCarousel";
 
 const Home: FC = () => {
   const navigate = useNavigate();
@@ -34,7 +32,9 @@ const Home: FC = () => {
     window.addEventListener("resize", handleResize);
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => { window.removeEventListener("resize", handleResize); };
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -45,6 +45,7 @@ const Home: FC = () => {
 
   return (
     <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
+     
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -73,50 +74,110 @@ const Home: FC = () => {
 
         <nav className="flex-1">
           <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg"
-              onClick={() => { handleNavigation("/"); }}>
-              <img alt="Home" className="h-6 w-6 mr-2" src={homeIcon} />
+           
+            <li
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                bg-gray-400 text-white border-2 border-gray-400
+                rounded-lg
+              "
+              onClick={() => { handleNavigation("/"); }}
+            >
+              <img alt="Home" className="h-6 w-6" src={homeIcon} />
               <span className="font-bold">Inicio</span>
             </li>
-            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-              onClick={() => { handleNavigation("/farm"); }}>
-              <img alt="Granjas" className="h-6 w-6 mr-2" src={moduleIcon} />
+
+            <li
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
+              onClick={() => { handleNavigation("/farm"); }}
+            >
+              <img alt="Granjas" className="h-6 w-6" src={moduleIcon} />
               <span className="font-bold">Granjas</span>
             </li>
-            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
-              onClick={() => { handleNavigation("/users"); }}>
-              <img alt="Usuarios" className="h-6 w-6 mr-2" src={userIcon} />
+
+            <li
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
+              onClick={() => { handleNavigation("/users"); }}
+            >
+              <img alt="Usuarios" className="h-6 w-6" src={userIcon} />
               <span className="font-bold">Usuarios</span>
             </li>
-            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
-              onClick={() => { handleNavigation("/module"); }}>
-              <img alt="Módulos" className="h-6 w-6 mr-2" src={fishIcon} />
+
+            <li
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
+              onClick={() => { handleNavigation("/module"); }}
+            >
+              <img alt="Módulos" className="h-6 w-6" src={fishIcon} />
               <span className="font-bold">Módulos</span>
             </li>
-            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
-              onClick={() => { handleNavigation("/report"); }}>
-              <img alt="Reporte" className="h-6 w-6 mr-2" src={reportIcon} />
+
+            <li
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
+              onClick={() => { handleNavigation("/report"); }}
+            >
+              <img alt="Reporte" className="h-6 w-6" src={reportIcon} />
               <span className="font-bold">Reporte</span>
             </li>
           </ul>
 
           <div className="mt-4 md:mt-20">
             <ul className="space-y-4">
-              <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105">
+              <li
+                className="
+                  flex items-center justify-center gap-3 p-2
+                  cursor-pointer transition-all duration-300
+                  transform origin-center overflow-hidden
+                  hover:bg-gray-300 hover:scale-102
+                  rounded-lg
+                "
+              >
                 <LogoutButton />
               </li>
             </ul>
           </div>
         </nav>
+
+        <div className="p-0">
+          <p className="text-center text-xs mt-2 ">
+            versión 1.0 <br /> Advanced Aquaponics Monitoring System
+          </p>
+        </div>
       </aside>
 
       <main className="flex-1 p-6 bg-white lg:ml-0">
         <h1 className="text-2xl font-bold mb-5 text-center">Acuaterra</h1>
         <p className="text-gray-600 mb-6 text-lg sm:text-sm text-center">
-          Acuaterra es una herramienta de software diseñada para sistematizar el proceso de monitoreo en módulos acuapónicos...
+          Acuaterra es una herramienta de software diseñada para sistematizar el
+          proceso de monitoreo en módulos acuapónicos...
         </p>
 
-        {/* 🔹 Carrusel móvil */}
         {isMobile ? (
           <MobileCarousel />
         ) : (

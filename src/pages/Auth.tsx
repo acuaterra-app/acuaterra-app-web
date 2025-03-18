@@ -6,7 +6,15 @@ import { useAuth } from "../hooks/useAuth";
 import LoaderAcua from "../components/loaders/LoaderAcua";
 
 export const Auth: FunctionComponent = () => {
-  const { email, setEmail, password, setPassword, error, loading, handleLogin } = useAuth();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    loading,
+    handleLogin,
+  } = useAuth();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleSubmit = (event: React.FormEvent) => {
@@ -45,7 +53,7 @@ export const Auth: FunctionComponent = () => {
           />
         </div>
 
-        <div className=" flex flex-col items-center">
+        <div className="flex flex-col items-center">
           <InputCustomComponent
             error={error && !password ? "El campo contraseña es requerido" : ""}
             name="password"
@@ -68,7 +76,9 @@ export const Auth: FunctionComponent = () => {
       </form>
 
       {error && email && password && (
-        <p className="mt-4 text-darkGray font-semibold">Credenciales Incorrectas</p>
+        <p className="mt-4 text-darkGray font-semibold">
+          Credenciales Incorrectas
+        </p>
       )}
 
       <p className="text-gray-500 text-sm mt-20">

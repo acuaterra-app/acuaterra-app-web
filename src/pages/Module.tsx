@@ -7,10 +7,17 @@ import EditModuleModal from "../components/ui/modals/editModuleModalProps";
 import CreateModuleModal from "../components/ui/modals/createModuleModal";
 import SearchModuleInput from "../components/ui/searchBar/searchBar";
 import { useNavigate } from "@tanstack/react-router";
-import { updateModule, createModule, deleteModule } from "../services/moduleService";
-import type { Module as ModuleType, UpdateModuleRequest, CreateModuleRequest } from "../common/types";
+import {
+  updateModule,
+  createModule,
+  deleteModule,
+} from "../services/moduleService";
+import type {
+  Module as ModuleType,
+  UpdateModuleRequest,
+  CreateModuleRequest,
+} from "../common/types";
 import Layout from "../components/layout/layout";
-import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import userIcon from "../assets/images/userlogo.png";
 import moduleIcon from "../assets/images/module.png";
 import homeIcon from "../assets/images/home.png";
@@ -19,6 +26,7 @@ import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
 import { Menu, X } from "lucide-react";
+import LogoutButton from "../components/ui/button/logoutButton";
 
 export const Module: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -26,11 +34,13 @@ export const Module: FunctionComponent = () => {
   const { modules, loading, error } = useModules(reload);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
-  const [selectedModule, setSelectedModule] = useState<ModuleType>({} as ModuleType);
+  const [selectedModule, setSelectedModule] = useState<ModuleType>(
+    {} as ModuleType
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  
+ 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleClickOutside = (event: MouseEvent) => {
@@ -46,6 +56,7 @@ export const Module: FunctionComponent = () => {
         setIsOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return () => {
@@ -53,7 +64,7 @@ export const Module: FunctionComponent = () => {
     };
   }, [isOpen]);
 
-
+  // Bloqueo del scroll cuando el sidebar está abierto
   useEffect(() => {
     document.body.style.overflowY = isOpen ? "hidden" : "auto";
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -62,7 +73,6 @@ export const Module: FunctionComponent = () => {
     };
   }, [isOpen]);
 
- 
   const handleEdit = (module: ModuleType): void => {
     setSelectedModule(module);
     setEditModalOpen(true);
@@ -88,10 +98,10 @@ export const Module: FunctionComponent = () => {
     setReload(!reload);
   };
 
-  
   const handleSearchChange = (term: string): void => {
     setSearchTerm(term);
   };
+
   const filteredModules = modules.filter((m) =>
     m.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -99,7 +109,6 @@ export const Module: FunctionComponent = () => {
   return (
     <Layout>
       <div className="flex min-h-screen bg-white font-sans relative">
-        
         <button
           className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
           id="menu-button"
@@ -107,8 +116,6 @@ export const Module: FunctionComponent = () => {
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-
-        
         <aside
           id="sidebar"
           className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50
@@ -116,7 +123,6 @@ export const Module: FunctionComponent = () => {
             md:translate-x-0 md:w-64 md:relative`}
         >
           <div className="p-4 flex flex-col items-center relative">
-            
             <button
               className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 md:hidden"
               onClick={() => { setIsOpen(false); }}
@@ -130,70 +136,113 @@ export const Module: FunctionComponent = () => {
           <nav className="flex-1">
             <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
               <li
-                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+                className="
+                  flex items-center justify-center gap-3 p-2
+                  cursor-pointer transition-all duration-300
+                  transform origin-center overflow-hidden
+                  hover:bg-gray-400 hover:scale-102
+                  rounded-lg
+                "
                 onClick={async () => {
                   await navigate({ to: "/newHome" });
                   setIsOpen(false);
                 }}
               >
-                <img alt="Inicio" className="h-6 w-6 mr-2" src={homeIcon} />
+                <img alt="Inicio" className="h-6 w-6" src={homeIcon} />
                 <span className="font-bold">Inicio</span>
               </li>
+
               <li
-                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+                className="
+                  flex items-center justify-center gap-3 p-2
+                  cursor-pointer transition-all duration-300
+                  transform origin-center overflow-hidden
+                  hover:bg-gray-400 hover:scale-102
+                  rounded-lg
+                "
                 onClick={async () => {
                   await navigate({ to: "/farm" });
                   setIsOpen(false);
                 }}
               >
-                <img alt="Módulos" className="h-6 w-6 mr-2" src={moduleIcon} />
+                <img alt="Módulos" className="h-6 w-6" src={moduleIcon} />
                 <span className="font-bold">Granjas</span>
               </li>
+
               <li
-                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+                className="
+                  flex items-center justify-center gap-3 p-2
+                  cursor-pointer transition-all duration-300
+                  transform origin-center overflow-hidden
+                  hover:bg-gray-400 hover:scale-102
+                  rounded-lg
+                "
                 onClick={async () => {
                   await navigate({ to: "/users" });
                   setIsOpen(false);
                 }}
               >
-                <img alt="Usuarios" className="h-6 w-6 mr-2" src={userIcon} />
+                <img alt="Usuarios" className="h-6 w-6" src={userIcon} />
                 <span className="font-bold">Usuarios</span>
               </li>
+
               <li
-                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg"
+                className="
+                  flex items-center justify-center gap-3 p-2
+                  cursor-pointer transition-all duration-300
+                  transform origin-center overflow-hidden
+                  hover:bg-gray-400 hover:scale-102
+                  bg-gray-400 text-white border-2 border-gray-400
+                  rounded-lg
+                "
                 onClick={async () => {
                   await navigate({ to: "/module" });
                   setIsOpen(false);
                 }}
               >
-                <img alt="Módulos" className="h-6 w-6 mr-2" src={fishIcon} />
+                <img alt="Módulos" className="h-6 w-6" src={fishIcon} />
                 <span className="font-bold">Módulos</span>
               </li>
+
               <li
-                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:scale-105"
+                className="
+                  flex items-center justify-center gap-3 p-2
+                  cursor-pointer transition-all duration-300
+                  transform origin-center overflow-hidden
+                  hover:bg-gray-400 hover:scale-102
+                  rounded-lg
+                "
                 onClick={async () => {
                   await navigate({ to: "/report" });
                   setIsOpen(false);
                 }}
               >
-                <img alt="Reporte" className="h-6 w-6 mr-2" src={reportIcon} />
+                <img alt="Reporte" className="h-6 w-6" src={reportIcon} />
                 <span className="font-bold">Reporte</span>
               </li>
-              <li
-                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
-                onClick={async () => {
-                  await navigate({ to: "/auth" });
-                  setIsOpen(false);
-                }}
-              >
-                <img alt="Cerrar Sesión" className="h-6 w-6 mr-2" src={closeSessionIcon} />
-                <span className="font-bold">Cerrar Sesión</span>
-              </li>
             </ul>
+
+            <div className="mt-4 md:mt-20">
+              <ul className="space-y-4">
+                <li
+                  className="
+                    flex items-center justify-center gap-3 p-2
+                    cursor-pointer transition-all duration-300
+                    transform origin-center overflow-hidden
+                    hover:bg-gray-300 hover:scale-102
+                    rounded-lg
+                  "
+                >
+                  <LogoutButton />
+                </li>
+              </ul>
+            </div>
+
             <div className="mt-20">
               <ul className="space-y-4"></ul>
             </div>
           </nav>
+
           <div className="p-0">
             <p className="text-center text-xs mt-2">
               versión 1.0 <br />
@@ -202,13 +251,14 @@ export const Module: FunctionComponent = () => {
           </div>
         </aside>
 
-       
         <main className="flex-1 p-6">
           {loading ? (
             <LoaderAcua />
           ) : (
             <>
-              <h1 className="text-2xl font-bold mb-4 text-center">Lista de Módulos</h1>
+              <h1 className="text-2xl font-bold mb-4 text-center">
+                Lista de Módulos
+              </h1>
               <SearchModuleInput onSearchChange={handleSearchChange} />
               <br />
               <button
@@ -219,8 +269,13 @@ export const Module: FunctionComponent = () => {
               </button>
               {error && <p className="mt-4 text-red-500">Error: {error}</p>}
               <div className="mt-4 overflow-x-auto">
-                <ModuleTable modules={filteredModules} onDelete={handleDelete} onEdit={handleEdit} />
+                <ModuleTable
+                  modules={filteredModules}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                />
               </div>
+
               <EditModuleModal
                 isOpen={isEditModalOpen}
                 module={selectedModule}
