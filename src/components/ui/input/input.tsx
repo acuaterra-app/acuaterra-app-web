@@ -54,7 +54,7 @@ const InputCustomComponent: FC<InputProps> = ({
           />
         </button>
       )}
-      {error && <span className="error mt-4 text-darkGray font-semibold text-sm mt-1">{error}</span>}
+      {error && <span className="error mt-4 text-darkGray font-semibold text-sm">{error}</span>}
     </div>
   );
 };
