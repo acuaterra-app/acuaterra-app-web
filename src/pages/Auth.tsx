@@ -21,7 +21,11 @@ export const Auth: FunctionComponent = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4 md:p-8 lg:p-12">
       <div className="mb-6 flex flex-col items-center">
-        <img alt="Acuaterra Logo" className="h-32 md:h-48 lg:h-64 mb-2" src={acuaterraLogo} />
+        <img
+          alt="Acuaterra Logo"
+          className="h-32 md:h-48 lg:h-64 mb-2"
+          src={acuaterraLogo}
+        />
       </div>
 
       <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-9">Login</h1>
@@ -41,7 +45,7 @@ export const Auth: FunctionComponent = () => {
           />
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className=" flex flex-col items-center">
           <InputCustomComponent
             error={error && !password ? "El campo contraseña es requerido" : ""}
             name="password"
@@ -62,6 +66,10 @@ export const Auth: FunctionComponent = () => {
           </ButtonComponent>
         </div>
       </form>
+
+      {error && email && password && (
+        <p className="mt-4 text-darkGray font-semibold">Credenciales Incorrectas</p>
+      )}
 
       <p className="text-gray-500 text-sm mt-20">
         versión 1.0 - Advanced Aquaponics Monitoring System
