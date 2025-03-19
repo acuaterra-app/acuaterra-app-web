@@ -41,7 +41,7 @@ export const createUser = async (userData: UserRequestV2): Promise<ResponseType<
 
 export const deleteUser = async (userId: number): Promise<void> => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
         method: "DELETE",
         headers: {
             Authorization: `${token}`,
