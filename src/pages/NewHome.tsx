@@ -1,6 +1,6 @@
 import type { FC } from "react";
 // eslint-disable-next-line no-duplicate-imports
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import homeIcon from "../assets/images/home.png";
@@ -20,6 +20,7 @@ const Home: FC = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const sliderImages = [foto1, foto2, foto3];
 
   useEffect(() => {
@@ -37,6 +38,26 @@ const Home: FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
@@ -45,7 +66,6 @@ const Home: FC = () => {
 
   return (
     <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
-     
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -55,7 +75,7 @@ const Home: FC = () => {
       </button>
 
       <aside
-        id="sidebar"
+        ref={menuRef}
         className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-300 flex flex-col transform transition-transform duration-300 ease-in-out z-50
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 lg:w-64 lg:relative`}
@@ -74,16 +94,11 @@ const Home: FC = () => {
 
         <nav className="flex-1">
           <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-           
             <li
-              className="
-                flex items-center justify-center gap-3 p-2
-                cursor-pointer transition-all duration-300
-                transform origin-center overflow-hidden
-                hover:bg-gray-400 hover:scale-102
-                bg-gray-400 text-white border-2 border-gray-400
-                rounded-lg
-              "
+              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all 
+                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400
+                         hover:scale-102 bg-gray-400 text-white border-2 border-gray-400 rounded-lg"
+
               onClick={() => { handleNavigation("/"); }}
             >
               <img alt="Home" className="h-6 w-6" src={homeIcon} />
@@ -91,13 +106,9 @@ const Home: FC = () => {
             </li>
 
             <li
-              className="
-                flex items-center justify-center gap-3 p-2
-                cursor-pointer transition-all duration-300
-                transform origin-center overflow-hidden
-                hover:bg-gray-400 hover:scale-102
-                rounded-lg
-              "
+              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all  
+                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400 
+                         hover:scale-102 rounded-lg"
               onClick={() => { handleNavigation("/farm"); }}
             >
               <img alt="Granjas" className="h-6 w-6" src={moduleIcon} />
@@ -105,13 +116,9 @@ const Home: FC = () => {
             </li>
 
             <li
-              className="
-                flex items-center justify-center gap-3 p-2
-                cursor-pointer transition-all duration-300
-                transform origin-center overflow-hidden
-                hover:bg-gray-400 hover:scale-102
-                rounded-lg
-              "
+              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all 
+                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400 
+                         hover:scale-102 rounded-lg"
               onClick={() => { handleNavigation("/users"); }}
             >
               <img alt="Usuarios" className="h-6 w-6" src={userIcon} />
@@ -119,13 +126,9 @@ const Home: FC = () => {
             </li>
 
             <li
-              className="
-                flex items-center justify-center gap-3 p-2
-                cursor-pointer transition-all duration-300
-                transform origin-center overflow-hidden
-                hover:bg-gray-400 hover:scale-102
-                rounded-lg
-              "
+              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all 
+                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400 
+                         hover:scale-102 rounded-lg"
               onClick={() => { handleNavigation("/module"); }}
             >
               <img alt="Módulos" className="h-6 w-6" src={fishIcon} />
@@ -133,13 +136,9 @@ const Home: FC = () => {
             </li>
 
             <li
-              className="
-                flex items-center justify-center gap-3 p-2
-                cursor-pointer transition-all duration-300
-                transform origin-center overflow-hidden
-                hover:bg-gray-400 hover:scale-102
-                rounded-lg
-              "
+              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all  
+                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400 
+                         hover:scale-102 rounded-lg"
               onClick={() => { handleNavigation("/report"); }}
             >
               <img alt="Reporte" className="h-6 w-6" src={reportIcon} />
@@ -149,15 +148,9 @@ const Home: FC = () => {
 
           <div className="mt-4 md:mt-20">
             <ul className="space-y-4">
-              <li
-                className="
-                  flex items-center justify-center gap-3 p-2
-                  cursor-pointer transition-all duration-300
-                  transform origin-center overflow-hidden
-                  hover:bg-gray-300 hover:scale-102
-                  rounded-lg
-                "
-              >
+              <li className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all 
+                             duration-300 transform origin-center overflow-hidden hover:bg-gray-300 
+                             hover:scale-102 rounded-lg">
                 <LogoutButton />
               </li>
             </ul>
@@ -165,7 +158,7 @@ const Home: FC = () => {
         </nav>
 
         <div className="p-0">
-          <p className="text-center text-xs mt-2 ">
+          <p className="text-center text-xs mt-2">
             versión 1.0 <br /> Advanced Aquaponics Monitoring System
           </p>
         </div>
@@ -174,17 +167,14 @@ const Home: FC = () => {
       <main className="flex-1 p-6 bg-white lg:ml-0">
         <h1 className="text-2xl font-bold mb-5 text-center">Acuaterra</h1>
         <p className="text-gray-600 mb-6 text-lg sm:text-sm text-center">
-          Acuaterra es una herramienta de software diseñada para sistematizar el
-          proceso de monitoreo en módulos acuapónicos...
+          Acuaterra es una herramienta de software diseñada para sistematizar el proceso de monitoreo en módulos acuapónicos...
         </p>
 
         {isMobile ? (
           <MobileCarousel />
         ) : (
           <div
-            className={`w-[1200px] mx-auto h-[800px] overflow-hidden relative transition-opacity duration-300 z-0 ${
-              isOpen && window.innerWidth < 1024 ? "opacity-40" : "opacity-100"
-            }`}
+            className={`w-[1200px] mx-auto h-[800px] overflow-hidden relative transition-opacity duration-300 z-0 ${isOpen && window.innerWidth < 1024 ? "opacity-40" : "opacity-100"}`}
           >
             <Slider images={sliderImages} interval={5000} />
           </div>
