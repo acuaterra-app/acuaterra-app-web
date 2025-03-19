@@ -55,7 +55,7 @@ export const deleteUser = async (userId: number): Promise<void> => {
 
 export const updateUser = async (userId: number, userData: UserRequestV2): Promise<void> => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/shared/users/${userId}`, {
         method: "PUT",
         headers: {
             Authorization: `${token}`,

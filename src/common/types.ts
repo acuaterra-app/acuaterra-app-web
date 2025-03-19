@@ -76,6 +76,7 @@ export interface UserRequestV2 {
     dni: string;
     id_rol: number;
     address?: string;
+	contact?: string;
 }
 export interface Bitacora {
 	id_bitacora: number;
@@ -152,4 +153,11 @@ export interface UserResponse {
 	createdAt: string;
 	updatedAt: string;
 	rol: UserRole;
+	contact: string;
 }
+
+export const roles = [
+	{ id: 1, name: "Admin" },
+	{ id: 2, name: "Owner" },
+	{ id: 3, name: "User" },
+  ];
