@@ -1,5 +1,5 @@
 import type React from "react";
-import type { Module as ModuleType } from "../../../common/types";
+import type { ModuleType } from "../../../common/types";
 
 interface ModuleTableProps {
     modules: Array<ModuleType>;
