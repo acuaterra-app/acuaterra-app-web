@@ -11,6 +11,7 @@ import UpdateUserModal from "../components/ui/modals/updateUserModalProps";
 import useRegisterUser from "../hooks/useRegisterUser";
 import { deleteUser, updateUser } from "../services/userService";
 import TableWithActions from "../components/ui/table/tableWithActions";
+import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobile";
 import LoaderAcua from "../components/loaders/LoaderAcua";
 import userIcon from "../assets/images/userlogo.png";
 import moduleIcon from "../assets/images/module.png";
@@ -109,7 +110,9 @@ export const Users: FunctionComponent = () => {
         <button
           className="absolute top-9 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
           id="menu-button"
-          onClick={() => { setIsOpen(!isOpen); }}
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -123,7 +126,9 @@ export const Users: FunctionComponent = () => {
           <div className="p-4 flex flex-col items-center relative">
             <button
               className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 md:hidden"
-              onClick={() => { setIsOpen(false); }}
+              onClick={() => {
+                setIsOpen(false);
+              }}
             >
               <X size={24} />
             </button>
@@ -133,15 +138,8 @@ export const Users: FunctionComponent = () => {
 
           <nav className="flex-1">
             <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-          
               <li
-                className="
-                  flex items-center justify-center gap-3 p-2
-                  cursor-pointer transition-all duration-300
-                  transform origin-center overflow-hidden
-                  hover:bg-gray-400 hover:scale-102
-                  rounded-lg
-                "
+                className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all duration-300 transform origin-center overflow-hidden hover:bg-gray-400 hover:scale-102 rounded-lg"
                 onClick={async () => {
                   await navigate({ to: "/newHome" });
                   setIsOpen(false);
@@ -150,15 +148,8 @@ export const Users: FunctionComponent = () => {
                 <img alt="Inicio" className="h-6 w-6" src={homeIcon} />
                 <span className="font-bold">Inicio</span>
               </li>
-
               <li
-                className="
-                  flex items-center justify-center gap-3 p-2
-                  cursor-pointer transition-all duration-300
-                  transform origin-center overflow-hidden
-                  hover:bg-gray-400 hover:scale-102
-                  rounded-lg
-                "
+                className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all duration-300 transform origin-center overflow-hidden hover:bg-gray-400 hover:scale-102 rounded-lg"
                 onClick={async () => {
                   await navigate({ to: "/farm" });
                   setIsOpen(false);
@@ -167,137 +158,144 @@ export const Users: FunctionComponent = () => {
                 <img alt="Granjas" className="h-6 w-6" src={moduleIcon} />
                 <span className="font-bold">Granjas</span>
               </li>
-
               <li
-                className="
-                  flex items-center justify-center gap-3 p-2
-                  cursor-pointer transition-all duration-300
-                  transform origin-center overflow-hidden
-                  hover:bg-gray-400 hover:scale-102
-                  bg-gray-400 text-white border-2 border-gray-400
-                  rounded-lg
-                "
-                onClick={() => { setIsOpen(false); }}
+                className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all duration-300 transform origin-center overflow-hidden hover:bg-gray-400 hover:scale-102 bg-gray-400 text-white border-2 border-gray-400 rounded-lg"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
               >
                 <img alt="Usuarios" className="h-6 w-6" src={userIcon} />
                 <span className="font-bold">Usuarios</span>
               </li>
-              
               <li
-                className="
-                  flex items-center justify-center gap-3 p-2
-                  cursor-pointer transition-all duration-300
-                  transform origin-center overflow-hidden
-                  hover:bg-gray-400 hover:scale-102
-                  rounded-lg
-                "
-                onClick={async () => {
-                  await navigate({ to: "/module" });
-                  setIsOpen(false);
-                }}
-              >
-                <img alt="Módulos" className="h-6 w-6" src={fishIcon} />
-                <span className="font-bold">Módulos</span>
-              </li>
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
+              onClick={async () => {
+                await navigate({ to: "/module" });
+                setIsOpen(false);
+              }}
+            >
+              <img alt="Módulos" className="h-6 w-6" src={fishIcon} />
+              <span className="font-bold">Módulos</span>
+            </li>
 
+            <li
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
+              onClick={async () => {
+                await navigate({ to: "/report" });
+                setIsOpen(false);
+              }}
+            >
+              <img alt="Reporte" className="h-6 w-6" src={reportIcon} />
+              <span className="font-bold">Reporte</span>
+            </li>
+            </ul>
+            <div className="mt-4 md:mt-20">
+            <ul className="space-y-4">
               <li
                 className="
                   flex items-center justify-center gap-3 p-2
                   cursor-pointer transition-all duration-300
                   transform origin-center overflow-hidden
-                  hover:bg-gray-400 hover:scale-102
+                  hover:bg-gray-300 hover:scale-102
                   rounded-lg
                 "
-                onClick={async () => {
-                  await navigate({ to: "/report" });
-                  setIsOpen(false);
-                }}
               >
-                <img alt="Reporte" className="h-6 w-6" src={reportIcon} />
-                <span className="font-bold">Reporte</span>
+                <LogoutButton />
               </li>
             </ul>
-
-            <div className="mt-4 md:mt-20">
-              <ul className="space-y-4">
-                <li
-                  className="
-                    flex items-center justify-center gap-3 p-2
-                    cursor-pointer transition-all duration-300
-                    transform origin-center overflow-hidden
-                    hover:bg-gray-300 hover:scale-102
-                    rounded-lg
-                  "
-                >
-                  <LogoutButton />
-                </li>
-              </ul>
-            </div>
-          </nav>
-
-          <div className="p-0">
-            <p className="text-center text-xs mt-2">
-              versión 1.0 <br />
-              Advanced Aquaponics Monitoring System
-            </p>
           </div>
+          </nav>
         </aside>
 
         <main className="flex-1 p-9 bg-white md:ml-0">
           <h1 className="text-2xl font-bold mb-4 text-center">Lista de Usuarios</h1>
 
-          <LoaderAcua />
           {loading ? (
-            <div className="flex justify-center items-center h-32" />
+            <LoaderAcua />
           ) : error ? (
             <div className="mt-4 text-red-500 flex items-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M10.29 3.86l-6.6 11.45a1 1 0 00.86 1.5h13.3a1 1 0 00.86-1.5l-6.6-11.45a1 1 0 00-1.72 0zM12 9v4m0 4h.01"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                />
-              </svg>
               <p>Error: {String(error)}</p>
             </div>
           ) : (
-            <div className="border border-gray-300 rounded-lg p-1 shadow-md overflow-x-auto">
-              <TableWithActions
-                data={users}
-                error={error}
-                limit={pageSize}
-                loading={loading}
-                page={page}
-                setLimit={() => {}}
-                setPage={setPage}
-                total={total}
-                columns={[
-                  { header: "ID", accessor: "id" },
-                  { header: "Name", accessor: "name" },
-                  { header: "Email", accessor: "email" },
-                  { header: "DNI", accessor: "dni" },
-                  {
-                    header: "Role",
-                    accessor: "rol",
-                    render: (u: UserResponse) => u.rol.name,
-                  },
-                  { header: "Address", accessor: "address" },
-                  { header: "Created At", accessor: "createdAt" },
-                  { header: "Updated At", accessor: "updatedAt" },
-                ]}
-                onDelete={handleDeleteUser}
-                onEdit={handleOpenUpdateModal}
-                onAdd={() => {
-                  setShowModal(true);
-                }}
-              />
-            </div>
+            <>
+              {/* Tabla de escritorio */}
+              <div className="hidden md:block">
+                <TableWithActions
+                  data={users}
+                  error={error}
+                  limit={pageSize}
+                  loading={loading}
+                  page={page}
+                  setLimit={() => {}}
+                  setPage={setPage}
+                  total={total}
+                  columns={[
+                    { header: "ID", accessor: "id" },
+                    { header: "Name", accessor: "name" },
+                    { header: "Email", accessor: "email" },
+                    { header: "DNI", accessor: "dni" },
+                    {
+                      header: "Role",
+                      accessor: "rol",
+                      render: (u: UserResponse) => u.rol.name,
+                    },
+                    { header: "Address", accessor: "address" },
+                    { header: "Created At", accessor: "createdAt" },
+                    { header: "Updated At", accessor: "updatedAt" },
+                  ]}
+                  onDelete={handleDeleteUser}
+                  onEdit={handleOpenUpdateModal}
+                  onAdd={() => {
+                    setShowModal(true);
+                  }}
+                />
+              </div>
+
+              {/* Tabla de móvil */}
+              <div className="block md:hidden">
+                <TableWithActionsMobile
+                  data={users}
+                  error={error}
+                  limit={pageSize}
+                  loading={loading}
+                  page={page}
+                  setLimit={() => {}}
+                  setPage={setPage}
+                  total={total}
+                  columns={[
+                    { header: "ID", accessor: "id" },
+                    { header: "Name", accessor: "name" },
+                    { header: "Email", accessor: "email" },
+                    { header: "DNI", accessor: "dni" },
+                    {
+                      header: "Role",
+                      accessor: "rol",
+                      render: (u: UserResponse) => u.rol.name,
+                    },
+                    { header: "Address", accessor: "address" },
+                    { header: "Created At", accessor: "createdAt" },
+                    { header: "Updated At", accessor: "updatedAt" },
+                  ]}
+                  onDelete={handleDeleteUser}
+                  onEdit={handleOpenUpdateModal}
+                  onAdd={() => {
+                    setShowModal(true);
+                  }}
+                />
+              </div>
+            </>
           )}
 
           <RegisterUserModal
