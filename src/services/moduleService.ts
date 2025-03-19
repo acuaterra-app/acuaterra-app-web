@@ -1,12 +1,13 @@
 import type {
-	Module,
+	ModuleType,
 	CreateModuleRequest,
 	UpdateModuleRequest,
+	ModuleListResponse,
 } from "../common/types";
 
 const API_BASE_URL: string = import.meta.env["VITE_API_BASE_URL"] as string;
 
-export const fetchModules = async (): Promise<Array<Module>> => {
+export const fetchModules = async (): Promise<Array<ModuleType>> => {
 	const response = await fetch(`${API_BASE_URL}/modulos/listarModuloMVC`, {
 		method: "GET",
 		headers: {
@@ -17,7 +18,7 @@ export const fetchModules = async (): Promise<Array<Module>> => {
 	if (!response.ok) {
 		throw new Error("Network response was not ok");
 	}
-	const data: Array<Module> = (await response.json()) as Array<Module>
+	const data: Array<ModuleType> = (await response.json()) as Array<ModuleType>
 	
 	return data;
 };
@@ -75,3 +76,23 @@ export const deleteModule = async (moduleId: number): Promise<ModuleResponse> =>
 	return response.json() as Promise<ModuleResponse>;
 };
 
+export const fetchModulesByFarm = async (
+	farmId: number,
+	page: number,
+	perPage: number
+  ): Promise<ModuleListResponse> => {
+	const response = await fetch(
+	  `${API_BASE_URL}/shared/modules/${farmId}?page=${page}&perPage=${perPage}`,
+	  {
+		method: "GET",
+		headers: {
+		  "Content-Type": "application/json",
+		  Authorization: `${localStorage.getItem("token")}`,
+		},
+	  }
+	);
+	if (!response.ok) {
+	  throw new Error("Failed to fetch modules for the farm");
+	}
+	return response.json() as Promise<ModuleListResponse>;
+  };
