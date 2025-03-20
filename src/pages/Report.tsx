@@ -18,10 +18,6 @@ const Report: FC = () => {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
-  const [loading, setLoading] = useState(true);
- 
-  const [isOpen, setIsOpen] = useState(false);
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
