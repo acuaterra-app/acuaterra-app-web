@@ -21,9 +21,17 @@ import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
 import { Menu, X } from "lucide-react";
 import LogoutButton from "../components/ui/button/logoutButton";
+import { isTokenValid } from "../common/isTokenValid";
 
 export const Users: FunctionComponent = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isTokenValid()) {
+      console.log("Redirigiendo a /auth desde el componente Users"); 
+      void navigate({ to: "/auth" });
+    }
+  }, [navigate]);
 
   const [page, setPage] = useState(1);
   const [reload, setReload] = useState(false);

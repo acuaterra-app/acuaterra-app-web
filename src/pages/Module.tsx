@@ -27,6 +27,7 @@ import fishIcon from "../assets/images/pez.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
 import { Menu, X } from "lucide-react";
 import LogoutButton from "../components/ui/button/logoutButton";
+import { isTokenValid } from "../common/isTokenValid";
 
 export const Module: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -40,7 +41,13 @@ export const Module: FunctionComponent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
- 
+    useEffect(() => {
+      if (!isTokenValid()) {
+        console.log("Redirigiendo a /auth desde el componente Modules"); 
+        void navigate({ to: "/auth" });
+      }
+    }, [navigate]);
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleClickOutside = (event: MouseEvent) => {

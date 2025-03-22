@@ -18,6 +18,7 @@ import fishIcon from "../assets/images/pez.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
 import { Menu, X } from "lucide-react";
 import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobile";
+import { isTokenValid } from "../common/isTokenValid";
 
 const FarmsPage: FunctionComponent = () => {
   const {
@@ -38,6 +39,13 @@ const FarmsPage: FunctionComponent = () => {
   const [selectedFarm, setSelectedFarm] = useState<FarmRequest | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+
+    useEffect(() => {
+      if (!isTokenValid()) {
+        console.log("Redirigiendo a /auth desde el componente Farms"); 
+        void navigate({ to: "/auth" });
+      }
+    }, [navigate]);
 
   const handleAddFarm = async (farmData: FarmRequest): Promise<void> => {
     try {

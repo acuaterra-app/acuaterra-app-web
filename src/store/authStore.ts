@@ -1,15 +1,15 @@
 import { create } from "zustand";
 
 interface AuthState {
-  isAuthenticated: boolean; // Indica si el usuario está autenticado
-  login: () => void; // Función para iniciar sesión
-  logout: () => void; // Función para cerrar sesión
+  isAuthenticated: boolean; 
+  login: () => void; 
+  logout: () => void; 
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: false, // Estado inicial: no autenticado
+  isAuthenticated: false, 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  login: () => { set({ isAuthenticated: true }); }, // Cambiar el estado a autenticado
+  login: () => { console.log("Usuario autenticado");set({ isAuthenticated: true }); }, 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  logout: () => { set({ isAuthenticated: false }); }, // Cambiar el estado a no autenticado
+  logout: () => { console.log("Usuario no autenticado");  set({ isAuthenticated: false }); }, 
 }));
