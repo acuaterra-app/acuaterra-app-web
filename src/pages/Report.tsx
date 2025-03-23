@@ -5,20 +5,17 @@ import { useNavigate } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
-import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import reporteIcon from "../assets/images/reporte.png";
 import moduleIcon from "../assets/images/module.png";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
 
-
 import LoaderAcua from "../components/loaders/LoaderAcua";
+import LogoutButton from "../components/ui/button/logoutButton";
 
 const Report: FC = () => {
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(true);
- 
   const [isOpen, setIsOpen] = useState(false);
 
 
@@ -26,18 +23,19 @@ const Report: FC = () => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
+
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return () => {
       clearTimeout(timer);
     };
   }, []);
 
-  
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleClickOutside = (event: MouseEvent) => {
       const sidebar = document.getElementById("sidebar");
       const menuButton = document.getElementById("menu-button");
+
       if (
         isOpen &&
         sidebar &&
@@ -48,7 +46,9 @@ const Report: FC = () => {
         setIsOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
+
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -65,7 +65,7 @@ const Report: FC = () => {
 
   return (
     <div className="flex min-h-screen bg-white font-sans relative overflow-x-auto">
-      
+
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -81,7 +81,7 @@ const Report: FC = () => {
           md:translate-x-0 md:w-64 md:relative`}
       >
         <div className="p-4 flex flex-col items-center relative">
-          
+
           <button
             className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 md:hidden"
             onClick={() => { setIsOpen(false); }}
@@ -95,72 +95,112 @@ const Report: FC = () => {
         <nav className="flex-1">
           <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
             <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
               onClick={async () => {
                 await navigate({ to: "/newHome" });
                 setIsOpen(false);
               }}
             >
-              <img alt="Inicio" className="h-6 w-6 mr-2" src={homeIcon} />
+              <img alt="Inicio" className="h-6 w-6" src={homeIcon} />
               <span className="font-bold">Inicio</span>
             </li>
             <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
               onClick={async () => {
                 await navigate({ to: "/farm" });
                 setIsOpen(false);
               }}
             >
-              <img alt="Granjas" className="h-6 w-6 mr-2" src={moduleIcon} />
+              <img alt="Granjas" className="h-6 w-6" src={moduleIcon} />
               <span className="font-bold">Granjas</span>
             </li>
             <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
               onClick={async () => {
                 await navigate({ to: "/users" });
                 setIsOpen(false);
               }}
             >
-              <img alt="Usuarios" className="h-6 w-6 mr-2" src={userIcon} />
+              <img alt="Usuarios" className="h-6 w-6" src={userIcon} />
               <span className="font-bold">Usuarios</span>
             </li>
             <li
-              className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                rounded-lg
+              "
               onClick={async () => {
                 await navigate({ to: "/module" });
                 setIsOpen(false);
               }}
             >
-              <img alt="Módulos" className="h-6 w-6 mr-2" src={fishIcon} />
+              <img alt="Módulos" className="h-6 w-6" src={fishIcon} />
               <span className="font-bold">Módulos</span>
             </li>
-            <li className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105 bg-gray-400 text-white border-2 border-gray-400 rounded-lg">
-              <img alt="Reporte" className="h-6 w-6 mr-2" src={reporteIcon} />
+            <li
+              className="
+                flex items-center justify-center gap-3 p-2
+                cursor-pointer transition-all duration-300
+                transform origin-center overflow-hidden
+                hover:bg-gray-400 hover:scale-102
+                bg-gray-400 text-white border-2 border-gray-400
+                rounded-lg
+              "
+            >
+              <img alt="Reporte" className="h-6 w-6" src={reporteIcon} />
               <span className="font-bold">Reporte</span>
             </li>
           </ul>
+
           <div className="mt-4 md:mt-20">
             <ul className="space-y-4">
               <li
-                className="flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-gray-400 hover:scale-105"
-                onClick={async () => {
-                  await navigate({ to: "/auth" });
-                  setIsOpen(false);
-                }}
+                className="
+                  flex items-center justify-center gap-3 p-2
+                  cursor-pointer transition-all duration-300
+                  transform origin-center overflow-hidden
+                  hover:bg-gray-300 hover:scale-102
+                  rounded-lg
+                "
               >
-                <img alt="Cerrar Sesión" className="h-6 w-6 mr-2" src={closeSessionIcon} />
-                <span className="font-bold">Cerrar Sesión</span>
+                <LogoutButton />
               </li>
             </ul>
           </div>
+
+          <div className="mt-4 md:mt-20">
+            <ul className="space-y-4"></ul>
+          </div>
         </nav>
+
         <div className="p-0">
           <p className="text-center text-xs mt-2">
             versión 1.0 <br /> Advanced Aquaponics Monitoring System
           </p>
         </div>
       </aside>
-      
+
       <main className="flex-1 p-6 bg-white">
         {loading ? (
           <LoaderAcua />
