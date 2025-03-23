@@ -4,7 +4,7 @@ import type { ResponseType, UserResponse, UserRequestV2 } from "../common/types"
 export const fetchUsers = async (page: number, limit: number): Promise<ResponseType<UserResponse>> => {
     const token = localStorage.getItem("token");
     const response = await fetch(
-        `${API_BASE_URL}/admin/users?page=${page}&perPage=${limit}`,
+        `${API_BASE_URL}/admin/users?page=${page}&limit=${limit}`,
         {
             method: "GET",
             headers: {

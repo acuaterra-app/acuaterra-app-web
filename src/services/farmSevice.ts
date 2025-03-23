@@ -19,7 +19,7 @@ interface ApiResponse {
 
 export const fetchFarms = async (page: number, limit: number): Promise<{ data: Array<Farm>, total: number }> => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_BASE_URL}/admin/farms?page=${page}&perPage=${limit}`, {
+    const response = await fetch(`${API_BASE_URL}/admin/farms?page=${page}&limit=${limit}`, {
         method: "GET",
         headers: {
             Authorization: `${token}`,

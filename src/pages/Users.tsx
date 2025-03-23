@@ -33,15 +33,14 @@ export const Users: FunctionComponent = () => {
     }
   }, [navigate]);
 
-  const [page, setPage] = useState(1);
+
   const [reload, setReload] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
 
-  const pageSize = 10;
-  const { users, loading, error, total } = useUsers(page, pageSize, reload);
+  const { users, page, setPage, loading, limit, error, total, setLimit } = useUsers();
   const { registerUser } = useRegisterUser();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -258,10 +257,10 @@ export const Users: FunctionComponent = () => {
                 <TableWithActions
                   data={users}
                   error={error}
-                  limit={pageSize}
+                  limit={limit}
                   loading={loading}
                   page={page}
-                  setLimit={() => {}}
+                  setLimit={setLimit}
                   setPage={setPage}
                   total={total}
                   columns={[
@@ -291,10 +290,10 @@ export const Users: FunctionComponent = () => {
                 <TableWithActionsMobile
                   data={users}
                   error={error}
-                  limit={pageSize}
+                  limit={limit}
                   loading={loading}
                   page={page}
-                  setLimit={() => {}}
+                  setLimit={setLimit}
                   setPage={setPage}
                   total={total}
                   columns={[

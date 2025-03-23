@@ -4,8 +4,7 @@ import type { UserResponse } from "../common/types";
 
 const useUsers = (
   initialPage = 1,
-  initialLimit = 10,
-  reload: boolean
+  initialLimit = 2,
 ): {
   users: Array<UserResponse>;
   loading: boolean;
@@ -27,12 +26,12 @@ const useUsers = (
     const fetchUsersData = async (): Promise<void> => {
       try {
         setLoading(true);
-        const response = await fetchUsers(page, limit);
+        const response = await fetchUsers(page, limit); // Asegúrate de que la API soporte paginación
         setUsers(response.data);
-        setTotal(response.meta.pagination.total);
+        setTotal(response.meta.pagination.total); // Total de usuarios
         setError(null);
       } catch (error_) {
-        console.log("Error fetching users:", error_);
+        console.error("Error fetching users:", error_);
         setError("Error fetching users");
       } finally {
         setLoading(false);
@@ -42,7 +41,7 @@ const useUsers = (
     fetchUsersData().catch((error) => {
       console.error("Error fetching users:", error);
     });
-  }, [page, limit, reload]);
+  }, [page, limit]);
 
   return { users, loading, error, total, page, limit, setPage, setLimit };
 };

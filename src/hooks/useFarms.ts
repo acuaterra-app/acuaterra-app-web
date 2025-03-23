@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetchFarms, createFarm, updateFarm, deleteFarm } from '../services/farmSevice';
 import type { Farm, FarmRequest } from '../common/types';
 
-const useFarms = (initialPage = 1, initialLimit = 10): {
+const useFarms = (initialPage = 1, initialLimit = 2): {
   farms: Array<Farm>,
   loading: boolean,
   error: string | null,

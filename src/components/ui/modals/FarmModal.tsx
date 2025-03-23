@@ -18,7 +18,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
   const [selectedUsers, setSelectedUsers] = useState<Array<number>>(Array.isArray(farm?.users) ? farm.users.map(user => typeof user === 'number' ? user : user.id) : []);
 
   // Usar el hook useUsers para obtener la lista de usuarios con paginación
-  const { users, loading, error, total, page, limit, setPage } = useUsers(1, 10, false); // Cargar 10 usuarios por página
+  const { users, loading, error, total, page, limit, setPage } = useUsers(); // Cargar 10 usuarios por página
 
   const handleUserSelection = (userId: number): void => {
     setSelectedUsers((previous) =>
