@@ -6,7 +6,15 @@ import { useAuth } from "../hooks/useAuth";
 import LoaderAcua from "../components/loaders/LoaderAcua";
 
 export const Auth: FunctionComponent = () => {
-  const { email, setEmail, password, setPassword, error, loading, handleLogin } = useAuth();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    loading,
+    handleLogin,
+  } = useAuth();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleSubmit = (event: React.FormEvent) => {
@@ -21,7 +29,11 @@ export const Auth: FunctionComponent = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4 md:p-8 lg:p-12">
       <div className="mb-6 flex flex-col items-center">
-        <img alt="Acuaterra Logo" className="h-32 md:h-48 lg:h-64 mb-2" src={acuaterraLogo} />
+        <img
+          alt="Acuaterra Logo"
+          className="h-32 md:h-48 lg:h-64 mb-2"
+          src={acuaterraLogo}
+        />
       </div>
 
       <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-9">Login</h1>
@@ -62,6 +74,12 @@ export const Auth: FunctionComponent = () => {
           </ButtonComponent>
         </div>
       </form>
+
+      {error && email && password && (
+        <p className="mt-4 text-darkGray font-semibold">
+          Credenciales Incorrectas
+        </p>
+      )}
 
       <p className="text-gray-500 text-sm mt-20">
         versión 1.0 - Advanced Aquaponics Monitoring System
