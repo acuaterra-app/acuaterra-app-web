@@ -4,7 +4,7 @@ import type { UserResponse } from "../common/types";
 
 const useUsers = (
   initialPage = 1,
-  initialLimit = 2,
+  initialLimit = 10,
 ): {
   users: Array<UserResponse>;
   loading: boolean;
