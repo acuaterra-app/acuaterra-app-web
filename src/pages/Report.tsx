@@ -19,6 +19,7 @@ const Report: FC = () => {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
+
   useEffect(() => {
     if (!isTokenValid()) {
       console.log("Redirigiendo a /auth desde el componente Report"); 
@@ -72,6 +73,7 @@ const Report: FC = () => {
 
   return (
     <div className="flex min-h-screen bg-white font-sans relative overflow-x-auto">
+
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -87,6 +89,7 @@ const Report: FC = () => {
           md:translate-x-0 md:w-64 md:relative`}
       >
         <div className="p-4 flex flex-col items-center relative">
+
           <button
             className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 md:hidden"
             onClick={() => { setIsOpen(false); }}
