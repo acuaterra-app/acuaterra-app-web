@@ -4,7 +4,7 @@ import type { ResponseType, UserResponse, UserRequestV2 } from "../common/types"
 export const fetchUsers = async (page: number, limit: number): Promise<ResponseType<UserResponse>> => {
     const token = localStorage.getItem("token");
     const response = await fetch(
-        `${API_BASE_URL}/admin/users?page=${page}&perPage=${limit}`,
+        `${API_BASE_URL}/admin/users?page=${page}&limit=${limit}`,
         {
             method: "GET",
             headers: {
@@ -41,7 +41,7 @@ export const createUser = async (userData: UserRequestV2): Promise<ResponseType<
 
 export const deleteUser = async (userId: number): Promise<void> => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
         method: "DELETE",
         headers: {
             Authorization: `${token}`,
@@ -55,7 +55,7 @@ export const deleteUser = async (userId: number): Promise<void> => {
 
 export const updateUser = async (userId: number, userData: UserRequestV2): Promise<void> => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/shared/users/${userId}`, {
         method: "PUT",
         headers: {
             Authorization: `${token}`,

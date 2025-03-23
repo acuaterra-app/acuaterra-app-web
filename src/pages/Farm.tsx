@@ -18,6 +18,7 @@ import fishIcon from "../assets/images/pez.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
 import { Menu, X } from "lucide-react";
 import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobile";
+import { isTokenValid } from "../common/isTokenValid";
 
 const FarmsPage: FunctionComponent = () => {
   const {
@@ -39,22 +40,39 @@ const FarmsPage: FunctionComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleAddFarm = async (farmData: FarmRequest): Promise<void> => {
-    await addFarm(farmData);
-    setIsModalOpen(false);
-    toast.success("Granja agregada exitosamente!");
-  };
+    useEffect(() => {
+      if (!isTokenValid()) {
+        console.log("Redirigiendo a /auth desde el componente Farms"); 
+        void navigate({ to: "/auth" });
+      }
+    }, [navigate]);
 
-  const handleEditFarm = async (farmData: FarmRequest): Promise<void> => {
-    if (selectedFarm) {
-      const userIds = farmData.users.map((user) =>
-        typeof user === "object" ? user.id : user
-      );
-      const updatedFarmData = { ...farmData, users: userIds };
-      await editFarm(selectedFarm.id as number, updatedFarmData);
+  const handleAddFarm = async (farmData: FarmRequest): Promise<void> => {
+    try {
+      await addFarm(farmData); 
+      setIsModalOpen(false); 
+      toast.success("Granja agregada exitosamente!");
+    } catch (error) {
+      console.error("Error al agregar la granja:", error);
+      toast.error("No se pudo agregar la granja. Por favor, inténtalo de nuevo.");
     }
-    setIsModalOpen(false);
-    toast.success("Granja editada exitosamente!");
+  };
+  
+  const handleEditFarm = async (farmData: FarmRequest): Promise<void> => {
+    try {
+      if (selectedFarm) {
+        const userIds = farmData.users.map((user) =>
+          typeof user === "object" ? user.id : user
+        );
+        const updatedFarmData = { ...farmData, users: userIds };
+        await editFarm(selectedFarm.id as number, updatedFarmData);
+      }
+      setIsModalOpen(false); 
+      toast.success("Granja editada exitosamente!");
+    } catch (error) {
+      console.error("Error al editar la granja:", error);
+      toast.error("No se pudo editar la granja. Por favor, inténtalo de nuevo.");
+    }
   };
 
   const handleRemoveFarm = async (farmId: number): Promise<void> => {

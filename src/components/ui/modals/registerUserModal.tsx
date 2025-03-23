@@ -164,8 +164,8 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               onChange={handleChange}
             >
               <option value="">Seleccione un rol</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
+              <option value="1">Admin</option>
+              <option value="2">Owner</option>
             </select>
           </div>
 
@@ -184,6 +184,30 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               placeholder="Ingrese la dirección"
               type="text"
               value={userData.address}
+              style={{
+                borderColor: colors.lightGray,
+                color: colors.veryDark,
+                outline: 'none',
+              }}
+              onChange={handleChange}
+            />
+          </div>
+
+           {/* Contact */}
+           <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: colors.veryDark }}
+            >
+              Contact
+            </label>
+            <input
+              required
+              className="block w-full rounded-md border p-2 shadow-sm focus:ring focus:border"
+              name="contact"
+              placeholder="Ingrese el contacto"
+              type="text"
+              value={userData.contact}
               style={{
                 borderColor: colors.lightGray,
                 color: colors.veryDark,

@@ -1,7 +1,7 @@
 import type React from 'react';
 // eslint-disable-next-line no-duplicate-imports
 import { useState, useEffect } from 'react';
-import type { UserRequestV2, UserResponse } from '../../../common/types';
+import { roles, type UserRequestV2, type UserResponse } from '../../../common/types';
 
 // Paleta de colores del proyecto
 const colors = {
@@ -37,6 +37,7 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
     email: '',
     // eslint-disable-next-line camelcase
     id_rol: 0,
+    contact: '',
   });
 
   useEffect(() => {
@@ -48,6 +49,7 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
         // eslint-disable-next-line camelcase
         id_rol: user.id_rol,
         address: user.address,
+        contact: user.contact,
       });
     }
   }, [user]);
@@ -179,8 +181,11 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
               onChange={handleChange}
             >
               <option value="">Seleccione un rol</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
+              {roles.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -199,6 +204,29 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
               placeholder="Ingrese la dirección"
               type="text"
               value={userData.address}
+              style={{
+                borderColor: colors.lightGray,
+                color: colors.veryDark,
+                outline: 'none',
+              }}
+              onChange={handleChange}
+            />
+          </div>
+           {/* Contact */}
+           <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: colors.veryDark }}
+            >
+              Contacto
+            </label>
+            <input
+              required
+              className="block w-full rounded-md border p-2 shadow-sm focus:ring focus:border"
+              name="contact"
+              placeholder="Ingresa contacto"
+              type="number"
+              value={userData.contact || ''}
               style={{
                 borderColor: colors.lightGray,
                 color: colors.veryDark,

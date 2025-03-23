@@ -15,6 +15,7 @@ import foto2 from "../assets/images/fotoAcuapico_2.jpg";
 import foto3 from "../assets/images/fotoAcuapico_3.jpg";
 import Slider from "../components/Slider/Slider";
 import MobileCarousel from "../components/Slider/MobileCarousel";
+import { isTokenValid } from "../common/isTokenValid";
 
 const Home: FC = () => {
   const navigate = useNavigate();
@@ -22,6 +23,13 @@ const Home: FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const sliderImages = [foto1, foto2, foto3];
+
+    useEffect(() => {
+      if (!isTokenValid()) {
+        console.log("Redirigiendo a /auth desde el componente Home"); 
+        void navigate({ to: "/auth" });
+      }
+    }, [navigate]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

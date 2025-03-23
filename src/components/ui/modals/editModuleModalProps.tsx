@@ -1,7 +1,7 @@
 import type React from "react";
 // eslint-disable-next-line no-duplicate-imports
 import { useState } from "react";
-import type { UpdateModuleRequest, Module as ModuleType } from "../../../common/types";
+import type { UpdateModuleRequest, ModuleType } from "../../../common/types";
 
 interface EditModuleModalProps {
     isOpen: boolean;

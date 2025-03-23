@@ -7,7 +7,7 @@ type IconProps = HeroIconSVGProps & {
 	titleId?: string;
 };
 export type Heroicon = React.FC<IconProps>;
-export interface Module {
+export interface ModuleType {
 	id_modulo: number;
 	nombre: string;
 	ubicacion: string;
@@ -40,7 +40,35 @@ export interface UpdateModuleRequest {
 	dimensiones: string;
 	id_persona: number;
 }
-
+export interface ModuleType {
+	id: number;
+	name: string;
+	location: string;
+	latitude: string;
+	longitude: string;
+	species_fish: string;
+	fish_quantity: string;
+	fish_age: string;
+	dimensions: string;
+	id_farm: number;
+	created_by_user_id: number;
+	createdAt: string;
+	updatedAt: string;
+	creator: {
+	  id: number;
+	  name: string;
+	  email: string;
+	  dni: string;
+	  id_rol: number;
+	};
+	farm: {
+	  id: number;
+	  name: string;
+	  address: string;
+	  latitude: string;
+	  longitude: string;
+	};
+  }
 export interface User {
 	id: number;
 	name: string;
@@ -76,6 +104,7 @@ export interface UserRequestV2 {
     dni: string;
     id_rol: number;
     address?: string;
+	contact?: string;
 }
 export interface Bitacora {
 	id_bitacora: number;
@@ -152,4 +181,26 @@ export interface UserResponse {
 	createdAt: string;
 	updatedAt: string;
 	rol: UserRole;
+	contact: string;
 }
+
+export const roles = [
+	{ id: 1, name: "Admin" },
+	{ id: 2, name: "Owner" },
+	{ id: 3, name: "User" },
+  ];
+
+  export interface ModuleListResponse {
+	message: string;
+	data: Array<ModuleType>;
+	meta: {
+	  pagination: {
+		total: number;
+		totalPages: number;
+		currentPage: number;
+		perPage: number;
+		hasNext: boolean;
+		hasPrev: boolean;
+	  };
+	};
+  }
