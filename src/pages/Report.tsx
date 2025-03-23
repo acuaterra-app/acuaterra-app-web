@@ -12,12 +12,20 @@ import fishIcon from "../assets/images/pez.png";
 
 import LoaderAcua from "../components/loaders/LoaderAcua";
 import LogoutButton from "../components/ui/button/logoutButton";
+import { isTokenValid } from "../common/isTokenValid";
 
 const Report: FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
+
+  useEffect(() => {
+    if (!isTokenValid()) {
+      console.log("Redirigiendo a /auth desde el componente Report"); 
+      void navigate({ to: "/auth" });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

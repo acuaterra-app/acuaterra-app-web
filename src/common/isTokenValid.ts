@@ -1,8 +1,8 @@
 export const isTokenValid = (): boolean => {
 	const token = localStorage.getItem("token");
-	// Aquí puedes agregar la lógica para verificar si el token ha expirado
+	console.log("Token encontrado:", token); 
 	return !!token;
-};
+  };
 
 /**
  * Auth guard function to check if the token is valid.
@@ -11,10 +11,13 @@ export const isTokenValid = (): boolean => {
  * @returns An object containing the redirect path if the token is invalid, otherwise an empty object.
  */
 export const authGuard = (): { redirect?: string } => {
+	console.log("authGuard ejecutado"); 
 	if (!isTokenValid()) {
-		return {
-			redirect: "/auth",
-		};
+	  console.log("Token no válido, redirigiendo a /auth"); 
+	  return {
+		redirect: "/auth",
+	  };
 	}
+	console.log("Token válido, acceso permitido"); 
 	return {};
-};
+  };

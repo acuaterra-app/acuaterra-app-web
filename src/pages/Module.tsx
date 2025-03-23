@@ -29,6 +29,7 @@ import LogoutButton from "../components/ui/button/logoutButton";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import useModulesByFarm from "../hooks/useModulesByFarm";
 import useFarms from "../hooks/useFarms";
+import { isTokenValid } from "../common/isTokenValid";
 
 export const Module: FunctionComponent = () => {
   const navigate = useNavigate();
@@ -46,6 +47,13 @@ export const Module: FunctionComponent = () => {
   const { modules, loading, error, total, page, perPage, setPage } = useModulesByFarm(selectedFarmId || 0);
   const { farms, loading: farmsLoading, error: farmsError } = useFarms();
  
+    useEffect(() => {
+      if (!isTokenValid()) {
+        console.log("Redirigiendo a /auth desde el componente Modules"); 
+        void navigate({ to: "/auth" });
+      }
+    }, [navigate]);
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleClickOutside = (event: MouseEvent) => {

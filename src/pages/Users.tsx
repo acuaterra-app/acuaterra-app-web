@@ -21,9 +21,17 @@ import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
 import { Menu, X } from "lucide-react";
 import LogoutButton from "../components/ui/button/logoutButton";
+import { isTokenValid } from "../common/isTokenValid";
 
 export const Users: FunctionComponent = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isTokenValid()) {
+      console.log("Redirigiendo a /auth desde el componente Users"); 
+      void navigate({ to: "/auth" });
+    }
+  }, [navigate]);
 
   const [page, setPage] = useState(1);
   const [reload, setReload] = useState(false);
@@ -39,31 +47,46 @@ export const Users: FunctionComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleRegisterUser = async (userData: UserRequestV2): Promise<void> => {
-    await registerUser(userData);
-    setReload(!reload);
-    setShowModal(false);
-    toast.success("Usuario registrado exitosamente!");
+    try {
+      await registerUser(userData); 
+      setReload(!reload); 
+      setShowModal(false); // Close the modal after registration
+      toast.success("Usuario registrado exitosamente!");
+    } catch (error) {
+      console.error("Error al registrar el usuario:", error);
+      toast.error("No se pudo registrar el usuario. Por favor, inténtalo de nuevo.");
+    }
   };
-
+  
+  const handleUpdateUser = async (
+    userId: number,
+    userData: UserRequestV2
+  ): Promise<void> => {
+    try {
+      await updateUser(userId, userData); 
+      setReload(!reload); 
+      setShowUpdateModal(false); 
+      toast.success("Usuario actualizado exitosamente!");
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      toast.error("No se pudo actualizar el usuario. Por favor, inténtalo de nuevo.");
+    }
+  };
+  
   const handleDeleteUser = async (userId: number): Promise<void> => {
     const confirmed = window.confirm(
       "¿Estás seguro de que deseas eliminar este usuario?"
     );
     if (confirmed) {
-      await deleteUser(userId);
-      setReload(!reload);
-      toast.success("Usuario eliminado exitosamente!");
+      try {
+        await deleteUser(userId);
+        setReload(!reload); 
+        toast.success("Usuario eliminado exitosamente!");
+      } catch (error) {
+        console.error("Error al eliminar el usuario:", error);
+        toast.error("No se pudo eliminar el usuario. Por favor, inténtalo de nuevo.");
+      }
     }
-  };
-
-  const handleUpdateUser = async (
-    userId: number,
-    userData: UserRequestV2
-  ): Promise<void> => {
-    await updateUser(userId, userData);
-    setReload(!reload);
-    setShowUpdateModal(false);
-    toast.success("Usuario actualizado exitosamente!");
   };
 
   const handleOpenUpdateModal = (user: UserResponse): void => {
