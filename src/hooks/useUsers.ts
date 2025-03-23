@@ -3,8 +3,9 @@ import { fetchUsers } from "../services/userService";
 import type { UserResponse } from "../common/types";
 
 const useUsers = (
+  reload = false,
   initialPage = 1,
-  initialLimit = 2,
+  initialLimit = 10,
 ): {
   users: Array<UserResponse>;
   loading: boolean;
@@ -41,7 +42,7 @@ const useUsers = (
     fetchUsersData().catch((error) => {
       console.error("Error fetching users:", error);
     });
-  }, [page, limit]);
+  }, [page, limit, reload]);
 
   return { users, loading, error, total, page, limit, setPage, setLimit };
 };

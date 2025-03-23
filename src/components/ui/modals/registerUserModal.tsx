@@ -3,7 +3,6 @@ import type React from 'react';
 import { useState } from 'react';
 import type { UserRequestV2 } from '../../../common/types';
 
-// Paleta de colores del proyecto (para referencia)
 const colors = {
   primary: '#44cbd3',
   secondary: '#3cacac',
@@ -13,7 +12,7 @@ const colors = {
   lightGray: '#ccd7d6',
   greenish: '#6ca09c',
   teal: '#649c94',
-  darkGray: '#5d7a7e', // ErrorMesagge color
+  darkGray: '#5d7a7e',
   veryDark: '#303537',
 };
 
@@ -35,33 +34,88 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
     // eslint-disable-next-line camelcase
     id_rol: 0,
     address: '',
+    contact: '',
   });
 
-  const handleChange = (
-    // eslint-disable-next-line unicorn/prevent-abbreviations
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  ) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    dni: '',
+    // eslint-disable-next-line camelcase
+    id_rol: '',
+    address: '',
+    contact: '',
+  });
+
+  const validate = (): boolean => {
+    const newErrors: typeof errors = {
+      name: '',
+      email: '',
+      dni: '',
+      // eslint-disable-next-line camelcase
+      id_rol: '',
+      address: '',
+      contact: '',
+    };
+
+    if (!userData.name.trim()) newErrors.name = 'El nombre es obligatorio.';
+    if (!userData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email))
+      newErrors.email = 'Ingrese un correo electrónico válido.';
+    if (!userData.dni.trim() || !/^\d+$/.test(userData.dni))
+      newErrors.dni = 'El DNI debe contener solo números.';
+    // eslint-disable-next-line camelcase
+    if (!userData.id_rol) newErrors.id_rol = 'Debe seleccionar un rol.';
+    if (!userData.address?.trim()) newErrors.address = 'La dirección es obligatoria.';
+    if (!userData.contact?.trim() || !/^\d+$/.test(userData.contact))
+      newErrors.contact = 'El contacto debe contener solo números.';
+
+    setErrors(newErrors);
+
+    return Object.values(newErrors).every((error) => error === '');
   };
 
-  // eslint-disable-next-line unicorn/prevent-abbreviations, @typescript-eslint/explicit-function-return-type
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await onRegister(userData);
+  const handleChange = (
+    _: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ):void => {
+    const { name, value } = _.target;
+    setUserData({ ...userData, [name]: value });
+    setErrors({ ...errors, [name]: '' }); // Limpiar error al cambiar el valor
+  };
+
+  const handleSubmit = async (_: React.FormEvent):Promise<void> => {
+    _.preventDefault();
+    if (validate()) {
+      await onRegister(userData);
+      setUserData({
+        name: '',
+        email: '',
+        dni: '',
+        // eslint-disable-next-line camelcase
+        id_rol: 0,
+        address: '',
+        contact: '',
+      });
+      setErrors({
+        name: '',
+        email: '',
+        dni: '',
+        // eslint-disable-next-line camelcase
+        id_rol: '',
+        address: '',
+        contact: '',
+      });
+      setShowModal(false);
+    }
   };
 
   if (!showModal) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      {/* Contenedor del modal */}
       <div
         className="w-full max-w-md rounded-lg shadow-lg p-6"
         style={{ backgroundColor: '#fff' }}
       >
-        {/* Título del modal */}
         <h2
           className="text-center text-xl font-bold mb-4"
           style={{ color: colors.primary }}
@@ -69,7 +123,6 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
           Registrar Usuario
         </h2>
 
-        {/* Formulario */}
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Nombre */}
           <div>
@@ -93,6 +146,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               }}
               onChange={handleChange}
             />
+            {errors.name && (
+              <p className="text-sm text-red-500 mt-1">{errors.name}</p>
+            )}
           </div>
 
           {/* Email */}
@@ -117,6 +173,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               }}
               onChange={handleChange}
             />
+            {errors.email && (
+              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+            )}
           </div>
 
           {/* DNI */}
@@ -141,6 +200,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               }}
               onChange={handleChange}
             />
+            {errors.dni && (
+              <p className="text-sm text-red-500 mt-1">{errors.dni}</p>
+            )}
           </div>
 
           {/* Rol */}
@@ -167,6 +229,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               <option value="1">Admin</option>
               <option value="2">Owner</option>
             </select>
+            {errors.id_rol && (
+              <p className="text-sm text-red-500 mt-1">{errors.id_rol}</p>
+            )}
           </div>
 
           {/* Dirección */}
@@ -191,15 +256,18 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               }}
               onChange={handleChange}
             />
+            {errors.address && (
+              <p className="text-sm text-red-500 mt-1">{errors.address}</p>
+            )}
           </div>
 
-           {/* Contact */}
-           <div>
+          {/* Contact */}
+          <div>
             <label
               className="block text-sm font-medium mb-1"
               style={{ color: colors.veryDark }}
             >
-              Contact
+              Contacto
             </label>
             <input
               required
@@ -215,11 +283,13 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               }}
               onChange={handleChange}
             />
+            {errors.contact && (
+              <p className="text-sm text-red-500 mt-1">{errors.contact}</p>
+            )}
           </div>
 
           {/* Botones */}
           <div className="flex justify-end space-x-4 pt-4">
-            {/* Botón Cancelar */}
             <button
               className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"
               type="button"
@@ -227,12 +297,13 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
                 background: colors.quaternary,
                 color: '#fff',
               }}
-              onClick={() => { setShowModal(false); }}
+              onClick={() => {
+                setShowModal(false);
+              }}
             >
               Cancelar
             </button>
 
-            {/* Botón Registrar */}
             <button
               className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"
               type="submit"

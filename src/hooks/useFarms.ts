@@ -11,7 +11,7 @@ const useFarms = (initialPage = 1, initialLimit = 10): {
   limit: number,
   setPage: (page: number) => void,
   setLimit: (limit: number) => void,
-  addFarm: (farmData: FarmRequest) => Promise<void>,
+  addFarm: (farmData: FarmRequest) => Promise<boolean>,
   editFarm: (farmId: number, farmData: FarmRequest) => Promise<void>,
   removeFarm: (farmId: number) => Promise<void>
 } => {
@@ -25,11 +25,11 @@ const useFarms = (initialPage = 1, initialLimit = 10): {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       setLoading(true);
+      setError(null); // Limpia el error antes de cargar los datos
       try {
         const { data, total } = await fetchFarms(page, limit);
         setFarms(data);
         setTotal(total);
-        setError(null);
       } catch (error_) {
         setError('Error al cargar las granjas');
         console.error(error_);
@@ -43,22 +43,27 @@ const useFarms = (initialPage = 1, initialLimit = 10): {
     });
   }, [page, limit]);
 
-  const addFarm = async (farmData: FarmRequest): Promise<void> => {
+  const addFarm = async (farmData: FarmRequest): Promise<boolean> => {
+    setError(null); // Limpia el error antes de agregar
     try {
       const response = await createFarm(farmData);
       const Farm = response.data[0];
       if (response.errors.length === 0 || !Farm) {
         setFarms([...farms, Farm as Farm]);
+        return await Promise.resolve(true);
       } else {
         setError(response.errors[0] as string);
+        return false;
       }
     } catch (error_) {
       setError('Error al agregar la granja');
       console.error(error_);
+      return false;
     }
   };
 
   const editFarm = async (farmId: number, farmData: FarmRequest): Promise<void> => {
+    setError(null); // Limpia el error antes de editar
     try {
       const response = await updateFarm(farmId, farmData);
       const responseFarm = response.data[0];
@@ -74,6 +79,7 @@ const useFarms = (initialPage = 1, initialLimit = 10): {
   };
 
   const removeFarm = async (farmId: number): Promise<void> => {
+    setError(null); // Limpia el error antes de eliminar
     try {
       const response = await deleteFarm(farmId);
       if (response.errors.length === 0) {

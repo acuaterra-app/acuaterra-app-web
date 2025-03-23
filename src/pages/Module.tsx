@@ -276,8 +276,14 @@ export const Module: FunctionComponent = () => {
 												},
 												{ header: "Cantidad", accessor: "fish_quantity" },
 												{ header: "Dimensiones", accessor: "dimensions" },
-												{ header: "Creado Por", accessor: "creator" },
-												{ header: "Granja", accessor: "farm" },
+												{
+													header: "Creado Por",
+													accessor: "creator",
+													render: (module) => module.creator.name.toString(),
+												},
+												{ header: "Granja", accessor: "farm",
+													render: (module) => module.farm.name.toString(),
+												},
 											]}
 											onAdd={() => {
 												console.log("Add new module");
