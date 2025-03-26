@@ -271,49 +271,52 @@ export const Users: FunctionComponent = () => {
 						</div>
 					) : (
 						<>
-							{/* Tabla de escritorio */}
-							<div className="hidden md:block">
-								<TableWithActions
-									data={users}
-									error={error}
-									limit={limit}
-									loading={loading}
-									page={page}
-									setLimit={setLimit}
-									setPage={setPage}
-									total={total}
-									columns={[
-										{ header: "ID", accessor: "id" },
-										{ header: "Nombre", accessor: "name" },
-										{ header: "Email", accessor: "email" },
-										{ header: "DNI", accessor: "dni" },
-                    { header: "Teléfono", accessor: "contact" },
-										{
-											header: "Rol",
-											accessor: "rol",
-											render: (u: UserResponse) => u.rol.name,
-										},
-										{ header: "Direción", accessor: "address" },
-                    {
-                      header: "Fecha de creación",
-                      accessor: "createdAt",
-                      render: (u: UserResponse) => new Date(u.createdAt).toLocaleDateString(),
-                  },
-                  {
-                      header: "Fecha de actualización",
-                      accessor: "updatedAt",
-                      render: (u: UserResponse) => new Date(u.updatedAt).toLocaleDateString(),
-                  },
-									]}
-									onDelete={handleDeleteUser}
-									onEdit={handleOpenUpdateModal}
-									onAdd={() => {
-										setShowModal(true);
-									}}
-								/>
-							</div>
+							{/* Table for desktop */}
+                            <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto">
+                            <TableWithActions
+                                 data={users}
+                                 error={error}
+                                 limit={limit}
+                                 loading={loading}
+                                 page={page}
+                                 setLimit={setLimit}
+                                 setPage={setPage}
+                                 total={total}
+                                 columns={[
+                                          { header: "ID", accessor: "id" },
+                                          { header: "Nombre", accessor: "name" },
+                                          { header: "Email", accessor: "email" },
+                                          { header: "DNI", accessor: "dni" },
+                                          { header: "Teléfono", accessor: "contact" },
+                                          {
+                                            header: "Rol",
+                                            accessor: "rol",
+                                                  render: (u: UserResponse) => u.rol.name,
+                                          },
+      
+										  { header: "Dirección", accessor: "address" },
+  	                                      { 
+                                            header: "Fecha de creación",
+                                            accessor: "createdAt",
+                                                  render: (u: UserResponse) =>
+                                                  new Date(u.createdAt).toLocaleDateString(),
+                                          },
+                                          {
+                                             header: "Fecha de actualización",
+                                             accessor: "updatedAt",
+                                             render: (u: UserResponse) =>
+                                             new Date(u.updatedAt).toLocaleDateString(),
+                                          },
+                         ]}
+                                onDelete={handleDeleteUser}
+                                onEdit={handleOpenUpdateModal}
+                                onAdd={() => {
+                                       setShowModal(true);
+                          }}
+                          />
+                         </div>
 
-							{/* Tabla de móvil */}
+							{/* Table for mobile */}
 							<div className="block md:hidden">
 								<TableWithActionsMobile
 									data={users}
