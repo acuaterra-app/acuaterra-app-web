@@ -278,45 +278,45 @@ const FarmsPage: FunctionComponent = () => {
 					<LoaderAcua />
 				) : (
 					<>
-						{/* Tabla de escritorio */}
-						<div className="hidden md:block border border-gray-300 rounded-lg p-1 shadow-md">
-							<TableWithActions
-								data={farms}
-								error={error}
-								limit={limit}
-								loading={loading}
-								page={page}
-								setLimit={setLimit}
-								setPage={setPage}
-								total={total}
-								columns={[
-									{ header: "ID", accessor: "id" },
-									{ header: "Name", accessor: "name" },
-									{ header: "Latitud", accessor: "latitude" },
-									{ header: "Longitud", accessor: "longitude" },
-									{ header: "Dirección", accessor: "address" },
-									{ header: "Date", accessor: "createdAt" },
-									{
-										header: "Users",
-										accessor: "users",
-										render: (farm) =>
-											farm.users.map((user) => (user as User).name).join(", "),
-									},
-								]}
-								onDelete={handleRemoveFarm}
-								onAdd={() => {
-									setSelectedFarm(null);
-									setIsModalOpen(true);
-								}}
-								onEdit={(farm: FarmRequest) => {
-									setSelectedFarm(farm);
-									setIsModalOpen(true);
-								}}
-							/>
-						</div>
+					{/* Tabla de escritorio */}
+                    <div className="hidden md:block border border-gray-300 rounded-lg p-1 shadow-md w-full max-w-7xl mx-auto">
+                    <TableWithActions
+                        data={farms}
+                        error={error}
+                        limit={limit}
+                        loading={loading}
+                        page={page}
+                        setLimit={setLimit}
+                        setPage={setPage}
+                        total={total}
+                        columns={[
+                            { header: "ID", accessor: "id" },
+                            { header: "Name", accessor: "name" },
+                            { header: "Latitud", accessor: "latitude" },
+                            { header: "Longitud", accessor: "longitude" },
+                            { header: "Dirección", accessor: "address" },
+                            { header: "Date", accessor: "createdAt" },
+                            {
+                                        header: "Users",
+                                        accessor: "users",
+                                        render: (farm) =>
+                                           farm.users.map((user) => (user as User).name).join(", "),
+                            },
+                     ]}
+                         onDelete={handleRemoveFarm}
+                         onAdd={() => {
+                               setSelectedFarm(null);
+                               setIsModalOpen(true);
+                     }}
+                        onEdit={(farm: FarmRequest) => {
+                               setSelectedFarm(farm);
+                               setIsModalOpen(true);
+                     }}
+                    />
+                    </div>
 
 						{/* Tabla de móvil */}
-						<div className="block md:hidden border border-gray-300 rounded-lg p-1 shadow-md">
+						<div className="block md:hidden border border-gray-300 rounded-lg p-1  shadow-md">
 							<TableWithActionsMobile
 								data={farms}
 								error={error}
