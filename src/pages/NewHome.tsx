@@ -175,7 +175,7 @@ const Home: FC = () => {
       <main className="flex-1 p-6 bg-white lg:ml-0">
         <h1 className="text-2xl font-bold mb-5 text-center">Acuaterra</h1>
         <p className="text-gray-600 mb-6 text-lg sm:text-sm text-center">
-          Acuaterra es una herramienta de software diseñada para sistematizar el proceso de monitoreo en módulos acuapónicos...
+          Acuaterra es una herramienta de software diseñada para sistematizar el proceso de monitoreo en módulos acuapónicos
         </p>
 
         {isMobile ? (
