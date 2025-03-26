@@ -30,7 +30,7 @@ const Report: FC = () => {
 		"Sábado",
 		"Domingo",
 	];
-	const weeklyData = [25, 28, 22, 30, 26, 24, 27]; // Promedios diarios
+	const weeklyData = [25, 28, 22, 30, 26, 24, 27]; // dayly averages
 
 	const monthlyLabels = [
 		"Enero",
@@ -46,7 +46,7 @@ const Report: FC = () => {
 		"Noviembre",
 		"Diciembre",
 	];
-	const monthlyData = [22, 24, 26, 28, 30, 32, 34, 33, 31, 29, 27, 25]; // Promedios mensuales
+	const monthlyData = [22, 24, 26, 28, 30, 32, 34, 33, 31, 29, 27, 25]; // weekly averages
 
 	useEffect(() => {
 		if (!isTokenValid()) {
@@ -248,7 +248,7 @@ const Report: FC = () => {
 						<p className="text-gray-600 mb-6 text-center">
 							Visualización y generación de reportes.
 						</p>
-						{/* Gráfico del sensor en tiempo real */}
+						{/* Sensor graphics in real time */}
 						<div className="mt-8">
 							<h2 className="text-xl font-semibold mb-4 text-center">
 								Comportamiento en Tiempo Real
@@ -260,7 +260,7 @@ const Report: FC = () => {
 							/>
 						</div>
 
-						{/* Gráfico semanal */}
+						{/* weekly graphics */}
 						<div className="mt-8">
 							<h2 className="text-xl font-semibold mb-4 text-center">
 								Comportamiento Semanal
@@ -272,7 +272,7 @@ const Report: FC = () => {
 							/>
 						</div>
 
-						{/* Gráfico mensual */}
+						{/* Monthly graphics  */}
 						<div className="mt-8">
 							<h2 className="text-xl font-semibold mb-4 text-center">
 								Comportamiento Mensual

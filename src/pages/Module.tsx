@@ -58,7 +58,7 @@ export const Module: FunctionComponent = () => {
 		};
 	}, [isOpen]);
 
-	// Bloqueo del scroll cuando el sidebar está abierto
+	// when the sidebar is open lock the body scroll
 	useEffect(() => {
 		document.body.style.overflowY = isOpen ? "hidden" : "auto";
 		// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -76,7 +76,7 @@ export const Module: FunctionComponent = () => {
 				</label>
 				<select
 					className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
-					disabled={farmsLoading} // Deshabilitamos el selector mientras cargan las granjas
+					disabled={farmsLoading} // disable the selector while the farms are loading
 					onChange={(_) => {
 						setSelectedFarmId(Number(_.target.value));
 					}}

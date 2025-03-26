@@ -278,7 +278,7 @@ const FarmsPage: FunctionComponent = () => {
 					<LoaderAcua />
 				) : (
 					<>
-					{/* Tabla de escritorio */}
+					{/* Desktop Table */}
                     <div className="hidden md:block border border-gray-300 rounded-lg p-1 shadow-md w-full max-w-7xl mx-auto">
                     <TableWithActions
                         data={farms}
@@ -315,7 +315,7 @@ const FarmsPage: FunctionComponent = () => {
                     />
                     </div>
 
-						{/* Tabla de móvil */}
+						{/* Mobile table */}
 						<div className="block md:hidden border border-gray-300 rounded-lg p-1  shadow-md">
 							<TableWithActionsMobile
 								data={farms}

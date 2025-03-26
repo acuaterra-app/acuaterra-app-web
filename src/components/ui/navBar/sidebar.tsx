@@ -21,7 +21,7 @@ const Sidebar: FunctionComponent = () => {
 				<Link className="p-2 hover:bg-gray-700 rounded" to="/farm">
 					Farm
 				</Link>
-				{/* Agrega más enlaces según sea necesario */}
+				{/* if we need more, we can add then */}
 			</nav>
 		</div>
 	);

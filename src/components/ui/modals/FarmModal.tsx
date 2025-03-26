@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useUsers from "../../../hooks/useUsers"; // Importar el hook
+import useUsers from "../../../hooks/useUsers"; // hook import 
 import type { FarmRequest } from "../../../common/types";
 import ButtonComponent from "../button/button";
 import InputCustomComponent from "../input/input";
@@ -22,7 +22,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 			: []
 	);
 
-	// Usar el hook useUsers para obtener la lista de usuarios con paginación
+	// Use the useUsers hook to get the list of users with pagination
 	const { users, loading, error, total, page, limit, setPage } = useUsers(); // Cargar 10 usuarios por página
 
 	const validateForm = (): boolean => {
@@ -73,7 +73,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 			  }}
 			>
 			  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-				{/* Columna izquierda: Formulario */}
+				{/* left column: form*/}
 				<div className="space-y-6">
 				  <div>
 					<label
@@ -157,7 +157,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 				  </div>
 				</div>
 	  
-				{/* Columna derecha: Tabla de usuarios */}
+				{/* Right column: User´s table  */}
 				<div>
 				  <label
 					className="block text-gray-700 font-bold mb-2"
@@ -201,7 +201,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 							  ))}
 						  </tbody>
 						</table>
-						{/* Controles de paginación */}
+						{/* Pagination controls */}
 						<div className="flex justify-between items-center mt-4">
 						  <button
 							className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
@@ -249,7 +249,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 				</div>
 			  </div>
 	  
-			  {/* Botones */}
+			  {/* Butoms */}
 			  <div className="flex justify-end mt-6 space-x-4">
 				<ButtonComponent
 				  className="bg-quaternary text-white px-6 py-3 rounded hover:bg-quinary"

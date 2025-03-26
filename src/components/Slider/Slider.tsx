@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 interface SliderProps {
   images: Array<string>;
-  interval?: number; // Tiempo en milisegundos entre cambios
+  interval?: number; // Time in milliseconds between changes
 }
 
 const Slider: React.FC<SliderProps> = ({ images, interval = 5000 }) => {
@@ -47,7 +47,7 @@ const Slider: React.FC<SliderProps> = ({ images, interval = 5000 }) => {
         </div>
       ))}
 
-      {/* Flecha Izquierda */}
+      {/* Left arrow*/}
       <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-50">
         <button
           className="bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition"
@@ -65,7 +65,7 @@ const Slider: React.FC<SliderProps> = ({ images, interval = 5000 }) => {
         </button>
       </div>
 
-      {/* Flecha Derecha */}
+      {/* Right arrow */}
       <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-50">
         <button
           className="bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition"
@@ -83,7 +83,7 @@ const Slider: React.FC<SliderProps> = ({ images, interval = 5000 }) => {
         </button>
       </div>
 
-      {/* Navegación con puntos */}
+      {/* Nav with points */}
       <div className="absolute bottom-6 left-0 right-0 flex justify-center space-x-3 z-50">
         {images.map((_, index) => (
           <button
