@@ -142,15 +142,15 @@ export const Users: FunctionComponent = () => {
 			<ToastContainer />
 
 			<div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
-				<button
-					className="absolute top-9 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
-					id="menu-button"
-					onClick={() => {
-						setIsOpen(!isOpen);
-					}}
-				>
-					{isOpen ? <X size={24} /> : <Menu size={24} />}
-				</button>
+			<button
+                 className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
+                 id="menu-button"
+                 onClick={() => {
+                     setIsOpen(!isOpen);
+                }}
+                >
+                {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
 
 				<aside
 					id="sidebar"

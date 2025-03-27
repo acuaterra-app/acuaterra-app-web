@@ -71,13 +71,13 @@ export const Module: FunctionComponent = () => {
       <div className="flex min-h-screen bg-white font-sans relative">
         {/* Sidebar */}
         <button
-          className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
-          id="menu-button"
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+            className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
+            id="menu-button"
+            onClick={() => {
+                 setIsOpen(!isOpen);
+             }}
+            >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         <aside
