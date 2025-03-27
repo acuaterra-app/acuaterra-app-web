@@ -102,7 +102,12 @@ export const Module: FunctionComponent = () => {
           <nav className="flex-1">
             <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
               <li
-                className="flex items-center justify-center gap-3 p-2 cursor-pointer hover:bg-gray-400 rounded-lg"
+                className=" 
+				flex items-center justify-center gap-3 p-2 
+				cursor-pointer transition-all duration-300
+				transform origin-center overflow-hidden
+				 hover:bg-gray-400 hover:scale-102 rounded-lg
+				"
                 onClick={async () => {
                   await navigate({ to: "/newHome" });
                   setIsOpen(false);
@@ -112,7 +117,12 @@ export const Module: FunctionComponent = () => {
                 <span className="font-bold">Inicio</span>
               </li>
               <li
-                className="flex items-center justify-center gap-3 p-2 cursor-pointer hover:bg-gray-400 rounded-lg"
+                className="
+				flex items-center justify-center gap-3 p-2 
+				cursor-pointer transition-all duration-300
+				transform origin-center overflow-hidden
+				 hover:bg-gray-400 hover:scale-102 rounded-lg
+				"
                 onClick={async () => {
                   await navigate({ to: "/farm" });
                   setIsOpen(false);
@@ -122,7 +132,12 @@ export const Module: FunctionComponent = () => {
                 <span className="font-bold">Granjas</span>
               </li>
               <li
-                className="flex items-center justify-center gap-3 p-2 cursor-pointer hover:bg-gray-400 rounded-lg"
+                className="
+				flex items-center justify-center gap-3 p-2 
+				cursor-pointer transition-all duration-300
+				transform origin-center overflow-hidden
+				 hover:bg-gray-400 hover:scale-102 rounded-lg
+				"
                 onClick={async () => {
                   await navigate({ to: "/users" });
                   setIsOpen(false);
@@ -132,7 +147,12 @@ export const Module: FunctionComponent = () => {
                 <span className="font-bold">Usuarios</span>
               </li>
               <li
-                className="flex items-center justify-center gap-3 p-2 cursor-pointer bg-gray-400 text-white rounded-lg"
+                className="
+				flex items-center justify-center gap-3 p-2 
+				cursor-pointer transition-all duration-300
+				transform origin-center overflow-hidden
+				 hover:bg-gray-400 hover:scale-102 rounded-lg
+				"
                 onClick={async () => {
                   await navigate({ to: "/module" });
                   setIsOpen(false);
@@ -142,7 +162,12 @@ export const Module: FunctionComponent = () => {
                 <span className="font-bold">Módulos</span>
               </li>
               <li
-                className="flex items-center justify-center gap-3 p-2 cursor-pointer hover:bg-gray-400 rounded-lg"
+                className="
+				flex items-center justify-center gap-3 p-2 
+				cursor-pointer transition-all duration-300
+				transform origin-center overflow-hidden
+				 hover:bg-gray-400 hover:scale-102 rounded-lg
+				"
                 onClick={async () => {
                   await navigate({ to: "/report" });
                   setIsOpen(false);
