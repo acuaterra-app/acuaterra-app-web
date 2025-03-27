@@ -322,7 +322,7 @@ export const Users: FunctionComponent = () => {
                          </div>
 
 							{/* Table for mobile */}
-							<div className="block md:hidden">
+							<div className="block md:hidden border max-w-sm  border-gray-300 rounded-lg  p-1 mb-4 shadow-md">
 								<TableWithActionsMobile
 									data={users}
 									error={error}

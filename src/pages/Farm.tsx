@@ -316,7 +316,7 @@ const FarmsPage: FunctionComponent = () => {
                     </div>
 
 						{/* Mobile table */}
-						<div className="block md:hidden border border-gray-300 rounded-lg p-1  shadow-md">
+						<div className="block md:hidden border max-w-sm  border-gray-300 rounded-lg  p-1 mb-4 shadow-md">
 							<TableWithActionsMobile
 								data={farms}
 								error={error}
