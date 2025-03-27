@@ -72,7 +72,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 				handleSubmit();
 			  }}
 			>
-			  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+			  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 				{/* left column: form*/}
 				<div className="space-y-6">
 				  <div>
@@ -83,7 +83,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 					  Nombre de la Granja
 					</label>
 					<InputCustomComponent
-					  className="w-full p-3 border border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
+					  className="w-full p-1  border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
 					  name="name"
 					  placeholder="Nombre de la Granja"
 					  value={name}
@@ -100,7 +100,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 					  Dirección de la Granja
 					</label>
 					<InputCustomComponent
-					  className="w-full p-3 border border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
+					  className="w-full p-1  border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
 					  name="address"
 					  placeholder="Dirección de la Granja"
 					  value={address}
@@ -117,7 +117,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 					  Longitud
 					</label>
 					<InputCustomComponent
-					  className="w-full p-3 border border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
+					  className="w-full p-1  border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
 					  name="longitude"
 					  placeholder="Longitud"
 					  type="number"
@@ -140,7 +140,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
 					  Latitud
 					</label>
 					<InputCustomComponent
-					  className="w-full p-3 border border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
+					  className="w-full p-1  border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
 					  name="latitude"
 					  placeholder="Latitud"
 					  type="number"
