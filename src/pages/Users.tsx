@@ -256,6 +256,11 @@ export const Users: FunctionComponent = () => {
 							</ul>
 						</div>
 					</nav>
+					<div className="p-0">
+                         <p className="text-center text-xs mt-2">
+                             versión 1.0 <br /> Advanced Aquaponics Monitoring System
+                         </p>
+                    </div>
 				</aside>
 
 				<main className="flex-1 p-9 bg-white md:ml-0">
