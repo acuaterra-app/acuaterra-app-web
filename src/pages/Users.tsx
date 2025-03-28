@@ -142,15 +142,15 @@ export const Users: FunctionComponent = () => {
 			<ToastContainer />
 
 			<div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
-				<button
-					className="absolute top-9 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
-					id="menu-button"
-					onClick={() => {
-						setIsOpen(!isOpen);
-					}}
-				>
-					{isOpen ? <X size={24} /> : <Menu size={24} />}
-				</button>
+			<button
+                 className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
+                 id="menu-button"
+                 onClick={() => {
+                     setIsOpen(!isOpen);
+                }}
+                >
+                {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
 
 				<aside
 					id="sidebar"
@@ -256,6 +256,11 @@ export const Users: FunctionComponent = () => {
 							</ul>
 						</div>
 					</nav>
+					<div className="p-0">
+                         <p className="text-center text-xs mt-2">
+                             versión 1.0 <br /> Advanced Aquaponics Monitoring System
+                         </p>
+                    </div>
 				</aside>
 
 				<main className="flex-1 p-9 bg-white md:ml-0">
@@ -271,50 +276,53 @@ export const Users: FunctionComponent = () => {
 						</div>
 					) : (
 						<>
-							{/* Tabla de escritorio */}
-							<div className="hidden md:block">
-								<TableWithActions
-									data={users}
-									error={error}
-									limit={limit}
-									loading={loading}
-									page={page}
-									setLimit={setLimit}
-									setPage={setPage}
-									total={total}
-									columns={[
-										{ header: "ID", accessor: "id" },
-										{ header: "Nombre", accessor: "name" },
-										{ header: "Email", accessor: "email" },
-										{ header: "DNI", accessor: "dni" },
-                    { header: "Teléfono", accessor: "contact" },
-										{
-											header: "Rol",
-											accessor: "rol",
-											render: (u: UserResponse) => u.rol.name,
-										},
-										{ header: "Direción", accessor: "address" },
-                    {
-                      header: "Fecha de creación",
-                      accessor: "createdAt",
-                      render: (u: UserResponse) => new Date(u.createdAt).toLocaleDateString(),
-                  },
-                  {
-                      header: "Fecha de actualización",
-                      accessor: "updatedAt",
-                      render: (u: UserResponse) => new Date(u.updatedAt).toLocaleDateString(),
-                  },
-									]}
-									onDelete={handleDeleteUser}
-									onEdit={handleOpenUpdateModal}
-									onAdd={() => {
-										setShowModal(true);
-									}}
-								/>
-							</div>
+							{/* Table for desktop */}
+                            <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto">
+                            <TableWithActions
+                                 data={users}
+                                 error={error}
+                                 limit={limit}
+                                 loading={loading}
+                                 page={page}
+                                 setLimit={setLimit}
+                                 setPage={setPage}
+                                 total={total}
+                                 columns={[
+                                          { header: "ID", accessor: "id" },
+                                          { header: "Nombre", accessor: "name" },
+                                          { header: "Email", accessor: "email" },
+                                          { header: "DNI", accessor: "dni" },
+                                          { header: "Teléfono", accessor: "contact" },
+                                          {
+                                            header: "Rol",
+                                            accessor: "rol",
+                                                  render: (u: UserResponse) => u.rol.name,
+                                          },
+      
+										  { header: "Dirección", accessor: "address" },
+  	                                      { 
+                                            header: "Fecha de creación",
+                                            accessor: "createdAt",
+                                                  render: (u: UserResponse) =>
+                                                  new Date(u.createdAt).toLocaleDateString(),
+                                          },
+                                          {
+                                             header: "Fecha de actualización",
+                                             accessor: "updatedAt",
+                                             render: (u: UserResponse) =>
+                                             new Date(u.updatedAt).toLocaleDateString(),
+                                          },
+                         ]}
+                                onDelete={handleDeleteUser}
+                                onEdit={handleOpenUpdateModal}
+                                onAdd={() => {
+                                       setShowModal(true);
+                          }}
+                          />
+                         </div>
 
-							{/* Tabla de móvil */}
-							<div className="block md:hidden">
+							{/* Table for mobile */}
+							<div className="block md:hidden border max-w-sm  border-gray-300 rounded-lg  p-1 mb-4 shadow-md">
 								<TableWithActionsMobile
 									data={users}
 									error={error}

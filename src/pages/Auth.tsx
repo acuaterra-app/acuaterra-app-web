@@ -81,7 +81,7 @@ export const Auth: FunctionComponent = () => {
         </p>
       )}
 
-      <p className="text-gray-500 text-sm mt-20">
+      <p className="text-gray-500 text-sm mt-20 text-center">
         versión 1.0 - Advanced Aquaponics Monitoring System
       </p>
     </div>

@@ -79,10 +79,10 @@ export const deleteModule = async (moduleId: number): Promise<ModuleResponse> =>
 export const fetchModulesByFarm = async (
 	farmId: number,
 	page: number,
-	perPage: number
+	limit: number
   ): Promise<ModuleListResponse> => {
 	const response = await fetch(
-	  `${API_BASE_URL}/shared/modules/${farmId}?page=${page}&perPage=${perPage}`,
+	  `${API_BASE_URL}/shared/modules/${farmId}?page=${page}&limit=${limit}`,
 	  {
 		method: "GET",
 		headers: {

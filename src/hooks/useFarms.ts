@@ -25,7 +25,7 @@ const useFarms = (initialPage = 1, initialLimit = 10): {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       setLoading(true);
-      setError(null); // Limpia el error antes de cargar los datos
+      setError(null); //  cleam error before fetching data
       try {
         const { data, total } = await fetchFarms(page, limit);
         setFarms(data);
@@ -63,7 +63,7 @@ const useFarms = (initialPage = 1, initialLimit = 10): {
   };
 
   const editFarm = async (farmId: number, farmData: FarmRequest): Promise<void> => {
-    setError(null); // Limpia el error antes de editar
+    setError(null); // cleam error before editing data
     try {
       const response = await updateFarm(farmId, farmData);
       const responseFarm = response.data[0];
@@ -79,7 +79,7 @@ const useFarms = (initialPage = 1, initialLimit = 10): {
   };
 
   const removeFarm = async (farmId: number): Promise<void> => {
-    setError(null); // Limpia el error antes de eliminar
+    setError(null); // cleam error before deleting data
     try {
       const response = await deleteFarm(farmId);
       if (response.errors.length === 0) {

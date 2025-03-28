@@ -24,7 +24,7 @@ ChartJS.register(
 interface SensorChartProps {
   labels: Array<string>;
   data: Array<number>;
-  color: string; // Nuevo prop para el color
+  color: string; //  new prop for the color
 }
 
 const SensorChart: React.FC<SensorChartProps> = ({ labels, data, color }) => {
@@ -35,7 +35,7 @@ const SensorChart: React.FC<SensorChartProps> = ({ labels, data, color }) => {
         label: "Valores del Sensor",
         data,
         borderColor: color,
-        backgroundColor: `${color}33`, // Color con transparencia
+        backgroundColor: `${color}33`, // Color with transparency
         borderWidth: 2,
         tension: 0.4,
       },

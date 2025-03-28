@@ -3,7 +3,7 @@ import type React from 'react';
 import { useState, useEffect } from 'react';
 import { roles, type UserRequestV2, type UserResponse } from '../../../common/types';
 
-// Paleta de colores del proyecto
+// color palette of the project
 const colors = {
   primary: '#44cbd3',
   secondary: '#3cacac',
@@ -73,12 +73,12 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      {/* Contenedor principal del modal */}
+      {/* Main container for modal*/}
       <div
         className="w-full max-w-md rounded-lg shadow-lg p-6"
         style={{ backgroundColor: '#fff' }}
       >
-        {/* Título */}
+        {/* Títle */}
         <h2
           className="text-center text-xl font-bold mb-4"
           style={{ color: colors.primary }}
@@ -86,9 +86,9 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
           Editar Usuario
         </h2>
 
-        {/* Formulario */}
+        {/* Form */}
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Nombre */}
+          {/* Name */}
           <div>
             <label
               className="block text-sm font-medium mb-1"
@@ -189,7 +189,7 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
             </select>
           </div>
 
-          {/* Dirección */}
+          {/* Address */}
           <div>
             <label
               className="block text-sm font-medium mb-1"
@@ -236,9 +236,9 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
             />
           </div>
 
-          {/* Botones */}
+          {/* Buttoms */}
           <div className="flex justify-end space-x-4 pt-4">
-            {/* Botón Cancelar */}
+            {/* Cancel Buttom  */}
             <button
               className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"
               type="button"
@@ -251,7 +251,7 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
               Cancelar
             </button>
 
-            {/* Botón Actualizar */}
+            {/* Update Buttom */}
             <button
               className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"
               type="submit"

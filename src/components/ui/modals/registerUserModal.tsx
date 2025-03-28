@@ -124,7 +124,7 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
         </h2>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Nombre */}
+          {/* Name */}
           <div>
             <label
               className="block text-sm font-medium mb-1"
@@ -234,7 +234,7 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
             )}
           </div>
 
-          {/* Dirección */}
+          {/* Address */}
           <div>
             <label
               className="block text-sm font-medium mb-1"
@@ -288,7 +288,7 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
             )}
           </div>
 
-          {/* Botones */}
+          {/* Buttoms */}
           <div className="flex justify-end space-x-4 pt-4">
             <button
               className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"

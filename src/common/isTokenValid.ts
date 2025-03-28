@@ -1,7 +1,7 @@
 import {jwtDecode} from "jwt-decode";
 
 interface TokenClaims {
-  role?: string; // Ajusta según la estructura de tu token
+  role?: string; //  adjust according to your token structure
 }
 
 export const isTokenValid = (): boolean => {
@@ -11,9 +11,9 @@ export const isTokenValid = (): boolean => {
 };
 
 /**
- * Verifica si el usuario tiene el rol de administrador.
+ * Vverify if the user has the admin role.
  *
- * @returns `true` si el usuario es administrador, de lo contrario `false`.
+ * @returns  ´True´ if the user is an admin, otherwise ´false´.
  */
 export const isAdmin = (): boolean => {
   const token = localStorage.getItem("token");

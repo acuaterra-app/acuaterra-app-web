@@ -27,9 +27,9 @@ const useUsers = (
     const fetchUsersData = async (): Promise<void> => {
       try {
         setLoading(true);
-        const response = await fetchUsers(page, limit); // Asegúrate de que la API soporte paginación
+        const response = await fetchUsers(page, limit); // gotta check if the API supports pagination
         setUsers(response.data);
-        setTotal(response.meta.pagination.total); // Total de usuarios
+        setTotal(response.meta.pagination.total); // User´s total count
         setError(null);
       } catch (error_) {
         console.error("Error fetching users:", error_);

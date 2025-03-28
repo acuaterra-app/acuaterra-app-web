@@ -5,7 +5,7 @@ interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
   disabled?: boolean;
-  className?: string; // Nueva propiedad para estilos personalizados
+  className?: string; // new prop for custom classes
 }
 
 const ButtonComponent: FC<ButtonProps> = ({
@@ -17,7 +17,7 @@ const ButtonComponent: FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      // Combina la clase por defecto con la que se le pase como prop
+      // combine the default class with the one passed as a prop
       className={`button-component ${className}`}
       disabled={disabled}
       type={type}

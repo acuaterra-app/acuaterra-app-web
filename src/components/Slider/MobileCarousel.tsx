@@ -40,7 +40,7 @@ const MobileCarousel = () => {
           }`}
         />
       ))}
-         {/* Flechas de navegación */}
+         {/* Navigation arrows */}
       <button
         className="absolute left-2 bg-gray-800 text-white p-2 rounded-full opacity-75 hover:opacity-100"
         onClick={previousSlide}
