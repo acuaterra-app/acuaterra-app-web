@@ -17,6 +17,7 @@ interface TableWithActionsMobileProps<T extends TableItem> {
   limit: number;
   setPage: (page: number) => void;
   setLimit: (limit: number) => void;
+  isVisibleButton?: boolean;
 }
 
 const TableWithActionsMobile = <T extends TableItem>({
@@ -32,6 +33,7 @@ const TableWithActionsMobile = <T extends TableItem>({
   page,
   limit,
   setPage,
+  isVisibleButton = true,
 }: TableWithActionsMobileProps<T>): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -59,15 +61,17 @@ const TableWithActionsMobile = <T extends TableItem>({
         // eslint-disable-next-line unicorn/prevent-abbreviations
         onChange={(e) => { setSearchTerm(e.target.value); }}
       />
-      
+
       {/* Button*/}
-      <motion.button
+      { isVisibleButton && (<motion.button
         className="bg-quaternary text-white px-4 py-2 rounded hover:bg-quinary transition duration-200 w-full cursor-pointer"
         whileTap={{ scale: 0.9 }}
         onClick={onAdd}
       >
         Agregar Nuevo
-      </motion.button>
+      </motion.button>) }
+      
+      
 
       {loading && <p className="text-center mt-4 text-primary">Cargando...</p>}
       {error && <p className="text-red-500 mt-4">{error}</p>}
