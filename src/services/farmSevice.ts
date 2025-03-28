@@ -30,7 +30,7 @@ export const fetchFarms = async (page: number, limit: number): Promise<{ data: A
         throw new Error("Network response was not ok");
     }
     const data = await response.json() as ApiResponse;
-    return { data: data.data, total: data.meta.pagination.total };
+    return { data: data.data.sort((itema, itemb) => itema.id >= itemb.id ? 1 : -1),  total: data.meta.pagination.total };
 };
 
 export const createFarm = async (farmData: FarmRequest): Promise<ApiResponse> => {
