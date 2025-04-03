@@ -1,6 +1,8 @@
+/* eslint-disable no-use-before-define */
 import { useState, type FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { motion, useMotionValue, useTransform } from "framer-motion"; // Importamos Framer Motion
+import { motion, useMotionValue, useTransform } from "framer-motion"; 
+import styled from "styled-components"; 
 import acuaterraLogo from "../assets/images/logo.png";
 import phoneHome from "../assets/images/mockup-phone.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
@@ -8,8 +10,6 @@ import LoaderAcua from "../components/loaders/LoaderAcua";
 const Welcome: FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const rotateX = useTransform(mouseY, [-100, 100], [10, -10]);
@@ -36,6 +36,8 @@ const Welcome: FC = () => {
     return <LoaderAcua />;
   }
 
+
+
   return (
     <motion.div
       animate={{ opacity: 1 }}
@@ -43,7 +45,7 @@ const Welcome: FC = () => {
       initial={{ opacity: 0 }}
       transition={{ duration: 1 }}
     >
-     
+      
       <motion.div
         animate={{ opacity: 1, x: 0 }}
         className="w-full md:w-1/2 flex flex-col items-center justify-center text-center space-y-6"
@@ -57,48 +59,41 @@ const Welcome: FC = () => {
           initial={{ opacity: 0, y: -50 }}
           src={acuaterraLogo}
           transition={{ type: "spring", stiffness: 100, damping: 10 }}
-          whileHover={{ rotate: 10, scale: 1.1 }}
+          whileHover={{ rotate: 15, scale: 1.2 }}
         />
 
-        <h1 className="text-2xl md:text-4xl font-bold text-gray-800 mb-4">
-          ¡Bienvenidos a Acuaterra!
-        </h1>
-
-        <motion.button
-          animate={{ scale: [1, 1.05, 1] }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="
-            bg-[#44cbd3] hover:bg-[#3cacac]
-            text-white font-semibold px-6 py-3
-            rounded-lg shadow-lg transition
-            focus:outline-none focus:ring-4 focus:ring-[#44cbd3]
-          "
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-          onClick={handleStart}
+        <motion.h1
+        animate={{ opacity: 1, y: 0 }}
+        className="text-2xl md:text-4xl font-bold text-gray-800 mb-4"
+        initial={{ opacity: 0, y: 50 }}
+        transition={{ duration: 0.8 }}
         >
-          ¡Comenzar!
-        </motion.button>
+        ¡Bienvenidos a Acuaterra!
+        </motion.h1>
 
-        <div className="mt-8">
-          <p className="text-xs text-gray-500">
-            versión 1.0 - Advanced Aquaponics Monitoring System <br />
-            AGUA TERRA © 2023
-          </p>
-        </div>
+        <StyledWrapper>
+          <button className="btn" onClick={handleStart}>
+            <span className="btn-text-one">Hola!</span>
+            <span className="btn-text-two">¡Comenzar!</span>
+          </button>
+        </StyledWrapper>
+
+        <motion.footer
+        animate={{ opacity: 1, y: 0 }}
+        className="text-1xl md:text font-bold text-gray-800 mb-4"
+        initial={{ opacity: 0, y: 50 }}
+        transition={{ duration: 1 }}  
+        >
+       <p>© 2023 Acuaterra. Todos los derechos reservados.</p>
+       </motion.footer>
       </motion.div>
 
-      
       <motion.div
         animate={{ opacity: 1, x: 0 }}
         className="hidden md:flex md:w-1/2 justify-center"
         initial={{ opacity: 0, x: 100 }}
         transition={{ duration: 0.8 }}
-        onMouseMove={handleMouseMove} 
+        onMouseMove={handleMouseMove}
       >
         <motion.img
           alt="Vista de la app en teléfono"
@@ -115,5 +110,52 @@ const Welcome: FC = () => {
     </motion.div>
   );
 };
+
+const StyledWrapper = styled.div`
+  .btn {
+    width: 140px;
+    height: 50px;
+    background: linear-gradient(to top, #44cbd3, #3cacac); /* Respetamos la paleta de colores */
+    color: #fff;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+  }
+
+  .btn span {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: top 0.5s;
+  }
+
+  .btn-text-one {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+
+  .btn-text-two {
+    position: absolute;
+    width: 100%;
+    top: 150%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+
+  .btn:hover .btn-text-one {
+    top: -100%;
+  }
+
+  .btn:hover .btn-text-two {
+    top: 50%;
+  }
+`;
 
 export default Welcome;
