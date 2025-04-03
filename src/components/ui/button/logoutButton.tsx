@@ -14,9 +14,11 @@ const LogoutButton: FunctionComponent = () => {
       onClick={handleLogout}
     >
       <img alt="Cerrar Sesión" className="h-6 w-6 mr-2" src={closeSessionIcon} />
-      <span className="font-bold">{loading ? "Cerrando sesión..." : "Cerrar Sesión"}</span>
+      
     </ButtonComponent>
   );
 };
 
 export default LogoutButton;
+
+// <span className="font-bold">{loading ? "Cerrando sesión..." : "Cerrar Sesión"}</span> LINE 17
