@@ -20,8 +20,8 @@ import MobileCarousel from "../components/Slider/MobileCarousel";
 
 const SidebarLogoWrapper = styled.div`
   .logo {
-    width: 64px;
-    height: 64px;
+    width: 96px;
+    height: 96px;
     animation: logo-spin 8s linear infinite; /* Animación de rotación */
   }
 
@@ -35,7 +35,7 @@ const SidebarLogoWrapper = styled.div`
 const WelcomeText = styled.p`
   font-size: 1.2rem;
   font-weight: bold;
-  color: #000;
+  color: #ffffff;
   transition: transform 0.3s ease;
 
   &:hover {
@@ -127,7 +127,7 @@ const Home: FC = () => {
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Datos para el carrusel
+  
   const slides = [
     { title: "Acuaterra Modulo", button: "1", src: foto1 },
     { title: "Modulo Acuaponico ", button: "2", src: foto2 },
@@ -171,9 +171,9 @@ const Home: FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen font-sans bg-gradient-to-r from-blue-100 to-blue-300 relative overflow-x-auto">
+    <div className="flex min-h-screen font-sans bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 relative overflow-x-auto">
       <button
-        className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
+        className="absolute top-4 left-4 z-50 bg-gray-700 p-2 rounded shadow-md md:hidden"
         id="menu-button"
         onClick={() => {
           setIsOpen(!isOpen);
@@ -184,7 +184,7 @@ const Home: FC = () => {
 
       <aside
         ref={menuRef}
-        className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-300 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        className={`fixed top-0 left-0 w-64 h-screen bg-gray-800 border-r border-gray-700 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
           isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
         } ${animateSidebar ? "animate-slide-in" : ""}`}
         style={{
@@ -194,7 +194,7 @@ const Home: FC = () => {
       >
         <div className="p-4 flex flex-col items-center relative">
           <button
-            className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 lg:hidden"
+            className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
             onClick={() => {
               setIsOpen(false);
             }}
@@ -225,7 +225,7 @@ const Home: FC = () => {
                 }}
               >
                 <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
-                <span className="relative z-10 flex items-center gap-3 text-gray-700 group-hover:text-white font-bold">
+                <span className="relative z-10 flex items-center gap-3 text-gray-300 group-hover:text-white font-bold">
                   <img alt={item.label} className="h-6 w-6" src={item.icon} />
                   {item.label}
                 </span>
@@ -238,26 +238,26 @@ const Home: FC = () => {
           </div>
         </nav>
 
-        <div className="p-0">
-          <p className="text-center text-xs mt-2">
-            versión 1.0 <br /> Sistema avanzado de monitoreo acuapónico
-          </p>
-        </div>
+      
       </aside>
 
       <main className="flex-1 p-6 lg:ml-0">
-        <h1 className="text-2xl font-bold mb-5 text-center">Acuaterra</h1>
-        <p className="text-gray-600 mb-6 text-lg sm:text-sm text-center">
+        <h1
+          className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-200 transition-transform duration-300 ease-in-out hover:scale-110"
+        >
+          Acuaterra
+        </h1>
+         <p className="text-gray-400 mb-6 text-lg sm:text-sm text-center">
           Acuaterra es una herramienta de software diseñada para sistematizar el
           proceso de monitoreo en módulos acuapónicos.
         </p>
 
-        {isMobile ? (
+       {isMobile ? (
           <MobileCarousel />
-        ) : (
+           ) : (
           <Carousel slides={slides} />
-        )}
-      </main>
+          )}
+     </main>
     </div>
   );
 };
