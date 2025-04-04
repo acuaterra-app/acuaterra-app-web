@@ -13,10 +13,10 @@ import fishIcon from "../assets/images/pez.png";
 import foto1 from "../assets/images/fotoAcuapico_1.jpg";
 import foto2 from "../assets/images/fotoAcuapico_2.jpg";
 import foto3 from "../assets/images/fotoAcuapico_3.jpg";
-import Slider from "../components/Slider/Slider";
-import MobileCarousel from "../components/Slider/MobileCarousel";
-import { isTokenValid } from "../common/isTokenValid";
+import { Carousel } from "../components/Slider/Carousel";
 import styled from "styled-components";
+import { isTokenValid } from "../common/isTokenValid";
+import MobileCarousel from "../components/Slider/MobileCarousel";
 
 const SidebarLogoWrapper = styled.div`
   .logo {
@@ -124,9 +124,15 @@ const Home: FC = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [animateSidebar, setAnimateSidebar] = useState(false); // Controla la animación inicial
+  const [animateSidebar, setAnimateSidebar] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const sliderImages = [foto1, foto2, foto3];
+
+  // Datos para el carrusel
+  const slides = [
+    { title: "Acuaterra Modulo", button: "1", src: foto1 },
+    { title: "Modulo Acuaponico ", button: "2", src: foto2 },
+    { title: "Acuaterra Granja", button: "3", src: foto3 },
+  ];
 
   useEffect(() => {
     if (!isTokenValid()) {
@@ -143,7 +149,9 @@ const Home: FC = () => {
 
       if (!isMobileView) {
         setAnimateSidebar(true);
-        setTimeout(() => { setAnimateSidebar(false); }, 500); // Duración de la animación
+        setTimeout(() => {
+          setAnimateSidebar(false);
+        }, 500);
       }
     };
 
@@ -156,26 +164,6 @@ const Home: FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
-
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
@@ -183,7 +171,7 @@ const Home: FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
+    <div className="flex min-h-screen font-sans bg-gradient-to-r from-blue-100 to-blue-300 relative overflow-x-auto">
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -197,76 +185,77 @@ const Home: FC = () => {
       <aside
         ref={menuRef}
         className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-300 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-        isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
-         } ${animateSidebar ? "animate-slide-in" : ""}`}
-           style={{
-            height: "100vh", // Asegura que la barra lateral ocupe toda la altura de la pantalla
-            boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)", // Sombreado para la barra lateral
-            }}
-           >
+          isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
+        } ${animateSidebar ? "animate-slide-in" : ""}`}
+        style={{
+          height: "100vh",
+          boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
+        }}
+      >
         <div className="p-4 flex flex-col items-center relative">
-        <button
-           className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 lg:hidden"
-           onClick={() => {
-           setIsOpen(false);
-          }}
-         >
-           <X size={24} />
-        </button>
+          <button
+            className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 lg:hidden"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
+            <X size={24} />
+          </button>
 
-        <SidebarLogoWrapper>
-          <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
-        </SidebarLogoWrapper>
-        <WelcomeText>Bienvenido, usuario!</WelcomeText>
+          <SidebarLogoWrapper>
+            <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
+          </SidebarLogoWrapper>
+          <WelcomeText>Bienvenido, usuario!</WelcomeText>
         </div>
 
-        <nav className="flex-1 overflow-y-auto"> {/* Permite desplazamiento si el contenido excede */}
-        <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-         {[
-            { icon: homeIcon, label: "Inicio", path: "" },
-            { icon: moduleIcon, label: "Granjas", path: "/farm" },
-            { icon: userIcon, label: "Usuarios", path: "/users" },
-            { icon: fishIcon, label: "Módulos", path: "/module" },
-            { icon: reportIcon, label: "Reporte", path: "/report" },
-         ].map((item, index) => (
-        <li
-          key={index}
-          className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
-          onClick={() => {
-            handleNavigation(item.path);
-          }}
-        >
-          <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
-          <span className="relative z-10 flex items-center gap-3 text-gray-700 group-hover:text-white font-bold">
-            <img alt={item.label} className="h-6 w-6" src={item.icon} />
-            {item.label}
-          </span>
-         </li>
-         ))}
-         </ul>
-         <div className="mt-4 md:mt-20">
-        <LogoutButtonStyled />
-        </div>
-       </nav> 
-    </aside>
+        <nav className="flex-1 overflow-y-auto">
+          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+            {[
+              { icon: homeIcon, label: "Inicio", path: "" },
+              { icon: moduleIcon, label: "Granjas", path: "/farm" },
+              { icon: userIcon, label: "Usuarios", path: "/users" },
+              { icon: fishIcon, label: "Módulos", path: "/module" },
+              { icon: reportIcon, label: "Reporte", path: "/report" },
+            ].map((item, index) => (
+              <li
+                key={index}
+                className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
+                onClick={() => {
+                  handleNavigation(item.path);
+                }}
+              >
+                <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
+                <span className="relative z-10 flex items-center gap-3 text-gray-700 group-hover:text-white font-bold">
+                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                  {item.label}
+                </span>
+              </li>
+            ))}
+          </ul>
 
-      <main className="flex-1 p-6 bg-white lg:ml-0">
+          <div className="mt-4 md:mt-20">
+            <LogoutButtonStyled />
+          </div>
+        </nav>
+
+        <div className="p-0">
+          <p className="text-center text-xs mt-2">
+            versión 1.0 <br /> Sistema avanzado de monitoreo acuapónico
+          </p>
+        </div>
+      </aside>
+
+      <main className="flex-1 p-6 lg:ml-0">
         <h1 className="text-2xl font-bold mb-5 text-center">Acuaterra</h1>
         <p className="text-gray-600 mb-6 text-lg sm:text-sm text-center">
           Acuaterra es una herramienta de software diseñada para sistematizar el
-          proceso de monitoreo en módulos acuapónicos
+          proceso de monitoreo en módulos acuapónicos.
         </p>
 
         {isMobile ? (
           <MobileCarousel />
         ) : (
-          <div
-            className={`w-[1200px] mx-auto h-[800px] overflow-hidden relative transition-opacity duration-300 z-0 ${
-              isOpen && window.innerWidth < 1024 ? "opacity-40" : "opacity-100"
-            }`}
-          >
-            <Slider images={sliderImages} interval={5000} />
-          </div>
+          <Carousel slides={slides} />
         )}
       </main>
     </div>
