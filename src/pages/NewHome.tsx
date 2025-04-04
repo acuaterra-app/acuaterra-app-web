@@ -18,11 +18,36 @@ import MobileCarousel from "../components/Slider/MobileCarousel";
 import { isTokenValid } from "../common/isTokenValid";
 import styled from "styled-components";
 
+const SidebarLogoWrapper = styled.div`
+  .logo {
+    width: 64px;
+    height: 64px;
+    animation: logo-spin 8s linear infinite; /* Animación de rotación */
+  }
+
+  @keyframes logo-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+const WelcomeText = styled.p`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #000;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1); /* Animación al pasar el puntero */
+  }
+`;
+
 const LogoutButtonStyledWrapper = styled.div`
   .button {
     cursor: pointer;
     border: none;
-    background: #3cacac; /* Cambiamos el color de fondo */
+    background: #3cacac;
     color: #fff;
     width: 100px;
     height: 100px;
@@ -33,7 +58,7 @@ const LogoutButtonStyledWrapper = styled.div`
     place-content: center;
     transition: background 300ms, transform 200ms;
     font-weight: 600;
-    margin: 0 auto; /* Centramos el botón */
+    margin: 0 auto;
   }
 
   .button__text {
@@ -46,7 +71,7 @@ const LogoutButtonStyledWrapper = styled.div`
       transform: rotate(calc(19deg * var(--index)));
       inset: 7px;
       font-size: 10px;
-      color: #fff; /* Mantenemos el texto blanco para contraste */
+      color: #fff;
     }
   }
 
@@ -63,28 +88,9 @@ const LogoutButtonStyledWrapper = styled.div`
     justify-content: center;
   }
 
-  .button__icon--copy {
-    position: absolute;
-    transform: translate(-150%, 150%);
-  }
-
   .button:hover {
-    background: #000; /* Cambiamos el fondo a negro al pasar el cursor */
+    background: #000;
     transform: scale(1.05);
-  }
-
-  .button:hover .button__icon {
-    color: #000;
-  }
-
-  .button:hover .button__icon:first-child {
-    transition: transform 0.3s ease-in-out;
-    transform: translate(150%, -150%);
-  }
-
-  .button:hover .button__icon--copy {
-    transition: transform 0.3s ease-in-out 0.1s;
-    transform: translate(0);
   }
 
   @keyframes text-rotation {
@@ -118,6 +124,7 @@ const Home: FC = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [animateSidebar, setAnimateSidebar] = useState(false); // Controla la animación inicial
   const menuRef = useRef<HTMLDivElement>(null);
   const sliderImages = [foto1, foto2, foto3];
 
@@ -131,7 +138,13 @@ const Home: FC = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      const isMobileView = window.innerWidth < 768;
+      setIsMobile(isMobileView);
+
+      if (!isMobileView) {
+        setAnimateSidebar(true);
+        setTimeout(() => { setAnimateSidebar(false); }, 500); // Duración de la animación
+      }
     };
 
     handleResize();
@@ -155,7 +168,7 @@ const Home: FC = () => {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
-    }
+    };
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return () => {
@@ -183,62 +196,59 @@ const Home: FC = () => {
 
       <aside
         ref={menuRef}
-        className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-300 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 lg:w-64 lg:relative`}
-      >
-        <div className="p-4 flex flex-col items-center relative">
-          <button
-            className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 lg:hidden"
-            onClick={() => {
-              setIsOpen(false);
+        className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-300 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
+         } ${animateSidebar ? "animate-slide-in" : ""}`}
+           style={{
+            height: "100vh", // Asegura que la barra lateral ocupe toda la altura de la pantalla
+            boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)", // Sombreado para la barra lateral
             }}
-          >
-            <X size={24} />
-          </button>
+           >
+        <div className="p-4 flex flex-col items-center relative">
+        <button
+           className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 lg:hidden"
+           onClick={() => {
+           setIsOpen(false);
+          }}
+         >
+           <X size={24} />
+        </button>
 
-          {/* Logo */}
-          <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
-          <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
+        <SidebarLogoWrapper>
+          <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
+        </SidebarLogoWrapper>
+        <WelcomeText>Bienvenido, usuario!</WelcomeText>
         </div>
 
-        {/* Navegación */}
-        <nav className="flex-1">
-          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-            {[
-              { icon: homeIcon, label: "Inicio", path: "/" },
-              { icon: moduleIcon, label: "Granjas", path: "/farm" },
-              { icon: userIcon, label: "Usuarios", path: "/users" },
-              { icon: fishIcon, label: "Módulos", path: "/module" },
-              { icon: reportIcon, label: "Reporte", path: "/report" },
-            ].map((item, index) => (
-              <li
-                key={index}
-                className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
-                onClick={() => {
-                  handleNavigation(item.path);
-                }}
-              >
-                <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
-                <span className="relative z-10 flex items-center gap-3 text-gray-700 group-hover:text-white font-bold">
-                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                  {item.label}
-                </span>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-4 md:mt-20">
-            <LogoutButtonStyled />
-          </div>
-        </nav>
-
-        <div className="p-0">
-          <p className="text-center text-xs mt-2">
-            versión 1.0 <br /> Advanced Aquaponics Monitoring System
-          </p>
+        <nav className="flex-1 overflow-y-auto"> {/* Permite desplazamiento si el contenido excede */}
+        <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+         {[
+            { icon: homeIcon, label: "Inicio", path: "" },
+            { icon: moduleIcon, label: "Granjas", path: "/farm" },
+            { icon: userIcon, label: "Usuarios", path: "/users" },
+            { icon: fishIcon, label: "Módulos", path: "/module" },
+            { icon: reportIcon, label: "Reporte", path: "/report" },
+         ].map((item, index) => (
+        <li
+          key={index}
+          className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
+          onClick={() => {
+            handleNavigation(item.path);
+          }}
+        >
+          <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
+          <span className="relative z-10 flex items-center gap-3 text-gray-700 group-hover:text-white font-bold">
+            <img alt={item.label} className="h-6 w-6" src={item.icon} />
+            {item.label}
+          </span>
+         </li>
+         ))}
+         </ul>
+         <div className="mt-4 md:mt-20">
+        <LogoutButtonStyled />
         </div>
-      </aside>
+       </nav> 
+    </aside>
 
       <main className="flex-1 p-6 bg-white lg:ml-0">
         <h1 className="text-2xl font-bold mb-5 text-center">Acuaterra</h1>
