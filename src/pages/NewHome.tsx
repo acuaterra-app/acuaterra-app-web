@@ -129,9 +129,9 @@ const Home: FC = () => {
 
   
   const slides = [
-    { title: "Acuaterra Modulo", button: "1", src: foto1 },
-    { title: "Modulo Acuaponico ", button: "2", src: foto2 },
-    { title: "Acuaterra Granja", button: "3", src: foto3 },
+    { title: "Acuaterra Modulo" , button: "1", src: foto1 },
+    { title: "Modulo Acuaponico", button: "2", src: foto2 },
+    { title: "Acuaterra Granja" , button: "3", src: foto3 },
   ];
 
   useEffect(() => {
@@ -211,11 +211,11 @@ const Home: FC = () => {
         <nav className="flex-1 overflow-y-auto">
           <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
             {[
-              { icon: homeIcon, label: "Inicio", path: "" },
-              { icon: moduleIcon, label: "Granjas", path: "/farm" },
-              { icon: userIcon, label: "Usuarios", path: "/users" },
-              { icon: fishIcon, label: "Módulos", path: "/module" },
-              { icon: reportIcon, label: "Reporte", path: "/report" },
+              { icon: homeIcon,   label: "Inicio",   path: ""        },
+              { icon: moduleIcon, label: "Granjas",  path: "/farm"   },
+              { icon: userIcon,   label: "Usuarios", path: "/users"  },
+              { icon: fishIcon,   label: "Módulos",  path: "/module" },
+              { icon: reportIcon, label: "Reporte",  path: "/report" },
             ].map((item, index) => (
               <li
                 key={index}
