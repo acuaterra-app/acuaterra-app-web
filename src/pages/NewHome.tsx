@@ -18,27 +18,26 @@ import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 import MobileCarousel from "../components/Slider/MobileCarousel";
 
-
 const SidebarLogoWrapper = styled.div`
   .logo {
     width: 96px;
     height: 96px;
-    transition: transform 0.3s ease; /* Transición para el efecto hover */
+    transition: transform 0.3s ease;
   }
 
   .logo:hover {
-    transform: scale(1.1); /* Aumenta el tamaño del logo al pasar el puntero */
+    transform: scale(1.1);
   }
 `;
 
 const WelcomeText = styled.p`
   font-size: 1.2rem;
   font-weight: bold;
-  color: #4a4a4a; /* Cambiado a text-gray-700 (#4a4a4a) */
+  color: #4a4a4a;
   transition: transform 0.3s ease;
 
   &:hover {
-    transform: scale(1.1); /* Animación al pasar el puntero */
+    transform: scale(1.1);
   }
 `;
 
@@ -124,13 +123,13 @@ const Home: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
+  const [isVisible, setIsVisible] = useState(false); 
   const menuRef = useRef<HTMLDivElement>(null);
 
-  
   const slides = [
-    { title: "Acuaterra Modulo" , button: "1", src: foto1 },
+    { title: "Acuaterra Modulo", button: "1", src: foto1 },
     { title: "Modulo Acuaponico", button: "2", src: foto2 },
-    { title: "Acuaterra Granja" , button: "3", src: foto3 },
+    { title: "Acuaterra Granja", button: "3", src: foto3 },
   ];
 
   useEffect(() => {
@@ -163,6 +162,15 @@ const Home: FC = () => {
     };
   }, []);
 
+  // Mostrar la página con un retraso para la animación
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 100); // Retraso de 100ms para iniciar la animación
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    return () => { clearTimeout(timeout); };
+  }, []);
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
@@ -170,86 +178,90 @@ const Home: FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen font-sans bg-[#f5f5f5] relative overflow-x-auto">
-  <button
-    className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
-    id="menu-button"
-    onClick={() => {
-      setIsOpen(!isOpen);
-    }}
-  >
-    {isOpen ? <X size={24} /> : <Menu size={24} />}
-  </button>
-
-  <aside
-    ref={menuRef}
-    className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-      isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
-    } ${animateSidebar ? "animate-slide-in" : ""}`}
-    style={{
-      height: "100vh",
-      boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
-    }}
-  >
-    <div className="p-4 flex flex-col items-center relative">
+    <div
+      className={`flex min-h-screen font-sans bg-[#f5f5f5] relative overflow-x-auto transition-opacity duration-700 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
       <button
-        className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
+        className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
+        id="menu-button"
         onClick={() => {
-          setIsOpen(false);
+          setIsOpen(!isOpen);
         }}
       >
-        <X size={24} />
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      <SidebarLogoWrapper>
-        <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
-      </SidebarLogoWrapper>
-      <WelcomeText>Bienvenido, usuario!</WelcomeText>
-    </div>
-
-    <nav className="flex-1 overflow-y-auto">
-      <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-        {[
-          { icon: homeIcon, label: "Inicio", path: "" },
-          { icon: moduleIcon, label: "Granjas", path: "/farm" },
-          { icon: userIcon, label: "Usuarios", path: "/users" },
-          { icon: fishIcon, label: "Módulos", path: "/module" },
-          { icon: reportIcon, label: "Reporte", path: "/report" },
-        ].map((item, index) => (
-          <li
-            key={index}
-            className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
+      <aside
+        ref={menuRef}
+        className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+          isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
+        } ${animateSidebar ? "animate-slide-in" : ""}`}
+        style={{
+          height: "100vh",
+          boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        <div className="p-4 flex flex-col items-center relative">
+          <button
+            className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
             onClick={() => {
-              handleNavigation(item.path);
+              setIsOpen(false);
             }}
           >
-            <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
-            <span className="relative z-10 flex items-center gap-3 text-gray-600 group-hover:text-white font-bold">
-              <img alt={item.label} className="h-6 w-6" src={item.icon} />
-              {item.label}
-            </span>
-          </li>
-        ))}
-      </ul>
+            <X size={24} />
+          </button>
 
-      <div className="mt-4 md:mt-20">
-        <LogoutButtonStyled />
-      </div>
-    </nav>
-  </aside>
+          <SidebarLogoWrapper>
+            <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
+          </SidebarLogoWrapper>
+          <WelcomeText>Bienvenido, usuario!</WelcomeText>
+        </div>
 
-  <main className="flex-1 p-6 lg:ml-0">
-    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
-      Acuaterra
-    </h1>
-    <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
-      Acuaterra es una herramienta de software diseñada para sistematizar el
-      proceso de monitoreo en módulos acuapónicos.
-    </p>
+        <nav className="flex-1 overflow-y-auto">
+          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+            {[
+              { icon: homeIcon, label: "Inicio", path: "" },
+              { icon: moduleIcon, label: "Granjas", path: "/farm" },
+              { icon: userIcon, label: "Usuarios", path: "/users" },
+              { icon: fishIcon, label: "Módulos", path: "/module" },
+              { icon: reportIcon, label: "Reporte", path: "/report" },
+            ].map((item, index) => (
+              <li
+                key={index}
+                className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
+                onClick={() => {
+                  handleNavigation(item.path);
+                }}
+              >
+                <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
+                <span className="relative z-10 flex items-center gap-3 text-gray-600 group-hover:text-white font-bold">
+                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                  {item.label}
+                </span>
+              </li>
+            ))}
+          </ul>
 
-    {isMobile ? <MobileCarousel /> : <Carousel slides={slides} />}
-  </main>
-</div>
+          <div className="mt-4 md:mt-20">
+            <LogoutButtonStyled />
+          </div>
+        </nav>
+      </aside>
+
+      <main className="flex-1 p-6 lg:ml-0">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+          Acuaterra
+        </h1>
+        <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
+          Acuaterra es una herramienta de software diseñada para sistematizar el
+          proceso de monitoreo en módulos acuapónicos.
+        </p>
+
+        {isMobile ? <MobileCarousel /> : <Carousel slides={slides} />}
+      </main>
+    </div>
   );
 };
 
