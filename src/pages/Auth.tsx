@@ -32,21 +32,21 @@ export const Auth: FunctionComponent = () => {
       className="min-h-screen bg-gradient-to-r from-blue-100 to-blue-300 flex flex-col justify-center items-center p-4 md:p-8 lg:p-12"
       exit={{ opacity: 0 }}
       initial={{ opacity: 0 }}
-      transition={{ duration: 1 }}
+      transition={{ duration: 0.8 }} // Reducimos la duración para optimizar
     >
-      
+      {/* Logo con animación */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="mb-6 flex flex-col items-center"
-        initial={{ opacity: 0, y: -50 }}
-        transition={{ duration: 0.8 }}
+        initial={{ opacity: 0, y: -30 }} // Reducimos el desplazamiento inicial
+        transition={{ duration: 0.6 }} // Reducimos la duración
       >
         <motion.img
           alt="Acuaterra Logo"
           className="h-32 md:h-48 lg:h-64 mb-2"
           src={acuaterraLogo}
-          transition={{ type: "spring", stiffness: 100, damping: 10 }}
-          whileHover={{ rotate: 15, scale: 1.2 }}
+          transition={{ type: "spring", stiffness: 80, damping: 12 }} // Ajustamos los valores para suavizar
+          whileHover={{ rotate: 10, scale: 1.1 }} // Reducimos el efecto hover
         />
       </motion.div>
 
@@ -54,27 +54,27 @@ export const Auth: FunctionComponent = () => {
       <motion.h1
         animate={{ opacity: 1, y: 0 }}
         className="text-4xl md:text-5xl lg:text-7xl font-bold mb-9 text-gray-800"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        whileHover={{ scale: 1.1 }}
+        initial={{ opacity: 0, y: 30 }} // Reducimos el desplazamiento inicial
+        transition={{ duration: 0.6, delay: 0.1 }} // Reducimos la duración y el retraso
+        whileHover={{ scale: 1.05 }} // Reducimos el efecto hover
       >
         Login
       </motion.h1>
 
-      
+      {/* Formulario con animación */}
       <motion.form
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-6 md:space-y-8 lg:space-y-10"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
+        initial={{ opacity: 0, y: 30 }} // Reducimos el desplazamiento inicial
+        transition={{ duration: 0.6, delay: 0.2 }} // Reducimos la duración y el retraso
         onSubmit={handleSubmit}
       >
-        
+        {/* Campo de email */}
         <motion.div
           animate={{ opacity: 1, x: 0 }}
           className="flex flex-col items-center"
-          initial={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          initial={{ opacity: 0, x: -20 }} // Reducimos el desplazamiento inicial
+          transition={{ duration: 0.6, delay: 0.3 }} // Reducimos la duración y el retraso
         >
           <InputCustomComponent
             error={error && !email ? "El campo email es requerido" : ""}
@@ -88,12 +88,12 @@ export const Auth: FunctionComponent = () => {
           />
         </motion.div>
 
-       
+        {/* Campo de contraseña */}
         <motion.div
           animate={{ opacity: 1, x: 0 }}
           className="flex flex-col items-center"
-          initial={{ opacity: 0, x: 50 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          initial={{ opacity: 0, x: 20 }} // Reducimos el desplazamiento inicial
+          transition={{ duration: 0.6, delay: 0.4 }} // Reducimos la duración y el retraso
         >
           <InputCustomComponent
             error={error && !password ? "El campo contraseña es requerido" : ""}
@@ -107,15 +107,15 @@ export const Auth: FunctionComponent = () => {
           />
         </motion.div>
 
-       
+        {/* Botón de inicio */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center"
-          initial={{ opacity: 0, y: 50 }}
-          transition={{ duration: 0.8, delay: 1 }}
+          initial={{ opacity: 0, y: 30 }} // Reducimos el desplazamiento inicial
+          transition={{ duration: 0.6, delay: 0.5 }} // Reducimos la duración y el retraso
         >
           <button
-            className="relative px-8 py-4 bg-[#44cbd3] text-white font-bold text-lg rounded-xl border-4 border-[#3cacac] shadow-[5px_5px_0px_0px_rgba(60,172,172,1)] transition-transform duration-300 hover:translate-x-1 hover:-translate-y-1"
+            className="relative px-8 py-4 bg-[#44cbd3] text-white font-bold text-lg rounded-xl border-4 border-[#3cacac] shadow-[5px_5px_0px_0px_rgba(60,172,172,1)] transition-transform duration-200 hover:translate-x-1 hover:-translate-y-1"
             onClick={handleSubmit}
           >
             ¡Comenzar!
@@ -123,24 +123,24 @@ export const Auth: FunctionComponent = () => {
         </motion.div>
       </motion.form>
 
-      
+      {/* Mensaje de error */}
       {error && email && password && (
         <motion.p
           animate={{ opacity: 1 }}
           className="mt-4 text-darkGray font-semibold"
           initial={{ opacity: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
+          transition={{ duration: 0.6, delay: 0.6 }} // Reducimos la duración y el retraso
         >
           Credenciales Incorrectas
         </motion.p>
       )}
 
-      
+      {/* Pie de página */}
       <motion.p
         animate={{ opacity: 1 }}
         className="text-gray-500 text-sm mt-20 text-center"
         initial={{ opacity: 0 }}
-        transition={{ duration: 0.8, delay: 1.4 }}
+        transition={{ duration: 0.6, delay: 0.7 }} // Reducimos la duración y el retraso
       >
         versión 1.0 - Advanced Aquaponics Monitoring System
       </motion.p>
