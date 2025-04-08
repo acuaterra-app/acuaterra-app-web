@@ -1,8 +1,8 @@
 /* eslint-disable no-use-before-define */
 import { useState, type FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { motion, useMotionValue, useTransform } from "framer-motion"; 
-import styled from "styled-components"; 
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import styled from "styled-components";
 import acuaterraLogo from "../assets/images/logo.png";
 import phoneHome from "../assets/images/mockup-phone.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
@@ -36,41 +36,37 @@ const Welcome: FC = () => {
     return <LoaderAcua />;
   }
 
-
-
   return (
     <motion.div
       animate={{ opacity: 1 }}
       className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-100 to-blue-300 font-sans p-8"
       initial={{ opacity: 0 }}
-      transition={{ duration: 1 }}
+      transition={{ duration: 0.8 }} 
     >
-      
+      {/* Sección izquierda */}
       <motion.div
         animate={{ opacity: 1, x: 0 }}
         className="w-full md:w-1/2 flex flex-col items-center justify-center text-center space-y-6"
         initial={{ opacity: 0, x: -100 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.6 }} 
       >
+        {/* Animation Logo */}
         <motion.img
           alt="Acuaterra Logo"
           animate={{ opacity: 1, y: 0 }}
           className="h-24 md:h-[250px] mb-4"
           initial={{ opacity: 0, y: -50 }}
           src={acuaterraLogo}
-          transition={{ type: "spring", stiffness: 100, damping: 10 }}
-          whileHover={{ rotate: 15, scale: 1.2 }}
+          transition={{ type: "spring", stiffness: 80, damping: 12 }} 
+          whileHover={{ rotate: 10, scale: 1.1 }} 
         />
 
-        <motion.h1
-        animate={{ opacity: 1, y: 0 }}
-        className="text-2xl md:text-4xl font-bold text-gray-800 mb-4"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8 }}
-        >
-        ¡Bienvenidos a Acuaterra!
-        </motion.h1>
+        {/* Títle */}
+        <h1 className="text-2xl md:text-4xl font-bold text-gray-800 mb-4">
+          ¡Bienvenidos a Acuaterra!
+        </h1>
 
+        {/* Start Buttom */}
         <StyledWrapper>
           <button className="btn" onClick={handleStart}>
             <span className="btn-text-one">Hola!</span>
@@ -78,21 +74,18 @@ const Welcome: FC = () => {
           </button>
         </StyledWrapper>
 
-        <motion.footer
-        animate={{ opacity: 1, y: 0 }}
-        className="text-1xl md:text font-bold text-gray-800 mb-4"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 1 }}  
-        >
-       <p>© 2023 Acuaterra. Todos los derechos reservados.</p>
-       </motion.footer>
+        {/* Footer */}
+        <footer className="text-1xl md:text font-bold text-gray-800 mb-4">
+          <p>© 2023 Acuaterra. Todos los derechos reservados.</p>
+        </footer>
       </motion.div>
 
+      {/* Right Section */}
       <motion.div
         animate={{ opacity: 1, x: 0 }}
         className="hidden md:flex md:w-1/2 justify-center"
         initial={{ opacity: 0, x: 100 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.6 }} 
         onMouseMove={handleMouseMove}
       >
         <motion.img
