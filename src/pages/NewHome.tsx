@@ -13,28 +13,144 @@ import fishIcon from "../assets/images/pez.png";
 import foto1 from "../assets/images/fotoAcuapico_1.jpg";
 import foto2 from "../assets/images/fotoAcuapico_2.jpg";
 import foto3 from "../assets/images/fotoAcuapico_3.jpg";
-import Slider from "../components/Slider/Slider";
-import MobileCarousel from "../components/Slider/MobileCarousel";
+import { Carousel } from "../components/Slider/Carousel";
+import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
+import MobileCarousel from "../components/Slider/MobileCarousel";
+
+const SidebarLogoWrapper = styled.div`
+  .logo {
+    width: 96px;
+    height: 96px;
+    transition: transform 0.3s ease;
+  }
+
+  .logo:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const WelcomeText = styled.p`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #4a4a4a;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const LogoutButtonStyledWrapper = styled.div`
+  .button {
+    cursor: pointer;
+    border: none;
+    background: #3cacac;
+    color: #fff;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    place-content: center;
+    transition: background 300ms, transform 200ms;
+    font-weight: 600;
+    margin: 0 auto;
+  }
+
+  .button__text {
+    position: absolute;
+    inset: 0;
+    animation: text-rotation 8s linear infinite;
+
+    > span {
+      position: absolute;
+      transform: rotate(calc(19deg * var(--index)));
+      inset: 7px;
+      font-size: 10px;
+      color: #fff;
+    }
+  }
+
+  .button__circle {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    background: #fff;
+    color: #84db7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .button:hover {
+    background: #000;
+    transform: scale(1.05);
+  }
+
+  @keyframes text-rotation {
+    to {
+      rotate: 360deg;
+    }
+  }
+`;
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const LogoutButtonStyled = () => {
+  return (
+    <LogoutButtonStyledWrapper>
+      <button className="button">
+        <p className="button__text">
+          {Array.from("CERRAR SESIÓN").map((char, index) => (
+            <span key={index} style={{ "--index": index } as React.CSSProperties}>
+              {char}
+            </span>
+          ))}
+        </p>
+        <div className="button__circle">
+          <LogoutButton />
+        </div>
+      </button>
+    </LogoutButtonStyledWrapper>
+  );
+};
 
 const Home: FC = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [animateSidebar, setAnimateSidebar] = useState(false);
+  const [isVisible, setIsVisible] = useState(false); 
   const menuRef = useRef<HTMLDivElement>(null);
-  const sliderImages = [foto1, foto2, foto3];
 
-    useEffect(() => {
-      if (!isTokenValid()) {
-        console.log("Redirigiendo a /auth desde el componente Home"); 
-        void navigate({ to: "/auth" });
-      }
-    }, [navigate]);
+  const slides = [
+    { title: "Acuaterra Modulo", button: "1", src: foto1 },
+    { title: "Modulo Acuaponico", button: "2", src: foto2 },
+    { title: "Acuaterra Granja", button: "3", src: foto3 },
+  ];
+
+  useEffect(() => {
+    if (!isTokenValid()) {
+      console.log("Redirigiendo a /auth desde el componente Home");
+      void navigate({ to: "/auth" });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      const isMobileView = window.innerWidth < 768;
+      setIsMobile(isMobileView);
+
+      if (!isMobileView) {
+        setAnimateSidebar(true);
+        setTimeout(() => {
+          setAnimateSidebar(false);
+        }, 500);
+      }
     };
 
     handleResize();
@@ -46,25 +162,14 @@ const Home: FC = () => {
     };
   }, []);
 
+  // Mostrar la página con un retraso para la animación
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 100); // Retraso de 100ms para iniciar la animación
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
+    return () => { clearTimeout(timeout); };
+  }, []);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleNavigation = (path: string) => {
@@ -73,120 +178,88 @@ const Home: FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
+    <div
+      className={`flex min-h-screen font-sans bg-[#f5f5f5] relative overflow-x-auto transition-opacity duration-700 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
       <button
-        className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
+        className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
         id="menu-button"
-        onClick={() => { setIsOpen(!isOpen); }}
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       <aside
         ref={menuRef}
-        className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-300 flex flex-col transform transition-transform duration-300 ease-in-out z-50
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0 lg:w-64 lg:relative`}
+        className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+          isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
+        } ${animateSidebar ? "animate-slide-in" : ""}`}
+        style={{
+          height: "100vh",
+          boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
+        }}
       >
         <div className="p-4 flex flex-col items-center relative">
           <button
-            className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 lg:hidden"
-            onClick={() => { setIsOpen(false); }}
+            className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
+            onClick={() => {
+              setIsOpen(false);
+            }}
           >
             <X size={24} />
           </button>
 
-          <img alt="Acuaterra Logo" className="h-16 mb-2" src={acuaterraLogo} />
-          <p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
+          <SidebarLogoWrapper>
+            <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
+          </SidebarLogoWrapper>
+          <WelcomeText>Bienvenido, usuario!</WelcomeText>
         </div>
 
-        <nav className="flex-1">
+        <nav className="flex-1 overflow-y-auto">
           <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-            <li
-              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all 
-                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400
-                         hover:scale-102 bg-gray-400 text-white border-2 border-gray-400 rounded-lg"
-
-              onClick={() => { handleNavigation("/"); }}
-            >
-              <img alt="Home" className="h-6 w-6" src={homeIcon} />
-              <span className="font-bold">Inicio</span>
-            </li>
-
-            <li
-              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all  
-                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400 
-                         hover:scale-102 rounded-lg"
-              onClick={() => { handleNavigation("/farm"); }}
-            >
-              <img alt="Granjas" className="h-6 w-6" src={moduleIcon} />
-              <span className="font-bold">Granjas</span>
-            </li>
-
-            <li
-              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all 
-                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400 
-                         hover:scale-102 rounded-lg"
-              onClick={() => { handleNavigation("/users"); }}
-            >
-              <img alt="Usuarios" className="h-6 w-6" src={userIcon} />
-              <span className="font-bold">Usuarios</span>
-            </li>
-
-            <li
-              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all 
-                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400 
-                         hover:scale-102 rounded-lg"
-              onClick={() => { handleNavigation("/module"); }}
-            >
-              <img alt="Módulos" className="h-6 w-6" src={fishIcon} />
-              <span className="font-bold">Módulos</span>
-            </li>
-
-            <li
-              className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all  
-                         duration-300 transform origin-center overflow-hidden hover:bg-gray-400 
-                         hover:scale-102 rounded-lg"
-              onClick={() => { handleNavigation("/report"); }}
-            >
-              <img alt="Reporte" className="h-6 w-6" src={reportIcon} />
-              <span className="font-bold">Reporte</span>
-            </li>
+            {[
+              { icon: homeIcon, label: "Inicio", path: "" },
+              { icon: moduleIcon, label: "Granjas", path: "/farm" },
+              { icon: userIcon, label: "Usuarios", path: "/users" },
+              { icon: fishIcon, label: "Módulos", path: "/module" },
+              { icon: reportIcon, label: "Reporte", path: "/report" },
+            ].map((item, index) => (
+              <li
+                key={index}
+                className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
+                onClick={() => {
+                  handleNavigation(item.path);
+                }}
+              >
+                <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
+                <span className="relative z-10 flex items-center gap-3 text-gray-600 group-hover:text-white font-bold">
+                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                  {item.label}
+                </span>
+              </li>
+            ))}
           </ul>
 
           <div className="mt-4 md:mt-20">
-            <ul className="space-y-4">
-              <li className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all 
-                             duration-300 transform origin-center overflow-hidden hover:bg-gray-300 
-                             hover:scale-102 rounded-lg">
-                <LogoutButton />
-              </li>
-            </ul>
+            <LogoutButtonStyled />
           </div>
         </nav>
-
-        <div className="p-0">
-          <p className="text-center text-xs mt-2">
-            versión 1.0 <br /> Advanced Aquaponics Monitoring System
-          </p>
-        </div>
       </aside>
 
-      <main className="flex-1 p-6 bg-white lg:ml-0">
-        <h1 className="text-2xl font-bold mb-5 text-center">Acuaterra</h1>
-        <p className="text-gray-600 mb-6 text-lg sm:text-sm text-center">
-          Acuaterra es una herramienta de software diseñada para sistematizar el proceso de monitoreo en módulos acuapónicos
+      <main className="flex-1 p-6 lg:ml-0">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+          Acuaterra
+        </h1>
+        <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
+          Acuaterra es una herramienta de software diseñada para sistematizar el
+          proceso de monitoreo en módulos acuapónicos.
         </p>
 
-        {isMobile ? (
-          <MobileCarousel />
-        ) : (
-          <div
-            className={`w-[1200px] mx-auto h-[800px] overflow-hidden relative transition-opacity duration-300 z-0 ${isOpen && window.innerWidth < 1024 ? "opacity-40" : "opacity-100"}`}
-          >
-            <Slider images={sliderImages} interval={5000} />
-          </div>
-        )}
+        {isMobile ? <MobileCarousel /> : <Carousel slides={slides} />}
       </main>
     </div>
   );
