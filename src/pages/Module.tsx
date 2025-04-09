@@ -246,6 +246,7 @@ export const Module: FunctionComponent = () => {
                 <TableWithActions
                   data={modules}
                   error={error}
+                  isVisibleActions={false}
                   isVisibleButton={false}
                   limit={perPage}
                   loading={loading}
@@ -284,6 +285,7 @@ export const Module: FunctionComponent = () => {
                 <TableWithActionsMobile
                   data={modules}
                   error={error}
+                  isVisibleActions={false}
                   isVisibleButton={false}
                   limit={perPage}
                   loading={loading}

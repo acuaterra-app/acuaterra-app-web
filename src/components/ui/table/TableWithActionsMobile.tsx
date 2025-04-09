@@ -18,6 +18,7 @@ interface TableWithActionsMobileProps<T extends TableItem> {
   setPage: (page: number) => void;
   setLimit: (limit: number) => void;
   isVisibleButton?: boolean;
+  isVisibleActions?: boolean;
 }
 
 const TableWithActionsMobile = <T extends TableItem>({
@@ -34,6 +35,7 @@ const TableWithActionsMobile = <T extends TableItem>({
   limit,
   setPage,
   isVisibleButton = true,
+  isVisibleActions = true,
 }: TableWithActionsMobileProps<T>): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -93,7 +95,8 @@ const TableWithActionsMobile = <T extends TableItem>({
               </div>
             ))}
             {/* Buttons */}
-            <div className="flex space-x-2 mt-2">
+            
+            {isVisibleActions && (<div className="flex space-x-2 mt-2">
               <motion.button
                 className="bg-primary hover:bg-secondary text-white px-3 py-1 rounded flex items-center transition duration-200 cursor-pointer"
                 whileTap={{ scale: 0.9 }}
@@ -108,7 +111,8 @@ const TableWithActionsMobile = <T extends TableItem>({
               >
                 <FaTrash className="mr-1" /> Borrar
               </motion.button>
-            </div>
+            </div>)}
+
           </motion.div>
         ))}
       </div>
