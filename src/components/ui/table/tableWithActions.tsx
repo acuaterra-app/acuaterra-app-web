@@ -19,6 +19,7 @@ interface TableWithActionsProps<T extends TableItem> {
   setPage: (page: number) => void;
   setLimit: (limit: number) => void;
   isVisibleButton?: boolean ;
+  isVisibleActions?: boolean;
 }
 
 const TableWithActions = <T extends TableItem>({
@@ -36,6 +37,7 @@ const TableWithActions = <T extends TableItem>({
   setPage,
   setLimit, 
   isVisibleButton = true,
+  isVisibleActions = true,
 }: TableWithActionsProps<T>): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -89,7 +91,7 @@ const TableWithActions = <T extends TableItem>({
                   {column.header}
                 </th>
               ))}
-              <th className="py-3 px-6 text-left">Actions</th>
+              {isVisibleActions && (<th className="py-3 px-6 text-left">Actions</th>)}
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm font-light">
@@ -105,7 +107,7 @@ const TableWithActions = <T extends TableItem>({
                     {column.render ? column.render(item) : String(item[column.accessor] ?? '')}
                   </td>
                 ))}
-                <td className="py-3 px-6 text-left whitespace-nowrap">
+                {isVisibleActions && (<td className="py-3 px-6 text-left whitespace-nowrap">
                   <div className="flex space-x-2">
                     <motion.button
                       className="bg-primary hover:bg-secondary text-white px-2 py-1 rounded flex items-center"
@@ -122,7 +124,8 @@ const TableWithActions = <T extends TableItem>({
                       <FaTrash className="mr-1" /> Borrar
                     </motion.button>
                   </div>
-                </td>
+                </td>)}
+                
               </tr>
             ))}
           </tbody>
