@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Paleta de colores proporcionada siguiendo los colores de ACUATERRA
+        // Color palette provided following ACUATERRA colors
         primary: "#44cbd3",
         secondary: "#3cacac",
         tertiary: "#34969e",
@@ -18,9 +18,9 @@ export default {
         
       },
       fontFamily: {
-        sans: ["Roboto", "sans-serif"],// Fuentes especificadas para el proyecto
+        sans: ["Roboto", "sans-serif"],// specified fonts for project
       },
-      // Definir tamaños para encabezados (usando rem; 1rem = 16px)
+      // Defined sizes for headers (using rem; 1rem = 16px)
       fontSize: {
         h1: ["1.75rem", { lineHeight: "2.25rem" }], // 28px aprox.
         h2: ["1.5rem", { lineHeight: "2rem" }],       // 24px aprox.
