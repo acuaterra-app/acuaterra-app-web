@@ -36,8 +36,7 @@ export default {
       },
       animation: {
         "square-in-hesitate": "square-in-hesitate 2.5s cubic-bezier(0.25, 1, 0.3, 1) both",
-      },
-      
+      },   
     },
   },
   plugins: [],
