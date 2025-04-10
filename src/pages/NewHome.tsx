@@ -1,7 +1,7 @@
 import type { FC } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate  } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
@@ -17,6 +17,7 @@ import { Carousel } from "../components/Slider/Carousel";
 import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 import MobileCarousel from "../components/Slider/MobileCarousel";
+
 
 const SidebarLogoWrapper = styled.div`
   .logo {
@@ -162,11 +163,11 @@ const Home: FC = () => {
     };
   }, []);
 
-  // Mostrar la página con un retraso para la animación
+  // Transition for sidebar
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsVisible(true);
-    }, 100); // Retraso de 100ms para iniciar la animación
+    }, 100); //delay of 100ms to start the animation
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return () => { clearTimeout(timeout); };
   }, []);
@@ -220,34 +221,42 @@ const Home: FC = () => {
         </div>
 
         <nav className="flex-1 overflow-y-auto">
-          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-            {[
-              { icon: homeIcon, label: "Inicio", path: "" },
-              { icon: moduleIcon, label: "Granjas", path: "/farm" },
-              { icon: userIcon, label: "Usuarios", path: "/users" },
-              { icon: fishIcon, label: "Módulos", path: "/module" },
-              { icon: reportIcon, label: "Reporte", path: "/report" },
-            ].map((item, index) => (
-              <li
-                key={index}
-                className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
-                onClick={() => {
-                  handleNavigation(item.path);
-                }}
-              >
-                <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
-                <span className="relative z-10 flex items-center gap-3 text-gray-600 group-hover:text-white font-bold">
-                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                  {item.label}
-                </span>
-              </li>
-            ))}
-          </ul>
+           <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+             {[
+               { icon: homeIcon, label: "Inicio", path: "/newhome" },
+               { icon: moduleIcon, label: "Granjas", path: "/farm" },
+               { icon: userIcon, label: "Usuarios", path: "/users" },
+               { icon: fishIcon, label: "Módulos", path: "/module" },
+               { icon: reportIcon, label: "Reporte", path: "/report" },
+             ].map((item, index) => (
+               <li
+              key={index}
+                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                location.pathname === item.path
+                  ? "bg-[#3cacac] text-white shadow-md"
+                 : "text-gray-600 group-hover:text-white"
+                }`}
+               onClick={() => {
+                 handleNavigation(item.path);
+            }}
+               >
+                <span
+          className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+            location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
+          }`}
+        ></span>
+            <span className="relative z-10 flex items-center gap-3 font-bold">
+              <img alt={item.label} className="h-6 w-6" src={item.icon} />
+              {item.label}
+             </span>
+            </li>
+          ))}
+         </ul>
 
           <div className="mt-4 md:mt-20">
             <LogoutButtonStyled />
           </div>
-        </nav>
+      </nav>
       </aside>
 
       <main className="flex-1 p-6 lg:ml-0">
