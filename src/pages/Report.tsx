@@ -228,7 +228,7 @@ const Report: FC = () => {
         } md:translate-x-0 md:w-64`}
         style={{
           height: "100vh",
-          boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
+          boxShadow: "7px 0 15px rgba(0, 0, 0, 0.2)",
         }}
       >
         <div className="p-4 flex flex-col items-center relative">
