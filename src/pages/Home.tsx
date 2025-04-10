@@ -1,29 +1,19 @@
 /* eslint-disable no-use-before-define */
-import { useState, type FC } from "react";
+import { useState, type FC, Suspense } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import styled from "styled-components";
 import acuaterraLogo from "../assets/images/logo.png";
-import phoneHome from "../assets/images/mockup-phone.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
+// eslint-disable-next-line no-duplicate-imports
+import { lazy } from "react";
+
+// Lazy load the SplineAnimation component
+const SplineAnimation = lazy(() => import ("../components/ui/SplineAnimation"));
 
 const Welcome: FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rotateX = useTransform(mouseY, [-100, 100], [10, -10]);
-  const rotateY = useTransform(mouseX, [-100, 100], [-10, 10]);
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleMouseMove = (event: React.MouseEvent) => {
-    const { clientX, clientY, currentTarget } = event;
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-    const x = clientX - left - width / 2;
-    const y = clientY - top - height / 2;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
 
   const handleStart = (): void => {
     setLoading(true);
@@ -41,14 +31,14 @@ const Welcome: FC = () => {
       animate={{ opacity: 1 }}
       className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-100 to-blue-300 font-sans p-8"
       initial={{ opacity: 0 }}
-      transition={{ duration: 0.8 }} 
+      transition={{ duration: 0.8 }}
     >
-      {/* Sección izquierda */}
+      {/* Left Section */}
       <motion.div
         animate={{ opacity: 1, x: 0 }}
         className="w-full md:w-1/2 flex flex-col items-center justify-center text-center space-y-6"
         initial={{ opacity: 0, x: -100 }}
-        transition={{ duration: 0.6 }} 
+        transition={{ duration: 0.6 }}
       >
         {/* Animation Logo */}
         <motion.img
@@ -57,16 +47,16 @@ const Welcome: FC = () => {
           className="h-24 md:h-[250px] mb-4"
           initial={{ opacity: 0, y: -50 }}
           src={acuaterraLogo}
-          transition={{ type: "spring", stiffness: 80, damping: 12 }} 
-          whileHover={{ rotate: 10, scale: 1.1 }} 
+          transition={{ type: "spring", stiffness: 80, damping: 12 }}
+          whileHover={{ rotate: 10, scale: 1.1 }}
         />
 
-        {/* Títle */}
+        {/* Title */}
         <h1 className="text-2xl md:text-4xl font-bold text-gray-800 mb-4">
           ¡Bienvenidos a Acuaterra!
         </h1>
 
-        {/* Start Buttom */}
+        {/* Start Button */}
         <StyledWrapper>
           <button className="btn" onClick={handleStart}>
             <span className="btn-text-one">Hola!</span>
@@ -80,25 +70,16 @@ const Welcome: FC = () => {
         </footer>
       </motion.div>
 
-      {/* Right Section */}
+      {/* Right Section with Spline Animation */}
       <motion.div
         animate={{ opacity: 1, x: 0 }}
         className="hidden md:flex md:w-1/2 justify-center"
         initial={{ opacity: 0, x: 100 }}
-        transition={{ duration: 0.6 }} 
-        onMouseMove={handleMouseMove}
+        transition={{ duration: 0.6 }}
       >
-        <motion.img
-          alt="Vista de la app en teléfono"
-          className="max-h-[800px] object-contain"
-          src={phoneHome}
-          whileHover={{ scale: 1.05 }}
-          style={{
-            rotateX,
-            rotateY,
-            willChange: "transform",
-          }}
-        />
+        <Suspense fallback={<LoaderAcua />}>
+          <SplineAnimation />
+        </Suspense>
       </motion.div>
     </motion.div>
   );
