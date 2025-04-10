@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as UsersImport } from './routes/users'
 import { Route as UserRegisterImport } from './routes/userRegister'
 import { Route as ReportImport } from './routes/report'
+import { Route as NotfoundImport } from './routes/notfound'
 import { Route as NewHomeImport } from './routes/newHome'
 import { Route as ModuleRegisterImport } from './routes/moduleRegister'
 import { Route as ModuleImport } from './routes/module'
@@ -42,6 +43,12 @@ const UserRegisterRoute = UserRegisterImport.update({
 const ReportRoute = ReportImport.update({
   id: '/report',
   path: '/report',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NotfoundRoute = NotfoundImport.update({
+  id: '/notfound',
+  path: '/notfound',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -179,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewHomeImport
       parentRoute: typeof rootRoute
     }
+    '/notfound': {
+      id: '/notfound'
+      path: '/notfound'
+      fullPath: '/notfound'
+      preLoaderRoute: typeof NotfoundImport
+      parentRoute: typeof rootRoute
+    }
     '/report': {
       id: '/report'
       path: '/report'
@@ -216,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/module': typeof ModuleRoute
   '/moduleRegister': typeof ModuleRegisterRoute
   '/newHome': typeof NewHomeRoute
+  '/notfound': typeof NotfoundRoute
   '/report': typeof ReportRoute
   '/userRegister': typeof UserRegisterRoute
   '/users': typeof UsersRoute
@@ -232,6 +247,7 @@ export interface FileRoutesByTo {
   '/module': typeof ModuleRoute
   '/moduleRegister': typeof ModuleRegisterRoute
   '/newHome': typeof NewHomeRoute
+  '/notfound': typeof NotfoundRoute
   '/report': typeof ReportRoute
   '/userRegister': typeof UserRegisterRoute
   '/users': typeof UsersRoute
@@ -249,6 +265,7 @@ export interface FileRoutesById {
   '/module': typeof ModuleRoute
   '/moduleRegister': typeof ModuleRegisterRoute
   '/newHome': typeof NewHomeRoute
+  '/notfound': typeof NotfoundRoute
   '/report': typeof ReportRoute
   '/userRegister': typeof UserRegisterRoute
   '/users': typeof UsersRoute
@@ -267,6 +284,7 @@ export interface FileRouteTypes {
     | '/module'
     | '/moduleRegister'
     | '/newHome'
+    | '/notfound'
     | '/report'
     | '/userRegister'
     | '/users'
@@ -282,6 +300,7 @@ export interface FileRouteTypes {
     | '/module'
     | '/moduleRegister'
     | '/newHome'
+    | '/notfound'
     | '/report'
     | '/userRegister'
     | '/users'
@@ -297,6 +316,7 @@ export interface FileRouteTypes {
     | '/module'
     | '/moduleRegister'
     | '/newHome'
+    | '/notfound'
     | '/report'
     | '/userRegister'
     | '/users'
@@ -314,6 +334,7 @@ export interface RootRouteChildren {
   ModuleRoute: typeof ModuleRoute
   ModuleRegisterRoute: typeof ModuleRegisterRoute
   NewHomeRoute: typeof NewHomeRoute
+  NotfoundRoute: typeof NotfoundRoute
   ReportRoute: typeof ReportRoute
   UserRegisterRoute: typeof UserRegisterRoute
   UsersRoute: typeof UsersRoute
@@ -330,6 +351,7 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleRoute: ModuleRoute,
   ModuleRegisterRoute: ModuleRegisterRoute,
   NewHomeRoute: NewHomeRoute,
+  NotfoundRoute: NotfoundRoute,
   ReportRoute: ReportRoute,
   UserRegisterRoute: UserRegisterRoute,
   UsersRoute: UsersRoute,
@@ -355,6 +377,7 @@ export const routeTree = rootRoute
         "/module",
         "/moduleRegister",
         "/newHome",
+        "/notfound",
         "/report",
         "/userRegister",
         "/users"
@@ -389,6 +412,9 @@ export const routeTree = rootRoute
     },
     "/newHome": {
       "filePath": "newHome.ts"
+    },
+    "/notfound": {
+      "filePath": "notfound.ts"
     },
     "/report": {
       "filePath": "report.ts"
