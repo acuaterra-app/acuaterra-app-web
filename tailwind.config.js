@@ -36,10 +36,15 @@ export default {
           from: { clipPath: "inset(100% 100% 100% 100%)" },
           to: { clipPath: "inset(0 0 0 0)" },
         },
+        "wipe-in-right": {
+          from: { clipPath: "inset(0 100% 0 0)" },
+          to: { clipPath: "inset(0 0 0 0)" },
+        },
       },
       animation: {
         "square-in-hesitate": "square-in-hesitate 2.5s cubic-bezier(0.25, 1, 0.3, 1) both",
         "square-in-center": "square-in-center 2.5s cubic-bezier(0.25, 1, 0.3, 1) both",
+        "wipe-in-right": "wipe-in-right 2.5s cubic-bezier(0.25, 1, 0.3, 1) both",
       },
     },
   },
