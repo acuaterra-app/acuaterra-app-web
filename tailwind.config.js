@@ -26,17 +26,21 @@ export default {
         h2: ["1.5rem", { lineHeight: "2rem" }],       // 24px aprox.
         h3: ["1.25rem", { lineHeight: "1.75rem" }],    // 20px aprox.
       },
-
       keyframes: {
         "square-in-hesitate": {
           "0%": { clipPath: "inset(100% 100% 100% 100%)" },
           "40%": { clipPath: "inset(33% 33% 33% 33%)" },
           "100%": { clipPath: "inset(0 0 0 0)" },
         },
+        "square-in-center": {
+          from: { clipPath: "inset(100% 100% 100% 100%)" },
+          to: { clipPath: "inset(0 0 0 0)" },
+        },
       },
       animation: {
         "square-in-hesitate": "square-in-hesitate 2.5s cubic-bezier(0.25, 1, 0.3, 1) both",
-      },   
+        "square-in-center": "square-in-center 2.5s cubic-bezier(0.25, 1, 0.3, 1) both",
+      },
     },
   },
   plugins: [],

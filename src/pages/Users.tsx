@@ -21,358 +21,374 @@ import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
 import { Menu, X } from "lucide-react";
 import LogoutButton from "../components/ui/button/logoutButton";
+import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 
+const SidebarLogoWrapper = styled.div`
+  .logo {
+    width: 96px;
+    height: 96px;
+    transition: transform 0.3s ease;
+  }
+
+  .logo:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const WelcomeText = styled.p`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #4a4a4a;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const LogoutButtonStyledWrapper = styled.div`
+  .button {
+    cursor: pointer;
+    border: none;
+    background: #3cacac;
+    color: #fff;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    place-content: center;
+    transition: background 300ms, transform 200ms;
+    font-weight: 600;
+    margin: 0 auto;
+  }
+
+  .button__text {
+    position: absolute;
+    inset: 0;
+    animation: text-rotation 8s linear infinite;
+
+    > span {
+      position: absolute;
+      transform: rotate(calc(19deg * var(--index)));
+      inset: 7px;
+      font-size: 10px;
+      color: #fff;
+    }
+  }
+
+  .button__circle {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    background: #fff;
+    color: #84db7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .button:hover {
+    background: #000;
+    transform: scale(1.05);
+  }
+
+  @keyframes text-rotation {
+    to {
+      rotate: 360deg;
+    }
+  }
+`;
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const LogoutButtonStyled = () => {
+  return (
+    <LogoutButtonStyledWrapper>
+      <button className="button">
+        <p className="button__text">
+          {Array.from("CERRAR SESIÓN").map((char, index) => (
+            <span key={index} style={{ "--index": index } as React.CSSProperties}>
+              {char}
+            </span>
+          ))}
+        </p>
+        <div className="button__circle">
+          <LogoutButton />
+        </div>
+      </button>
+    </LogoutButtonStyledWrapper>
+  );
+};
+
 export const Users: FunctionComponent = () => {
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	useEffect(() => {
-		if (!isTokenValid()) {
-			console.log("Redirigiendo a /auth desde el componente Users");
-			void navigate({ to: "/auth" });
-		}
-	}, [navigate]);
+  useEffect(() => {
+    if (!isTokenValid()) {
+      console.log("Redirigiendo a /auth desde el componente Users");
+      void navigate({ to: "/auth" });
+    }
+  }, [navigate]);
 
-	const [reload, setReload] = useState(false);
+  const [reload, setReload] = useState(false);
 
-	const [showModal, setShowModal] = useState(false);
-	const [showUpdateModal, setShowUpdateModal] = useState(false);
-	const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
 
-	const { users, page, setPage, loading, limit, error, total, setLimit } =
-		useUsers(reload);
-	const { registerUser } = useRegisterUser();
+  const { users, page, setPage, loading, limit, error, total, setLimit } =
+    useUsers(reload);
+  const { registerUser } = useRegisterUser();
 
-	const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-	const handleRegisterUser = async (userData: UserRequestV2): Promise<void> => {
-		try {
-			const isRegister = await registerUser(userData);
-		
-			if (isRegister) {
+  const handleRegisterUser = async (userData: UserRequestV2): Promise<void> => {
+    try {
+      const isRegister = await registerUser(userData);
+
+      if (isRegister) {
         setShowModal(false); // Close the modal after registration
         setReload(!reload);
-				toast.success("Usuario registrado exitosamente!");
-			} else {
-				toast.error(
-					"No se pudo registrar el usuario. Por favor, inténtalo de nuevo."
-				);
-			}
-		} catch (error) {
-			console.error("Error al registrar el usuario:", error);
-			toast.error(
-				"No se pudo registrar el usuario. Por favor, inténtalo de nuevo."
-			);
-		}
-	};
+        toast.success("Usuario registrado exitosamente!");
+      } else {
+        toast.error(
+          "No se pudo registrar el usuario. Por favor, inténtalo de nuevo."
+        );
+      }
+    } catch (error) {
+      console.error("Error al registrar el usuario:", error);
+      toast.error(
+        "No se pudo registrar el usuario. Por favor, inténtalo de nuevo."
+      );
+    }
+  };
 
-	const handleUpdateUser = async (
-		userId: number,
-		userData: UserRequestV2
-	): Promise<void> => {
-		try {
-			await updateUser(userId, userData);
-			setReload(!reload);
-			setShowUpdateModal(false);
-			toast.success("Usuario actualizado exitosamente!");
-		} catch (error) {
-			console.error("Error al actualizar el usuario:", error);
-			toast.error(
-				"No se pudo actualizar el usuario. Por favor, inténtalo de nuevo."
-			);
-		}
-	};
+  const handleUpdateUser = async (
+    userId: number,
+    userData: UserRequestV2
+  ): Promise<void> => {
+    try {
+      await updateUser(userId, userData);
+      setReload(!reload);
+      setShowUpdateModal(false);
+      toast.success("Usuario actualizado exitosamente!");
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      toast.error(
+        "No se pudo actualizar el usuario. Por favor, inténtalo de nuevo."
+      );
+    }
+  };
 
-	const handleDeleteUser = async (userId: number): Promise<void> => {
-		const confirmed = window.confirm(
-			"¿Estás seguro de que deseas eliminar este usuario?"
-		);
-		if (confirmed) {
-			try {
-				await deleteUser(userId);
-				setReload(!reload);
-				toast.success("Usuario eliminado exitosamente!");
-			} catch (error) {
-				console.error("Error al eliminar el usuario:", error);
-				toast.error(
-					"No se pudo eliminar el usuario. Por favor, inténtalo de nuevo."
-				);
-			}
-		}
-	};
+  const handleDeleteUser = async (userId: number): Promise<void> => {
+    const confirmed = window.confirm(
+      "¿Estás seguro de que deseas eliminar este usuario?"
+    );
+    if (confirmed) {
+      try {
+        await deleteUser(userId);
+        setReload(!reload);
+        toast.success("Usuario eliminado exitosamente!");
+      } catch (error) {
+        console.error("Error al eliminar el usuario:", error);
+        toast.error(
+          "No se pudo eliminar el usuario. Por favor, inténtalo de nuevo."
+        );
+      }
+    }
+  };
 
-	const handleOpenUpdateModal = (user: UserResponse): void => {
-		setSelectedUser(user);
-		setShowUpdateModal(true);
-	};
+  const handleOpenUpdateModal = (user: UserResponse): void => {
+    setSelectedUser(user);
+    setShowUpdateModal(true);
+  };
 
-	useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-		const handleClickOutside = (event: MouseEvent) => {
-			const sidebar = document.getElementById("sidebar");
-			const menuButton = document.getElementById("menu-button");
-			if (
-				isOpen &&
-				sidebar &&
-				!sidebar.contains(event.target as Node) &&
-				menuButton &&
-				!menuButton.contains(event.target as Node)
-			) {
-				setIsOpen(false);
-			}
-		};
+  return (
+    <>
+      <ToastContainer />
 
-		document.addEventListener("mousedown", handleClickOutside);
-		// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [isOpen]);
+      <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
+        <button
+          className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
+          id="menu-button"
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
 
-	useEffect(() => {
-		document.body.style.overflowY = isOpen ? "hidden" : "auto";
-		// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-		return () => {
-			document.body.style.overflowY = "auto";
-		};
-	}, [isOpen]);
+		<aside
+  id="sidebar"
+  className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
+    isOpen ? "translate-x-0" : "-translate-x-full"
+  } md:translate-x-0 md:w-64`}
+  style={{
+    height: "100vh", 
+    boxShadow: "7px 0 15px rgba(0, 0, 0, 0.2)", 
+  }}
+>
+  <div className="p-4 flex flex-col items-center relative">
+    <button
+      className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 md:hidden"
+      onClick={() => {
+        setIsOpen(false);
+      }}
+    >
+      <X size={24} />
+    </button>
+    <SidebarLogoWrapper>
+      <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
+    </SidebarLogoWrapper>
+    <WelcomeText>Bienvenido, usuario!</WelcomeText>
+  </div>
 
-	return (
-		<>
-			<ToastContainer />
+  <nav className="flex-1 overflow-y-auto">
+    <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+      {[
+        { icon: homeIcon, label: "Inicio", path: "/newhome" },
+        { icon: moduleIcon, label: "Granjas", path: "/farm" },
+        { icon: userIcon, label: "Usuarios", path: "" },
+        { icon: fishIcon, label: "Módulos", path: "/module" },
+        { icon: reportIcon, label: "Reporte", path: "/report" },
+      ].map((item, index) => (
+        <li
+          key={index}
+          className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
+          onClick={() => {
+            void navigate({ to: item.path });
+            setIsOpen(false);
+          }}
+        >
+          <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
+          <span className="relative z-10 flex items-center gap-3 text-gray-600 group-hover:text-white font-bold">
+            <img alt={item.label} className="h-6 w-6" src={item.icon} />
+            {item.label}
+          </span>
+        </li>
+      ))}
+    </ul>
 
-			<div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
-			<button
-                 className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
-                 id="menu-button"
-                 onClick={() => {
-                     setIsOpen(!isOpen);
-                }}
-                >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+    <div className="mt-4 md:mt-20">
+      <LogoutButtonStyled />
+    </div>
+  </nav>
+</aside>
 
-				<aside
-					id="sidebar"
-					className={`fixed top-0 left-0 w-64 h-screen bg-gray-300 border-r border-gray-300 flex flex-col transform transition-transform duration-300 ease-in-out z-50
-            ${isOpen ? "translate-x-0" : "-translate-x-full"}
-            md:translate-x-0 md:w-64 md:relative`}
-				>
-					<div className="p-4 flex flex-col items-center relative">
-						<button
-							className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 md:hidden"
-							onClick={() => {
-								setIsOpen(false);
-							}}
-						>
-							<X size={24} />
-						</button>
-						<img
-							alt="Acuaterra Logo"
-							className="h-16 mb-2"
-							src={acuaterraLogo}
-						/>
-						<p className="text-gray-700 font-semibold">Bienvenido, usuario!</p>
-					</div>
+<main className="flex-1 p-9 bg-white md:ml-64 overflow-y-auto">
+  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+    Lista de Usuarios
+  </h1>
 
-					<nav className="flex-1">
-						<ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-							<li
-								className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all duration-300 transform origin-center overflow-hidden hover:bg-gray-400 hover:scale-102 rounded-lg"
-								onClick={async () => {
-									await navigate({ to: "/newHome" });
-									setIsOpen(false);
-								}}
-							>
-								<img alt="Inicio" className="h-6 w-6" src={homeIcon} />
-								<span className="font-bold">Inicio</span>
-							</li>
-							<li
-								className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all duration-300 transform origin-center overflow-hidden hover:bg-gray-400 hover:scale-102 rounded-lg"
-								onClick={async () => {
-									await navigate({ to: "/farm" });
-									setIsOpen(false);
-								}}
-							>
-								<img alt="Granjas" className="h-6 w-6" src={moduleIcon} />
-								<span className="font-bold">Granjas</span>
-							</li>
-							<li
-								className="flex items-center justify-center gap-3 p-2 cursor-pointer transition-all duration-300 transform origin-center overflow-hidden hover:bg-gray-400 hover:scale-102 bg-gray-400 text-white border-2 border-gray-400 rounded-lg"
-								onClick={() => {
-									setIsOpen(false);
-								}}
-							>
-								<img alt="Usuarios" className="h-6 w-6" src={userIcon} />
-								<span className="font-bold">Usuarios</span>
-							</li>
-							<li
-								className="
-                flex items-center justify-center gap-3 p-2
-                cursor-pointer transition-all duration-300
-                transform origin-center overflow-hidden
-                hover:bg-gray-400 hover:scale-102
-                rounded-lg
-              "
-								onClick={async () => {
-									await navigate({ to: "/module" });
-									setIsOpen(false);
-								}}
-							>
-								<img alt="Módulos" className="h-6 w-6" src={fishIcon} />
-								<span className="font-bold">Módulos</span>
-							</li>
+  {loading ? (
+    <div className="flex items-center justify-center min-h-screen">
+      <LoaderAcua />
+    </div>
+  ) : error ? (
+    <div className="mt-4 text-red-500 flex items-center">
+      <p>Error: {String(error)}</p>
+    </div>
+  ) : (
+    <>
+      {/* Desktop Table */}
+      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-[square-in-center_2.5s_cubic-bezier(0.25,1,0.3,1)_both]">
+        <TableWithActions
+          data={users}
+          error={error}
+          limit={limit}
+          loading={loading}
+          page={page}
+          setLimit={setLimit}
+          setPage={setPage}
+          total={total}
+          columns={[
+            { header: "ID", accessor: "id" },
+            { header: "Nombre", accessor: "name" },
+            { header: "Email", accessor: "email" },
+            { header: "DNI", accessor: "dni" },
+            { header: "Teléfono", accessor: "contact" },
+            {
+              header: "Rol",
+              accessor: "rol",
+              render: (u: UserResponse) => u.rol.name,
+            },
+            {
+              header: "Fecha de creación",
+              accessor: "createdAt",
+              render: (u: UserResponse) =>
+                new Date(u.createdAt).toLocaleDateString(),
+            },
+            {
+              header: "Fecha de actualización",
+              accessor: "updatedAt",
+              render: (u: UserResponse) =>
+                new Date(u.updatedAt).toLocaleDateString(),
+            },
+          ]}
+          onDelete={handleDeleteUser}
+          onEdit={handleOpenUpdateModal}
+          onAdd={() => {
+            setShowModal(true);
+          }}
+        />
+      </div>
 
-							<li
-								className="
-                flex items-center justify-center gap-3 p-2
-                cursor-pointer transition-all duration-300
-                transform origin-center overflow-hidden
-                hover:bg-gray-400 hover:scale-102
-                rounded-lg
-              "
-								onClick={async () => {
-									await navigate({ to: "/report" });
-									setIsOpen(false);
-								}}
-							>
-								<img alt="Reporte" className="h-6 w-6" src={reportIcon} />
-								<span className="font-bold">Reporte</span>
-							</li>
-						</ul>
-						<div className="mt-4 md:mt-20">
-							<ul className="space-y-4">
-								<li
-									className="
-                  flex items-center justify-center gap-3 p-2
-                  cursor-pointer transition-all duration-300
-                  transform origin-center overflow-hidden
-                  hover:bg-gray-300 hover:scale-102
-                  rounded-lg
-                "
-								>
-									<LogoutButton />
-								</li>
-							</ul>
-						</div>
-					</nav>
-					<div className="p-0">
-                         <p className="text-center text-xs mt-2">
-                             versión 1.0 <br /> Advanced Aquaponics Monitoring System
-                         </p>
-                    </div>
-				</aside>
+      {/* Mobile table */}
+      <div className="block md:hidden border max-w-sm border-gray-300 rounded-lg p-1 mb-4 shadow-md">
+        <TableWithActionsMobile
+          data={users}
+          error={error}
+          limit={limit}
+          loading={loading}
+          page={page}
+          setLimit={setLimit}
+          setPage={setPage}
+          total={total}
+          columns={[
+            { header: "ID", accessor: "id" },
+            { header: "Name", accessor: "name" },
+            { header: "Email", accessor: "email" },
+            { header: "DNI", accessor: "dni" },
+            {
+              header: "Role",
+              accessor: "rol",
+              render: (u: UserResponse) => u.rol.name,
+            },
+            { header: "Address", accessor: "address" },
+            { header: "Created At", accessor: "createdAt" },
+            { header: "Updated At", accessor: "updatedAt" },
+          ]}
+          onDelete={handleDeleteUser}
+          onEdit={handleOpenUpdateModal}
+          onAdd={() => {
+            setShowModal(true);
+          }}
+        />
+      </div>
+    </>
+  )}
 
-				<main className="flex-1 p-9 bg-white md:ml-0">
-					<h1 className="text-2xl font-bold mb-4 text-center">
-						Lista de Usuarios
-					</h1>
-
-					{loading ? (
-						<LoaderAcua />
-					) : error ? (
-						<div className="mt-4 text-red-500 flex items-center">
-							<p>Error: {String(error)}</p>
-						</div>
-					) : (
-						<>
-							{/* Table for desktop */}
-                            <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto">
-                            <TableWithActions
-                                 data={users}
-                                 error={error}
-                                 limit={limit}
-                                 loading={loading}
-                                 page={page}
-                                 setLimit={setLimit}
-                                 setPage={setPage}
-                                 total={total}
-                                 columns={[
-                                          { header: "ID", accessor: "id" },
-                                          { header: "Nombre", accessor: "name" },
-                                          { header: "Email", accessor: "email" },
-                                          { header: "DNI", accessor: "dni" },
-                                          { header: "Teléfono", accessor: "contact" },
-                                          {
-                                            header: "Rol",
-                                            accessor: "rol",
-                                                  render: (u: UserResponse) => u.rol.name,
-                                          },
-      
-										  { header: "Dirección", accessor: "address" },
-  	                                      { 
-                                            header: "Fecha de creación",
-                                            accessor: "createdAt",
-                                                  render: (u: UserResponse) =>
-                                                  new Date(u.createdAt).toLocaleDateString(),
-                                          },
-                                          {
-                                             header: "Fecha de actualización",
-                                             accessor: "updatedAt",
-                                             render: (u: UserResponse) =>
-                                             new Date(u.updatedAt).toLocaleDateString(),
-                                          },
-                         ]}
-                                onDelete={handleDeleteUser}
-                                onEdit={handleOpenUpdateModal}
-                                onAdd={() => {
-                                       setShowModal(true);
-                          }}
-                          />
-                         </div>
-
-							{/* Table for mobile */}
-							<div className="block md:hidden border max-w-sm  border-gray-300 rounded-lg  p-1 mb-4 shadow-md">
-								<TableWithActionsMobile
-									data={users}
-									error={error}
-									limit={limit}
-									loading={loading}
-									page={page}
-									setLimit={setLimit}
-									setPage={setPage}
-									total={total}
-									columns={[
-										{ header: "ID", accessor: "id" },
-										{ header: "Name", accessor: "name" },
-										{ header: "Email", accessor: "email" },
-										{ header: "DNI", accessor: "dni" },
-										{
-											header: "Role",
-											accessor: "rol",
-											render: (u: UserResponse) => u.rol.name,
-										},
-										{ header: "Address", accessor: "address" },
-										{ header: "Created At", accessor: "createdAt" },
-										{ header: "Updated At", accessor: "updatedAt" },
-									]}
-									onDelete={handleDeleteUser}
-									onEdit={handleOpenUpdateModal}
-									onAdd={() => {
-										setShowModal(true);
-									}}
-								/>
-							</div>
-						</>
-					)}
-
-					<RegisterUserModal
-						setShowModal={setShowModal}
-						showModal={showModal}
-						onRegister={handleRegisterUser}
-					/>
-					{selectedUser && (
-						<UpdateUserModal
-							setShowModal={setShowUpdateModal}
-							showModal={showUpdateModal}
-							user={selectedUser}
-							onUpdate={handleUpdateUser}
-						/>
-					)}
-				</main>
-			</div>
-		</>
-	);
+  <RegisterUserModal
+    setShowModal={setShowModal}
+    showModal={showModal}
+    onRegister={handleRegisterUser}
+  />
+  {selectedUser && (
+    <UpdateUserModal
+      setShowModal={setShowUpdateModal}
+      showModal={showUpdateModal}
+      user={selectedUser}
+      onUpdate={handleUpdateUser}
+    />
+  )}
+</main>
+      </div>
+    </>
+  );
 };
 
 export default Users;
