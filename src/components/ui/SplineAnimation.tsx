@@ -3,13 +3,18 @@ import type { FC } from "react";
 
 const SplineAnimation: FC = () => {
   return (
-    <div className="w-full h-full flex justify-center items-center" style={{ background: "transparent" }}>
+    <div
+      className="w-full h-full flex justify-center items-center"
+      style={{
+        background: "transparent",
+        marginLeft: "400px", 
+      }}
+    >
       <Spline
-        scene="https://prod.spline.design/d29Mmlc8OyPhcyP4/scene.splinecode"
+        scene="https://prod.spline.design/die5ufQGg5C51BXN/scene.splinecode"
         style={{
-          background: "transparent", // Aseguramos que el fondo de Spline sea transparente
-          width: "100%",
-          height: "100%",
+          background: "transparent", 
+         
         }}
       />
     </div>

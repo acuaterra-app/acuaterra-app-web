@@ -9,7 +9,7 @@ import LoaderAcua from "../components/loaders/LoaderAcua";
 import { lazy } from "react";
 
 // Lazy load the SplineAnimation component
-const SplineAnimation = lazy(() => import ("../components/ui/SplineAnimation"));
+const SplineAnimation = lazy(() => import("../components/ui/SplineAnimation"));
 
 const Welcome: FC = () => {
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const Welcome: FC = () => {
         <motion.img
           alt="Acuaterra Logo"
           animate={{ opacity: 1, y: 0 }}
-          className="h-24 md:h-[250px] mb-4"
+          className="h-24 md:h-[350px] mb-4"
           initial={{ opacity: 0, y: -50 }}
           src={acuaterraLogo}
           transition={{ type: "spring", stiffness: 80, damping: 12 }}
@@ -52,7 +52,7 @@ const Welcome: FC = () => {
         />
 
         {/* Title */}
-        <h1 className="text-2xl md:text-4xl font-bold text-gray-800 mb-4">
+        <h1 className="text-2xl md:text-5xl font-bold text-gray-800 mb-4">
           ¡Bienvenidos a Acuaterra!
         </h1>
 
@@ -88,7 +88,7 @@ const Welcome: FC = () => {
 const StyledWrapper = styled.div`
   .btn {
     width: 140px;
-    height: 50px;
+    height: 60px;
     background: linear-gradient(to top, #44cbd3, #3cacac); /* Respetamos la paleta de colores */
     color: #fff;
     border-radius: 50px;
@@ -101,7 +101,7 @@ const StyledWrapper = styled.div`
   }
 
   .btn span {
-    font-size: 12px;
+    font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: top 0.5s;
