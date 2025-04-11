@@ -26,8 +26,8 @@ import { isTokenValid } from "../common/isTokenValid";
 
 const SidebarLogoWrapper = styled.div`
   .logo {
-    width: 96px;
-    height: 96px;
+    width: 99px;
+    height: 99px;
     transition: transform 0.3s ease;
   }
 
@@ -37,7 +37,7 @@ const SidebarLogoWrapper = styled.div`
 `;
 
 const WelcomeText = styled.p`
-  font-size: 1.2rem;
+  font-size: 1.7rem;
   font-weight: bold;
   color: #4a4a4a;
   transition: transform 0.3s ease;
@@ -53,8 +53,8 @@ const LogoutButtonStyledWrapper = styled.div`
     border: none;
     background: #3cacac;
     color: #fff;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     overflow: hidden;
     position: relative;
@@ -74,7 +74,7 @@ const LogoutButtonStyledWrapper = styled.div`
       position: absolute;
       transform: rotate(calc(19deg * var(--index)));
       inset: 7px;
-      font-size: 10px;
+      font-size: 14px;
       color: #fff;
     }
   }
@@ -224,11 +224,12 @@ export const Users: FunctionComponent = () => {
 
 		<aside
   id="sidebar"
-  className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
+  className={`fixed top-0 left-0 w-96 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
     isOpen ? "translate-x-0" : "-translate-x-full"
   } md:translate-x-0 md:w-64`}
   style={{
     height: "100vh", 
+    width: "384px",
     boxShadow: "7px 0 15px rgba(0, 0, 0, 0.2)", 
   }}
 >

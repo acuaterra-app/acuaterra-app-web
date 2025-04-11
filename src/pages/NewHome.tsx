@@ -20,8 +20,8 @@ import MobileCarousel from "../components/Slider/MobileCarousel";
 
 const SidebarLogoWrapper = styled.div`
   .logo {
-    width: 96px;
-    height: 96px;
+    width: 99px;
+    height: 99px;
     transition: transform 0.3s ease;
   }
 
@@ -31,7 +31,7 @@ const SidebarLogoWrapper = styled.div`
 `;
 
 const WelcomeText = styled.p`
-  font-size: 1.2rem;
+  font-size: 1.7rem;
   font-weight: bold;
   color: #4a4a4a;
   transition: transform 0.3s ease;
@@ -47,8 +47,8 @@ const LogoutButtonStyledWrapper = styled.div`
     border: none;
     background: #3cacac;
     color: #fff;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     overflow: hidden;
     position: relative;
@@ -68,7 +68,7 @@ const LogoutButtonStyledWrapper = styled.div`
       position: absolute;
       transform: rotate(calc(19deg * var(--index)));
       inset: 7px;
-      font-size: 10px;
+      font-size: 14px;
       color: #fff;
     }
   }
@@ -88,7 +88,7 @@ const LogoutButtonStyledWrapper = styled.div`
 
   .button:hover {
     background: #000;
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
 
   @keyframes text-rotation {
@@ -205,7 +205,7 @@ const Home: FC = () => {
 
       <aside
         ref={menuRef}
-        className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        className={`fixed top-0 left-0 w-96 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
           isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
         } ${animateSidebar ? "animate-slide-in" : ""}`}
         style={{
@@ -254,7 +254,7 @@ const Home: FC = () => {
                     location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
                   }`}
                 ></span>
-                <span className="relative z-10 flex items-center gap-3 font-bold">
+                <span className="relative z-0 flex items-center gap-4 font-bold">
                   <img alt={item.label} className="h-6 w-6" src={item.icon} />
                   {item.label}
                 </span>
@@ -272,7 +272,7 @@ const Home: FC = () => {
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
           Acuaterra
         </h1>
-        <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
+        <p className="text-gray-500 mb-7 text-lg sm:text-sm text-center">
           Acuaterra es una herramienta de software diseñada para sistematizar el
           proceso de monitoreo en módulos acuapónicos.
         </p>

@@ -49,41 +49,41 @@ export const Auth: FunctionComponent = () => {
   return (
     <motion.div
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-r from-blue-100 to-blue-300 flex flex-col justify-center items-center p-4 md:p-8 lg:p-12"
+      className="min-h-screen bg-gradient-to-r from-blue-100 to-blue-300 flex flex-col justify-center items-center p-6 md:p-12 lg:p-16"
       exit={{ opacity: 0 }}
       initial={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
     >
-      {/* Logo animationn */}
+      {/* Logo Animation */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="mb-6 flex flex-col items-center"
+        className="mb-8 flex flex-col items-center"
         initial={{ opacity: 0, y: -30 }}
         transition={{ duration: 0.6 }}
       >
         <motion.img
           alt="Acuaterra Logo"
-          className="h-32 md:h-48 lg:h-64 mb-2"
+          className="h-40 md:h-56 lg:h-72 mb-4" // Aumentamos el tamaño del logo
           src={acuaterraLogo}
           transition={{ type: "spring", stiffness: 80, damping: 12 }}
           whileHover={{ rotate: 10, scale: 1.1 }}
         />
       </motion.div>
 
-      {/* Títle*/}
-      <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-9 text-gray-800">
+      {/* Title */}
+      <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold mb-12 text-gray-800">
         Login
       </h1>
 
       {/* Form Animation */}
       <motion.form
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-6 md:space-y-8 lg:space-y-10"
+        className="w-full max-w-md md:max-w-lg lg:max-w-xl space-y-8 md:space-y-10 lg:space-y-12"
         initial={{ opacity: 0, y: 30 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         onSubmit={handleSubmit}
       >
-        {/* Email Field*/}
+        {/* Email Field */}
         <motion.div
           animate={{ opacity: 1, x: 0 }}
           className="flex flex-col items-center"
@@ -102,7 +102,7 @@ export const Auth: FunctionComponent = () => {
             }}
           />
           {emailError && (
-            <p className="text-red-500 text-sm mt-1">Completa este campo</p>
+            <p className="text-red-500 text-lg mt-2">Completa este campo</p>
           )}
         </motion.div>
 
@@ -125,11 +125,11 @@ export const Auth: FunctionComponent = () => {
             }}
           />
           {passwordError && (
-            <p className="text-red-500 text-sm mt-1">Completa este campo</p>
+            <p className="text-red-500 text-lg mt-2">Completa este campo</p>
           )}
         </motion.div>
 
-        {/* Start Buttom */}
+        {/* Start Button */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center"
@@ -137,7 +137,7 @@ export const Auth: FunctionComponent = () => {
           transition={{ duration: 0.6, delay: 0.5 }}
         >
           <button
-            className="relative px-8 py-4 bg-[#44cbd3] text-white font-bold text-lg rounded-xl border-4 border-[#3cacac] shadow-[5px_5px_0px_0px_rgba(60,172,172,1)] transition-transform duration-200 hover:translate-x-1 hover:-translate-y-1"
+            className="relative px-10 py-5 bg-[#44cbd3] text-white font-bold text-xl rounded-2xl border-4 border-[#3cacac] shadow-[5px_5px_0px_0px_rgba(60,172,172,1)] transition-transform duration-200 hover:translate-x-1 hover:-translate-y-1"
             type="submit"
           >
             ¡Comenzar!
@@ -145,11 +145,11 @@ export const Auth: FunctionComponent = () => {
         </motion.div>
       </motion.form>
 
-      {/* Genreal Error message */}
+      {/* General Error Message */}
       {error && email && password && (
         <motion.p
           animate={{ opacity: 1 }}
-          className="mt-4 text-darkGray font-semibold"
+          className="mt-6 text-darkGray font-semibold text-lg"
           initial={{ opacity: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
@@ -157,10 +157,10 @@ export const Auth: FunctionComponent = () => {
         </motion.p>
       )}
 
-      {/* Footer*/}
+      {/* Footer */}
       <motion.p
         animate={{ opacity: 1 }}
-        className="text-gray-500 text-sm mt-20 text-center"
+        className="text-gray-500 text-lg mt-24 text-center"
         initial={{ opacity: 0 }}
         transition={{ duration: 0.6, delay: 0.7 }}
       >
