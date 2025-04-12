@@ -1,13 +1,13 @@
 import type { FC } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useLocation } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
 import acuaterraLogo from "../assets/images/logo.png";
-import reportIcon from "../assets/images/reporte.png";
 import LogoutButton from "../components/ui/button/logoutButton";
+import reportIcon from "../assets/images/reporte.png";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
 import foto1 from "../assets/images/fotoAcuapico_1.jpg";
@@ -20,8 +20,8 @@ import MobileCarousel from "../components/Slider/MobileCarousel";
 
 const SidebarLogoWrapper = styled.div`
   .logo {
-    width: 96px;
-    height: 96px;
+    width: 80px; /* Tamaño ajustado */
+    height: 80px;
     transition: transform 0.3s ease;
   }
 
@@ -31,7 +31,7 @@ const SidebarLogoWrapper = styled.div`
 `;
 
 const WelcomeText = styled.p`
-  font-size: 1.2rem;
+  font-size: 1.3rem; /* Tamaño ajustado */
   font-weight: bold;
   color: #4a4a4a;
   transition: transform 0.3s ease;
@@ -47,7 +47,7 @@ const LogoutButtonStyledWrapper = styled.div`
     border: none;
     background: #3cacac;
     color: #fff;
-    width: 100px;
+    width: 100px; /* Tamaño ajustado */
     height: 100px;
     border-radius: 50%;
     overflow: hidden;
@@ -68,15 +68,15 @@ const LogoutButtonStyledWrapper = styled.div`
       position: absolute;
       transform: rotate(calc(19deg * var(--index)));
       inset: 7px;
-      font-size: 10px;
+      font-size: 12px; /* Tamaño ajustado */
       color: #fff;
     }
   }
 
   .button__circle {
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 30px; /* Tamaño ajustado */
+    height: 30px;
     overflow: hidden;
     background: #fff;
     color: #84db7;
@@ -88,7 +88,7 @@ const LogoutButtonStyledWrapper = styled.div`
 
   .button:hover {
     background: #000;
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
 
   @keyframes text-rotation {
@@ -118,12 +118,12 @@ const LogoutButtonStyled = () => {
   );
 };
 
-const Home: FC = () => {
+const NewHome: FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
-  const [isVisible, setIsVisible] = useState(false); 
   const menuRef = useRef<HTMLDivElement>(null);
 
   const slides = [
@@ -134,7 +134,7 @@ const Home: FC = () => {
 
   useEffect(() => {
     if (!isTokenValid()) {
-      console.log("Redirigiendo a /auth desde el componente Home");
+      console.log("Redirigiendo a /auth desde el componente NewHome");
       void navigate({ to: "/auth" });
     }
   }, [navigate]);
@@ -162,14 +162,11 @@ const Home: FC = () => {
     };
   }, []);
 
-  // Mostrar la página con un retraso para la animación
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsVisible(true);
-    }, 100); // Retraso de 100ms para iniciar la animación
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => { clearTimeout(timeout); };
-  }, []);
+    if (location.pathname === "/newhome") {
+      setIsOpen(false);
+    }
+  }, [location.pathname]);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleNavigation = (path: string) => {
@@ -178,11 +175,7 @@ const Home: FC = () => {
   };
 
   return (
-    <div
-      className={`flex min-h-screen font-sans bg-[#f5f5f5] relative overflow-x-auto transition-opacity duration-700 ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
-    >
+    <div className="flex min-h-screen font-sans bg-[#f5f5f5] relative overflow-x-auto">
       <button
         className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -220,9 +213,9 @@ const Home: FC = () => {
         </div>
 
         <nav className="flex-1 overflow-y-auto">
-          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+          <ul className="space-y3 md:space-y-20 mt-4 md:mt-20">
             {[
-              { icon: homeIcon, label: "Inicio", path: "" },
+              { icon: homeIcon, label: "Inicio", path: "/newhome" },
               { icon: moduleIcon, label: "Granjas", path: "/farm" },
               { icon: userIcon, label: "Usuarios", path: "/users" },
               { icon: fishIcon, label: "Módulos", path: "/module" },
@@ -230,31 +223,39 @@ const Home: FC = () => {
             ].map((item, index) => (
               <li
                 key={index}
-                className="relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg"
+                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                  location.pathname === item.path
+                    ? "bg-[#3cacac] text-white shadow-md"
+                    : "text-gray-600 group-hover:text-white"
+                }`}
                 onClick={() => {
                   handleNavigation(item.path);
                 }}
               >
-                <span className="absolute inset-0 bg-[#3cacac] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg"></span>
-                <span className="relative z-10 flex items-center gap-3 text-gray-600 group-hover:text-white font-bold">
-                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                <span
+                  className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                    location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
+                  }`}
+                ></span>
+                <span className="relative z-0 flex items-center gap-4 font-bold">
+                  <img alt={item.label} className="h-5 w-5" src={item.icon} />
                   {item.label}
                 </span>
               </li>
             ))}
           </ul>
 
-          <div className="mt-4 md:mt-20">
+          <div className="mt-4 md:mt-10">
             <LogoutButtonStyled />
           </div>
         </nav>
       </aside>
 
       <main className="flex-1 p-6 lg:ml-0">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center text-gray-700">
           Acuaterra
         </h1>
-        <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
+        <p className="text-gray-500 mb-7 text-base sm:text-sm text-center">
           Acuaterra es una herramienta de software diseñada para sistematizar el
           proceso de monitoreo en módulos acuapónicos.
         </p>
@@ -265,4 +266,4 @@ const Home: FC = () => {
   );
 };
 
-export default Home;
+export default NewHome;
