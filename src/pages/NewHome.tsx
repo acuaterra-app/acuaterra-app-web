@@ -6,7 +6,6 @@ import { Menu, X } from "lucide-react";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
 import acuaterraLogo from "../assets/images/logo.png";
-import reportIcon from "../assets/images/reporte.png";
 import LogoutButton from "../components/ui/button/logoutButton";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
@@ -20,8 +19,8 @@ import MobileCarousel from "../components/Slider/MobileCarousel";
 
 const SidebarLogoWrapper = styled.div`
   .logo {
-    width: 99px;
-    height: 99px;
+    width: 80px; /* Tamaño ajustado */
+    height: 80px;
     transition: transform 0.3s ease;
   }
 
@@ -31,7 +30,7 @@ const SidebarLogoWrapper = styled.div`
 `;
 
 const WelcomeText = styled.p`
-  font-size: 1.7rem;
+  font-size: 1.3rem; /* Tamaño ajustado */
   font-weight: bold;
   color: #4a4a4a;
   transition: transform 0.3s ease;
@@ -47,8 +46,8 @@ const LogoutButtonStyledWrapper = styled.div`
     border: none;
     background: #3cacac;
     color: #fff;
-    width: 120px;
-    height: 120px;
+    width: 100px; /* Tamaño ajustado */
+    height: 100px;
     border-radius: 50%;
     overflow: hidden;
     position: relative;
@@ -68,15 +67,15 @@ const LogoutButtonStyledWrapper = styled.div`
       position: absolute;
       transform: rotate(calc(19deg * var(--index)));
       inset: 7px;
-      font-size: 14px;
+      font-size: 12px; /* Tamaño ajustado */
       color: #fff;
     }
   }
 
   .button__circle {
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 30px; /* Tamaño ajustado */
+    height: 30px;
     overflow: hidden;
     background: #fff;
     color: #84db7;
@@ -118,9 +117,9 @@ const LogoutButtonStyled = () => {
   );
 };
 
-const Home: FC = () => {
+const NewHome: FC = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
@@ -135,7 +134,7 @@ const Home: FC = () => {
 
   useEffect(() => {
     if (!isTokenValid()) {
-      console.log("Redirigiendo a /auth desde el componente Home");
+      console.log("Redirigiendo a /auth desde el componente NewHome");
       void navigate({ to: "/auth" });
     }
   }, [navigate]);
@@ -163,21 +162,19 @@ const Home: FC = () => {
     };
   }, []);
 
-  // Transition for sidebar
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsVisible(true);
-    }, 100); //delay of 100ms to start the animation
+    }, 100);
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return () => {
       clearTimeout(timeout);
     };
   }, []);
 
-  // Ensure the sidebar highlights the active page on first load
   useEffect(() => {
     if (location.pathname === "/newhome") {
-      setIsOpen(false); // Close the menu if it's open
+      setIsOpen(false);
     }
   }, [location.pathname]);
 
@@ -205,14 +202,14 @@ const Home: FC = () => {
 
       <aside
         ref={menuRef}
-        className={`fixed top-0 left-0 w-96 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-          isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
         } ${animateSidebar ? "animate-slide-in" : ""}`}
-        style={{
-          height: "100vh",
+      style={{
+          height: "100vh", 
           boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
-        }}
-      >
+       }}
+     >
         <div className="p-4 flex flex-col items-center relative">
           <button
             className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
@@ -230,13 +227,12 @@ const Home: FC = () => {
         </div>
 
         <nav className="flex-1 overflow-y-auto">
-          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+          <ul className="space-y3 md:space-y-20 mt-4 md:mt-10">
             {[
               { icon: homeIcon, label: "Inicio", path: "/newhome" },
               { icon: moduleIcon, label: "Granjas", path: "/farm" },
               { icon: userIcon, label: "Usuarios", path: "/users" },
               { icon: fishIcon, label: "Módulos", path: "/module" },
-              { icon: reportIcon, label: "Reporte", path: "/report" },
             ].map((item, index) => (
               <li
                 key={index}
@@ -255,24 +251,24 @@ const Home: FC = () => {
                   }`}
                 ></span>
                 <span className="relative z-0 flex items-center gap-4 font-bold">
-                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                  <img alt={item.label} className="h-5 w-5" src={item.icon} />
                   {item.label}
                 </span>
               </li>
             ))}
           </ul>
 
-          <div className="mt-4 md:mt-20">
+          <div className="mt-4 md:mt-10">
             <LogoutButtonStyled />
           </div>
         </nav>
       </aside>
 
       <main className="flex-1 p-6 lg:ml-0">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center text-gray-700">
           Acuaterra
         </h1>
-        <p className="text-gray-500 mb-7 text-lg sm:text-sm text-center">
+        <p className="text-gray-500 mb-7 text-base sm:text-sm text-center">
           Acuaterra es una herramienta de software diseñada para sistematizar el
           proceso de monitoreo en módulos acuapónicos.
         </p>
@@ -283,4 +279,4 @@ const Home: FC = () => {
   );
 };
 
-export default Home;
+export default NewHome;

@@ -29,14 +29,14 @@ const Welcome: FC = () => {
   return (
     <motion.div
       animate={{ opacity: 1 }}
-      className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-100 to-blue-300 font-sans p-8"
+      className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-100 to-blue-300 font-sans p-6"
       initial={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
     >
       {/* Left Section */}
       <motion.div
         animate={{ opacity: 1, x: 0 }}
-        className="w-full md:w-1/2 flex flex-col items-center justify-center text-center space-y-6"
+        className="w-full md:w-1/2 flex flex-col items-center justify-center text-center space-y-4"
         initial={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.6 }}
       >
@@ -44,15 +44,15 @@ const Welcome: FC = () => {
         <motion.img
           alt="Acuaterra Logo"
           animate={{ opacity: 1, y: 0 }}
-          className="h-24 md:h-[350px] mb-4"
+          className="h-20 md:h-32 lg:h-40 mb-4"
           initial={{ opacity: 0, y: -50 }}
           src={acuaterraLogo}
           transition={{ type: "spring", stiffness: 80, damping: 12 }}
-          whileHover={{ rotate: 10, scale: 1.1 }}
+          whileHover={{ rotate: 10, scale: 1.05 }}
         />
 
         {/* Title */}
-        <h1 className="text-2xl md:text-5xl font-bold text-gray-800 mb-4">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-4">
           ¡Bienvenidos a Acuaterra!
         </h1>
 
@@ -65,7 +65,7 @@ const Welcome: FC = () => {
         </StyledWrapper>
 
         {/* Footer */}
-        <footer className="text-1xl md:text font-bold text-gray-800 mb-4">
+        <footer className="text-sm md:text-base font-medium text-gray-800 mt-4">
           <p>© 2023 Acuaterra. Todos los derechos reservados.</p>
         </footer>
       </motion.div>
@@ -87,21 +87,21 @@ const Welcome: FC = () => {
 
 const StyledWrapper = styled.div`
   .btn {
-    width: 140px;
-    height: 60px;
+    width: 100px;
+    height: 40px;
     background: linear-gradient(to top, #44cbd3, #3cacac); /* Respetamos la paleta de colores */
     color: #fff;
-    border-radius: 50px;
+    border-radius: 25px;
     border: none;
     outline: none;
     cursor: pointer;
     position: relative;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     overflow: hidden;
   }
 
   .btn span {
-    font-size: 15px;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: top 0.5s;
