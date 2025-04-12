@@ -42,6 +42,7 @@ export const authGuard = (): { redirect?: string } => {
   console.log("authGuard ejecutado"); 
   if (!isTokenValid()) {
     console.log("Token no válido, redirigiendo a /auth"); 
+    window.history.replaceState(null, "", "/auth");
     return {
       redirect: "/auth",
     };
