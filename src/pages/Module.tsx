@@ -14,7 +14,7 @@ import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
 import userIcon from "../assets/images/userlogo.png";
-//import reportIcon from "../assets/images/reporte.png";
+import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
 import LogoutButton from "../components/ui/button/logoutButton";
 import styled from "styled-components";
@@ -247,7 +247,7 @@ export const Module: FunctionComponent = () => {
                 { icon: moduleIcon, label: "Granjas", path: "/farm" },
                 { icon: userIcon, label: "Usuarios", path: "/users" },
                 { icon: fishIcon, label: "Módulos", path: "/module" },
-                //{ icon: reportIcon, label: "Reporte", path: "/report" },
+                { icon: reportIcon, label: "Reporte", path: "/report" },
                ].map((item, index) => (
           <li
               key={index}

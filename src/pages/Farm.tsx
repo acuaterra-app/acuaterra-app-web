@@ -11,6 +11,7 @@ import FarmModal from "../components/ui/modals/FarmModal";
 import type { FarmRequest, User } from "../common/types";
 import LogoutButton from "../components/ui/button/logoutButton";
 import acuaterraLogo from "../assets/images/logo.png";
+import reportIcon from "../assets/images/reporte.png";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
 import userIcon from "../assets/images/userlogo.png";
@@ -301,6 +302,7 @@ const FarmsPage: FunctionComponent = () => {
           { icon: moduleIcon, label: "Granjas", path: "/farm" },
           { icon: userIcon, label: "Usuarios", path: "/users" },
           { icon: fishIcon, label: "Módulos", path: "/module" },
+          { icon: reportIcon, label: "Reporte", path: "/report" },
              ].map((item, index) => (
       <li
             key={index}
