@@ -336,105 +336,104 @@ const FarmsPage: FunctionComponent = () => {
     </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-6 lg:ml-0">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
-          Granjas
-        </h1>
-        <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
-          Aquí puedes gestionar las granjas acuapónicas.
-        </p>
+      <main className="flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto">
+  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+    Granjas
+  </h1>
+  <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
+    Aquí puedes gestionar las granjas acuapónicas.
+  </p>
 
-        {loading ? (
-          <LoaderAcua />
-        ) : (
-          <>
-            {/* Desktop advice's table  */}
-			<div className="hidden md:block border border-gray-300 rounded-lg p-1 shadow-md w-full max-w-7xl mx-auto animate-square-in-hesitate">
-  
-          <TableWithActions
-            data={farms}
-            error={error}
-            limit={limit}
-            loading={loading}
-            page={page}
-            setLimit={setLimit}
-            setPage={setPage}
-            total={total}
-            columns={[
-              { header: "ID", accessor: "id" },
-              { header: "Name", accessor: "name" },
-              { header: "Latitud", accessor: "latitude" },
-              { header: "Longitud", accessor: "longitude" },
-              { header: "Dirección", accessor: "address" },
-              { header: "Date", accessor: "createdAt" },
+  {loading ? (
+    <LoaderAcua />
+  ) : (
+    <>
+      {/* Tabla para escritorio */}
+      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto">
+        <TableWithActions
+          data={farms}
+          error={error}
+          limit={limit}
+          loading={loading}
+          page={page}
+          setLimit={setLimit}
+          setPage={setPage}
+          total={total}
+          columns={[
+            { header: "ID", accessor: "id" },
+            { header: "Name", accessor: "name" },
+            { header: "Latitud", accessor: "latitude" },
+            { header: "Longitud", accessor: "longitude" },
+            { header: "Dirección", accessor: "address" },
+            { header: "Date", accessor: "createdAt" },
             {
-               header: "Users",
-               accessor: "users",
-                   render: (farm) =>
-                   farm.users.map((user) => (user as User).name).join(", "),
-        },
-        ]}
-            onDelete={handleRemoveFarm}
-            onAdd={() => {
+              header: "Users",
+              accessor: "users",
+              render: (farm) =>
+                farm.users.map((user) => (user as User).name).join(", "),
+            },
+          ]}
+          onDelete={handleRemoveFarm}
+          onAdd={() => {
             setSelectedFarm(null);
             setIsModalOpen(true);
-        }}
-            onEdit={(farm: FarmRequest) => {
+          }}
+          onEdit={(farm: FarmRequest) => {
             setSelectedFarm(farm);
             setIsModalOpen(true);
-       }}
-         />
-     </div>
+          }}
+        />
+      </div>
 
-            {/* Mobile advice's table */}
-            <div className="block md:hidden border max-w-sm border-gray-300 rounded-lg p-1 mb-4 shadow-md">
-              <TableWithActionsMobile
-                data={farms}
-                error={error}
-                limit={limit}
-                loading={loading}
-                page={page}
-                setLimit={setLimit}
-                setPage={setPage}
-                total={total}
-                columns={[
-                  { header: "ID", accessor: "id" },
-                  { header: "Name", accessor: "name" },
-                  { header: "Latitud", accessor: "latitude" },
-                  { header: "Longitud", accessor: "longitude" },
-                  { header: "Dirección", accessor: "address" },
-                  { header: "Date", accessor: "createdAt" },
-                  {
-                    header: "Users",
-                    accessor: "users",
-                    render: (farm) =>
-                      farm.users.map((user) => (user as User).name).join(", "),
-                  },
-                ]}
-                onDelete={handleRemoveFarm}
-                onAdd={() => {
-                  setSelectedFarm(null);
-                  setIsModalOpen(true);
-                }}
-                onEdit={(farm: FarmRequest) => {
-                  setSelectedFarm(farm);
-                  setIsModalOpen(true);
-                }}
-              />
-            </div>
-          </>
-        )}
+      {/* Tabla para móvil */}
+      <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
+        <TableWithActionsMobile
+          data={farms}
+          error={error}
+          limit={limit}
+          loading={loading}
+          page={page}
+          setLimit={setLimit}
+          setPage={setPage}
+          total={total}
+          columns={[
+            { header: "ID", accessor: "id" },
+            { header: "Name", accessor: "name" },
+            { header: "Latitud", accessor: "latitude" },
+            { header: "Longitud", accessor: "longitude" },
+            { header: "Dirección", accessor: "address" },
+            { header: "Date", accessor: "createdAt" },
+            {
+              header: "Users",
+              accessor: "users",
+              render: (farm) =>
+                farm.users.map((user) => (user as User).name).join(", "),
+            },
+          ]}
+          onDelete={handleRemoveFarm}
+          onAdd={() => {
+            setSelectedFarm(null);
+            setIsModalOpen(true);
+          }}
+          onEdit={(farm: FarmRequest) => {
+            setSelectedFarm(farm);
+            setIsModalOpen(true);
+          }}
+        />
+      </div>
+    </>
+  )}
 
-        {isModalOpen && (		
-          <FarmModal
-            farm={selectedFarm}
-            onSave={selectedFarm ? handleEditFarm : handleAddFarm}
-            onClose={() => {
-              setIsModalOpen(false);
-            }}
-          />		  
-        )}
-      </main>
+  {isModalOpen && (
+    <FarmModal
+      farm={selectedFarm}
+      onSave={selectedFarm ? handleEditFarm : handleAddFarm}
+      onClose={() => {
+        setIsModalOpen(false);
+      }}
+    />
+  )}
+</main>
     </div>
   );
 };

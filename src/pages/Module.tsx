@@ -281,134 +281,134 @@ export const Module: FunctionComponent = () => {
       </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 lg:ml-0 overflow-y-auto">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
-            Lista de Módulos
-          </h1>
+        <main className="flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto">
+  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+    Lista de Módulos
+  </h1>
 
-          {/* Farms selector */}
-          <div className="mb-6 max-w-md mx-auto">
-            <label className="block text-center text-2xl font-bold mb-4">
-              Seleccione una Granja
-            </label>
-            <select
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
-              disabled={farmsLoading}
-              onChange={(event) => {
-                setSelectedFarmId(Number(event.target.value));
-              }}
-            >
-              <option value="">Seleccione una granja</option>
-              {farms.map((farm) => (
-                <option key={farm.id} value={farm.id}>
-                  {farm.name}
-                </option>
-              ))}
-            </select>
-            {farmsError && (
-              <p className="text-red-500 mt-2 text-center">
-                Error al cargar las granjas
-              </p>
-            )}
-          </div>
+  {/* Selector de granjas */}
+  <div className="mb-6 max-w-md mx-auto">
+    <label className="block text-center text-2xl font-bold mb-4">
+      Seleccione una Granja
+    </label>
+    <select
+      className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
+      disabled={farmsLoading}
+      onChange={(event) => {
+        setSelectedFarmId(Number(event.target.value));
+      }}
+    >
+      <option value="">Seleccione una granja</option>
+      {farms.map((farm) => (
+        <option key={farm.id} value={farm.id}>
+          {farm.name}
+        </option>
+      ))}
+    </select>
+    {farmsError && (
+      <p className="text-red-500 mt-2 text-center">
+        Error al cargar las granjas
+      </p>
+    )}
+  </div>
 
-          {loading ? (
-            <LoaderAcua />
-          ) : (
-            <>
-              {error && <p className="mt-4 text-red-500">Error: {error}</p>}
-              <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-[wipe-in-right_2.5s_cubic-bezier(0.25,1,0.3,1)_both]">
-                <TableWithActions
-                  data={modules}
-                  error={error}
-                  isVisibleActions={false}
-                  isVisibleButton={false}
-                  limit={perPage}
-                  loading={loading}
-                  page={page}
-                  setLimit={() => {}}
-                  setPage={setPage}
-                  total={total}
-                  columns={[
-                    { header: "ID", accessor: "id" },
-                    { header: "Nombre", accessor: "name" },
-                    { header: "Ubicación", accessor: "location" },
-                    {
-                      header: "Especie de Pescados",
-                      accessor: "species_fish",
-                    },
-                    { header: "Cantidad", accessor: "fish_quantity" },
-                    { header: "Dimensiones", accessor: "dimensions" },
-                    {
-                      header: "Creado Por",
-                      accessor: "creator",
-                      render: (module) => module.creator.name.toString(),
-                    },
-                    {
-                      header: "Granja",
-                      accessor: "farm",
-                      render: (module) => module.farm.name.toString(),
-                    },
-                  ]}
-                  onAdd={() => {
-                    console.log("Add new module");
-                  }}
-                  onDelete={() => {
-                    console.log("Delete module");
-                  }}
-                  onEdit={() => {
-                    console.log("Edit module");
-                  }}
-                />
-              </div>
+  {loading ? (
+    <LoaderAcua />
+  ) : (
+    <>
+      {error && <p className="mt-4 text-red-500">Error: {error}</p>}
+      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto">
+        <TableWithActions
+          data={modules}
+          error={error}
+          isVisibleActions={false}
+          isVisibleButton={false}
+          limit={perPage}
+          loading={loading}
+          page={page}
+          setLimit={() => {}}
+          setPage={setPage}
+          total={total}
+          columns={[
+            { header: "ID", accessor: "id" },
+            { header: "Nombre", accessor: "name" },
+            { header: "Ubicación", accessor: "location" },
+            {
+              header: "Especie de Pescados",
+              accessor: "species_fish",
+            },
+            { header: "Cantidad", accessor: "fish_quantity" },
+            { header: "Dimensiones", accessor: "dimensions" },
+            {
+              header: "Creado Por",
+              accessor: "creator",
+              render: (module) => module.creator.name.toString(),
+            },
+            {
+              header: "Granja",
+              accessor: "farm",
+              render: (module) => module.farm.name.toString(),
+            },
+          ]}
+          onAdd={() => {
+            console.log("Add new module");
+          }}
+          onDelete={() => {
+            console.log("Delete module");
+          }}
+          onEdit={() => {
+            console.log("Edit module");
+          }}
+        />
+      </div>
 
-              <div className="block md:hidden">
-                <TableWithActionsMobile
-                  data={modules}
-                  error={error}
-                  isVisibleActions={false}
-                  isVisibleButton={false}
-                  limit={perPage}
-                  loading={loading}
-                  page={page}
-                  setLimit={() => {}}
-                  setPage={setPage}
-                  total={total}
-                  columns={[
-                    { header: "ID", accessor: "id" },
-                    { header: "Nombre", accessor: "name" },
-                    { header: "Ubicación", accessor: "location" },
-                    {
-                      header: "Especie de Pescados",
-                      accessor: "species_fish",
-                    },
-                    { header: "Cantidad", accessor: "fish_quantity" },
-                    { header: "Dimensiones", accessor: "dimensions" },
-                    {
-                      header: "Creado Por",
-                      accessor: "creator",
-                      render: (module) => module.creator.name.toString(),
-                    },
-                    {
-                      header: "Granja",
-                      accessor: "farm",
-                      render: (module) => module.farm.name.toString(),
-                    },
-                  ]}
-                  onAdd={() => {
-                    console.log("Add new module");
-                  }}
-                  onDelete={() => {
-                    console.log("Delete module");
-                  }}
-                  onEdit={() => {
-                    console.log("Edit module");
-                  }}
-                />
-              </div>
-            </>
-          )}
-        </main>
+      <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
+        <TableWithActionsMobile
+          data={modules}
+          error={error}
+          isVisibleActions={false}
+          isVisibleButton={false}
+          limit={perPage}
+          loading={loading}
+          page={page}
+          setLimit={() => {}}
+          setPage={setPage}
+          total={total}
+          columns={[
+            { header: "ID", accessor: "id" },
+            { header: "Nombre", accessor: "name" },
+            { header: "Ubicación", accessor: "location" },
+            {
+              header: "Especie de Pescados",
+              accessor: "species_fish",
+            },
+            { header: "Cantidad", accessor: "fish_quantity" },
+            { header: "Dimensiones", accessor: "dimensions" },
+            {
+              header: "Creado Por",
+              accessor: "creator",
+              render: (module) => module.creator.name.toString(),
+            },
+            {
+              header: "Granja",
+              accessor: "farm",
+              render: (module) => module.farm.name.toString(),
+            },
+          ]}
+          onAdd={() => {
+            console.log("Add new module");
+          }}
+          onDelete={() => {
+            console.log("Delete module");
+          }}
+          onEdit={() => {
+            console.log("Edit module");
+          }}
+        />
+      </div>
+    </>
+  )}
+</main>
       </div>
     </Layout>
   );
