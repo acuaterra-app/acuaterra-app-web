@@ -36,7 +36,7 @@ const Welcome: FC = () => {
       {/* Left Section */}
       <motion.div
         animate={{ opacity: 1, x: 0 }}
-        className="w-full md:w-1/2 flex flex-col items-center justify-center text-center space-y-4"
+        className="w-full md:w-1/2 flex flex-col items-center justify-center text-center space-y-6"
         initial={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.6 }}
       >
@@ -44,7 +44,7 @@ const Welcome: FC = () => {
         <motion.img
           alt="Acuaterra Logo"
           animate={{ opacity: 1, y: 0 }}
-          className="h-20 md:h-32 lg:h-40 mb-4"
+          className="h-32 md:h-48 lg:h-56 mb-6" // Aumenté el tamaño del logo
           initial={{ opacity: 0, y: -50 }}
           src={acuaterraLogo}
           transition={{ type: "spring", stiffness: 80, damping: 12 }}
@@ -52,7 +52,7 @@ const Welcome: FC = () => {
         />
 
         {/* Title */}
-        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-4">
+        <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-6">
           ¡Bienvenidos a Acuaterra!
         </h1>
 
@@ -65,7 +65,7 @@ const Welcome: FC = () => {
         </StyledWrapper>
 
         {/* Footer */}
-        <footer className="text-sm md:text-base font-medium text-gray-800 mt-4">
+        <footer className="text-sm md:text-base font-medium text-gray-800 mt-6">
           <p>© 2023 Acuaterra. Todos los derechos reservados.</p>
         </footer>
       </motion.div>
@@ -87,8 +87,8 @@ const Welcome: FC = () => {
 
 const StyledWrapper = styled.div`
   .btn {
-    width: 100px;
-    height: 40px;
+    width: 140px; /* Aumenté el ancho del botón */
+    height: 50px; /* Aumenté la altura del botón */
     background: linear-gradient(to top, #44cbd3, #3cacac); /* Respetamos la paleta de colores */
     color: #fff;
     border-radius: 25px;
@@ -101,7 +101,7 @@ const StyledWrapper = styled.div`
   }
 
   .btn span {
-    font-size: 12px;
+    font-size: 16px; /* Aumenté el tamaño del texto del botón */
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: top 0.5s;
