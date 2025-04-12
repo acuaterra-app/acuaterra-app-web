@@ -227,7 +227,7 @@ const NewHome: FC = () => {
         </div>
 
         <nav className="flex-1 overflow-y-auto">
-          <ul className="space-y3 md:space-y-20 mt-4 md:mt-10">
+          <ul className="space-y3 md:space-y-20 mt-4 md:mt-20">
             {[
               { icon: homeIcon, label: "Inicio", path: "/newhome" },
               { icon: moduleIcon, label: "Granjas", path: "/farm" },

@@ -22,8 +22,8 @@ import { isTokenValid } from "../common/isTokenValid";
 
 const SidebarLogoWrapper = styled.div`
   .logo {
-    width: 99px;
-    height: 99px;
+    width: 80px;
+    height: 80px;
     transition: transform 0.3s ease;
   }
 
@@ -33,7 +33,7 @@ const SidebarLogoWrapper = styled.div`
 `;
 
 const WelcomeText = styled.p`
-  font-size: 1.7rem;
+  font-size: 1.3rem;
   font-weight: bold;
   color: #4a4a4a;
   transition: transform 0.3s ease;

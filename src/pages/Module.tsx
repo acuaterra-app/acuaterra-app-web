@@ -14,15 +14,15 @@ import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
 import userIcon from "../assets/images/userlogo.png";
-import reportIcon from "../assets/images/reporte.png";
+//import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
 import LogoutButton from "../components/ui/button/logoutButton";
 import styled from "styled-components";
 
 const SidebarLogoWrapper = styled.div`
   .logo {
-    width: 99px;
-    height: 99px;
+    width: 80px;
+    height: 80px;
     transition: transform 0.3s ease;
   }
 
@@ -32,7 +32,7 @@ const SidebarLogoWrapper = styled.div`
 `;
 
 const WelcomeText = styled.p`
-  font-size: 1.7rem;
+  font-size: 1.3rem;
   font-weight: bold;
   color: #4a4a4a;
   transition: transform 0.3s ease;
@@ -216,7 +216,7 @@ export const Module: FunctionComponent = () => {
         <aside
           ref={menuRef}
           id="sidebar"
-          className={`fixed top-0 left-0 w-96 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
+          className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
             isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
           } ${animateSidebar ? "animate-slide-in" : ""}`}
           style={{
@@ -247,7 +247,7 @@ export const Module: FunctionComponent = () => {
                 { icon: moduleIcon, label: "Granjas", path: "/farm" },
                 { icon: userIcon, label: "Usuarios", path: "/users" },
                 { icon: fishIcon, label: "Módulos", path: "/module" },
-                { icon: reportIcon, label: "Reporte", path: "/report" },
+                //{ icon: reportIcon, label: "Reporte", path: "/report" },
                ].map((item, index) => (
           <li
               key={index}
