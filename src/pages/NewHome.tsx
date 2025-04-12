@@ -123,7 +123,6 @@ const NewHome: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const slides = [
@@ -163,16 +162,6 @@ const NewHome: FC = () => {
   }, []);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsVisible(true);
-    }, 100);
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
-
-  useEffect(() => {
     if (location.pathname === "/newhome") {
       setIsOpen(false);
     }
@@ -185,11 +174,7 @@ const NewHome: FC = () => {
   };
 
   return (
-    <div
-      className={`flex min-h-screen font-sans bg-[#f5f5f5] relative overflow-x-auto transition-opacity duration-700 ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
-    >
+    <div className="flex min-h-screen font-sans bg-[#f5f5f5] relative overflow-x-auto">
       <button
         className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -203,13 +188,13 @@ const NewHome: FC = () => {
       <aside
         ref={menuRef}
         className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-        isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
+          isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
         } ${animateSidebar ? "animate-slide-in" : ""}`}
-      style={{
-          height: "100vh", 
+        style={{
+          height: "100vh",
           boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
-       }}
-     >
+        }}
+      >
         <div className="p-4 flex flex-col items-center relative">
           <button
             className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
