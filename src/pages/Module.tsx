@@ -317,7 +317,7 @@ export const Module: FunctionComponent = () => {
   ) : (
     <>
       {error && <p className="mt-4 text-red-500">Error: {error}</p>}
-      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto">
+      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-square-in-hesitate ">
         <TableWithActions
           data={modules}
           error={error}

@@ -349,7 +349,7 @@ const FarmsPage: FunctionComponent = () => {
   ) : (
     <>
       {/* Tabla para escritorio */}
-      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto">
+      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right">
         <TableWithActions
           data={farms}
           error={error}
