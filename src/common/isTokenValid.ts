@@ -40,13 +40,15 @@ export const isAdmin = (): boolean => {
  */
 export const authGuard = (): { redirect?: string } => {
   console.log("authGuard ejecutado"); 
-  if (!isTokenValid()) {
-    console.log("Token no válido, redirigiendo a /auth"); 
-    window.history.replaceState(null, "", "/auth");
+  if (isTokenValid()) {
+    console.log("Token válido, redirigiendo a /newHome");
+    return {
+      redirect: "/newHome",
+    };
+  } else {
+    console.log("Token no válido, redirigiendo a /auth");
     return {
       redirect: "/auth",
     };
   }
-  console.log("Token válido y usuario autorizado, acceso permitido"); 
-  return {};
 };
