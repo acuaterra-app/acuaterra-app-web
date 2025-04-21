@@ -33,9 +33,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
     dni: '',
     // eslint-disable-next-line camelcase
     id_rol: 0,
-    address: '',
+    address: '', // Default value ensures it's not undefined
     contact: '',
-  });
+  } as Required<UserRequestV2>);
 
   const [errors, setErrors] = useState({
     name: '',
@@ -58,16 +58,41 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
       contact: '',
     };
 
-    if (!userData.name.trim()) newErrors.name = 'El nombre es obligatorio.';
-    if (!userData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email))
-      newErrors.email = 'Ingrese un correo electrónico válido.';
-    if (!userData.dni.trim() || !/^\d+$/.test(userData.dni))
+    // Validations
+    if (!userData.name.trim()) {
+      newErrors.name = 'El nombre es obligatorio.';
+    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(userData.name)) {
+      newErrors.name = 'El nombre solo debe contener letras.';
+    }
+
+    if (!userData.email.trim()) {
+      newErrors.email = 'El correo electrónico es obligatorio.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email)) {
+      newErrors.email = 'Ingrese un correo electrónico válido (ejemplo@dominio.com).';
+    }
+
+    if (!userData.dni.trim()) {
+      newErrors.dni = 'El DNI es obligatorio.';
+    } else if (!/^\d+$/.test(userData.dni)) {
       newErrors.dni = 'El DNI debe contener solo números.';
-    // eslint-disable-next-line camelcase
-    if (!userData.id_rol) newErrors.id_rol = 'Debe seleccionar un rol.';
-    if (!userData.address?.trim()) newErrors.address = 'La dirección es obligatoria.';
-    if (!userData.contact?.trim() || !/^\d+$/.test(userData.contact))
+    }
+
+    if (!userData.id_rol) {
+      // eslint-disable-next-line camelcase
+      newErrors.id_rol = 'Debe seleccionar un rol.';
+    }
+
+    if (!userData.address.trim()) {
+      newErrors.address = 'La dirección es obligatoria.';
+    } else if (!/^[a-zA-Z0-9\s.,-]+$/.test(userData.address)) {
+      newErrors.address = 'La dirección solo debe contener letras, números y caracteres especiales.';
+    }
+
+    if (!userData.contact.trim()) {
+      newErrors.contact = 'El contacto es obligatorio.';
+    } else if (!/^\d+$/.test(userData.contact)) {
       newErrors.contact = 'El contacto debe contener solo números.';
+    }
 
     setErrors(newErrors);
 
@@ -75,15 +100,17 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
   };
 
   const handleChange = (
-    _: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ):void => {
-    const { name, value } = _.target;
+    // eslint-disable-next-line unicorn/prevent-abbreviations
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
+    const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
     setErrors({ ...errors, [name]: '' }); // Limpiar error al cambiar el valor
   };
 
-  const handleSubmit = async (_: React.FormEvent):Promise<void> => {
-    _.preventDefault();
+  // eslint-disable-next-line unicorn/prevent-abbreviations
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
     if (validate()) {
       await onRegister(userData);
       setUserData({
@@ -190,7 +217,7 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               required
               className="block w-full rounded-md border p-2 shadow-sm focus:ring focus:border"
               name="dni"
-              placeholder="Ingrese DNI del usuario"
+              placeholder="Ingrese identificación del usuario"
               type="text"
               value={userData.dni}
               style={{
@@ -273,7 +300,7 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
               required
               className="block w-full rounded-md border p-2 shadow-sm focus:ring focus:border"
               name="contact"
-              placeholder="Ingrese el contacto"
+              placeholder="Ingrese número telefónico"
               type="text"
               value={userData.contact}
               style={{
@@ -288,7 +315,7 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
             )}
           </div>
 
-          {/* Buttoms */}
+          {/* Buttons */}
           <div className="flex justify-end space-x-4 pt-4">
             <button
               className="px-4 py-2 font-semibold rounded-md transition duration-300 shadow-sm focus:outline-none focus:ring-2 hover:brightness-110 hover:shadow-md"

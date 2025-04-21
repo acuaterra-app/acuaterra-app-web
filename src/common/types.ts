@@ -103,8 +103,8 @@ export interface UserRequestV2 {
     email: string;
     dni: string;
     id_rol: number;
-    address?: string;
-	contact?: string;
+    address: string; // optional before "?"
+	contact: string; // optional before "?"
 }
 export interface Bitacora {
 	id_bitacora: number;
