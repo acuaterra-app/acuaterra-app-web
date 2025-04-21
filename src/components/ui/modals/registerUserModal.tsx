@@ -57,45 +57,44 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
       address: '',
       contact: '',
     };
-
+  
     // Validations
     if (!userData.name.trim()) {
       newErrors.name = 'El nombre es obligatorio.';
     } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(userData.name)) {
       newErrors.name = 'El nombre solo debe contener letras.';
     }
-
+  
     if (!userData.email.trim()) {
       newErrors.email = 'El correo electrónico es obligatorio.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email)) {
       newErrors.email = 'Ingrese un correo electrónico válido (ejemplo@dominio.com).';
     }
-
+  
     if (!userData.dni.trim()) {
       newErrors.dni = 'El DNI es obligatorio.';
     } else if (!/^\d+$/.test(userData.dni)) {
       newErrors.dni = 'El DNI debe contener solo números.';
     }
-
+  
     if (!userData.id_rol) {
       // eslint-disable-next-line camelcase
       newErrors.id_rol = 'Debe seleccionar un rol.';
     }
-
+  
+    // Address validation: Only check if it's required
     if (!userData.address.trim()) {
       newErrors.address = 'La dirección es obligatoria.';
-    } else if (!/^[a-zA-Z0-9\s.,-]+$/.test(userData.address)) {
-      newErrors.address = 'La dirección solo debe contener letras, números y caracteres especiales.';
     }
-
+  
     if (!userData.contact.trim()) {
       newErrors.contact = 'El contacto es obligatorio.';
     } else if (!/^\d+$/.test(userData.contact)) {
       newErrors.contact = 'El contacto debe contener solo números.';
     }
-
+  
     setErrors(newErrors);
-
+  
     return Object.values(newErrors).every((error) => error === '');
   };
 
