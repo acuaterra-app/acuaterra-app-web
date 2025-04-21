@@ -15,7 +15,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
   const [address, setAddress] = useState(farm?.address || "");
   const [latitude, setLatitude] = useState(farm?.latitude || "");
   const [longitude, setLongitude] = useState(farm?.longitude || "");
-  const [errors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [selectedUsers, setSelectedUsers] = useState<Array<number>>(
     Array.isArray(farm?.users)
       ? farm.users.map((user) => (typeof user === "number" ? user : user.id))
@@ -34,8 +34,37 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
     );
   };
 
+  const validateForm = (): boolean => {
+    const newErrors: { [key: string]: string } = {};
+
+    // Validations for all fields
+    if (!name.trim()) newErrors["name"] = "El nombre de la granja es obligatorio.";
+    if (!address.trim()) newErrors["address"] = "La dirección de la granja es obligatoria.";
+
+    // Validation for latitude
+    if (!latitude.trim()) {
+      newErrors["latitude"] = "La latitud es obligatoria.";
+    } else if (!/^-?\d+(\.\d+|,\d+)?$/.test(latitude)) {
+      newErrors["latitude"] = "La latitud debe ser un número válido.";
+    } else if (parseFloat(latitude.replace(",", ".")) < -90 || parseFloat(latitude.replace(",", ".")) > 90) {
+      newErrors["latitude"] = "La latitud debe estar entre -90 y 90.";
+    }
+
+    // Validation for longitude
+    if (!longitude.trim()) {
+      newErrors["longitude"] = "La longitud es obligatoria.";
+    } else if (!/^-?\d+(\.\d+|,\d+)?$/.test(longitude)) {
+      newErrors["longitude"] = "La longitud debe ser un número válido.";
+    } else if (parseFloat(longitude.replace(",", ".")) < -180 || parseFloat(longitude.replace(",", ".")) > 180) {
+      newErrors["longitude"] = "La longitud debe estar entre -180 y 180.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (): void => {
-    if (Object.keys(errors).length === 0) {
+    if (validateForm()) {
       onSave({ name, address, latitude, longitude, users: selectedUsers });
     }
   };
@@ -69,13 +98,14 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
                 <InputCustomComponent
                   className="w-full p-2 border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
                   name="name"
-                  placeholder="Nombre de la Granja"
+                  placeholder="Ingresa Nombre de la Granja"
                   value={name}
                   // eslint-disable-next-line unicorn/prevent-abbreviations
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
+                  onChange={(e) => { setName(e.target.value); }}
                 />
+                {errors["name"] && (
+                  <p className="text-red-500 text-sm mt-1">{errors["name"]}</p>
+                )}
               </div>
               <div>
                 <label
@@ -87,13 +117,14 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
                 <InputCustomComponent
                   className="w-full p-2 border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
                   name="address"
-                  placeholder="Dirección de la Granja"
+                  placeholder="Ingresa Dirección de la Granja"
                   value={address}
                   // eslint-disable-next-line unicorn/prevent-abbreviations
-                  onChange={(e) => {
-                    setAddress(e.target.value);
-                  }}
+                  onChange={(e) => { setAddress(e.target.value); }}
                 />
+                {errors["address"] && (
+                  <p className="text-red-500 text-sm mt-1">{errors["address"]}</p>
+                )}
               </div>
               <div>
                 <label
@@ -105,18 +136,14 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
                 <InputCustomComponent
                   className="w-full p-2 border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
                   name="longitude"
-                  placeholder="Longitud"
-                  type="number"
+                  placeholder="Longitud (Valor debe estar entre -180 y 180)"
+                  type="text"
                   value={longitude}
                   // eslint-disable-next-line unicorn/prevent-abbreviations
-                  onChange={(e) => {
-                    setLongitude(e.target.value);
-                  }}
+                  onChange={(e) => { setLongitude(e.target.value); }}
                 />
                 {errors["longitude"] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors["longitude"]}
-                  </p>
+                  <p className="text-red-500 text-sm mt-1">{errors["longitude"]}</p>
                 )}
               </div>
               <div>
@@ -129,18 +156,14 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
                 <InputCustomComponent
                   className="w-full p-2 border-lightGray rounded focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
                   name="latitude"
-                  placeholder="Latitud"
-                  type="number"
+                  placeholder="Latitud (Valor debe estar entre -90 y 90)"
+                  type="text"
                   value={latitude}
                   // eslint-disable-next-line unicorn/prevent-abbreviations
-                  onChange={(e) => {
-                    setLatitude(e.target.value);
-                  }}
+                  onChange={(e) => { setLatitude(e.target.value); }}
                 />
                 {errors["latitude"] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors["latitude"]}
-                  </p>
+                  <p className="text-red-500 text-sm mt-1">{errors["latitude"]}</p>
                 )}
               </div>
             </div>
@@ -151,7 +174,7 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave }) => {
                 className="block text-gray-700 font-bold mb-2"
                 htmlFor="users"
               >
-                Usuarios
+                Usuarios,  debes seleccionar al menos uno para crear una Granja
               </label>
               <div className="border p-4 rounded max-h-96 overflow-y-auto bg-gray-50">
                 {loading ? (
