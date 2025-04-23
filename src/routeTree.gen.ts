@@ -13,6 +13,8 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as UsersImport } from './routes/users'
 import { Route as UserRegisterImport } from './routes/userRegister'
+import { Route as ResetPasswordImport } from './routes/reset-password'
+import { Route as RequestPasswordResetImport } from './routes/request-password-reset'
 import { Route as ReportImport } from './routes/report'
 import { Route as NotfoundImport } from './routes/notfound'
 import { Route as NewHomeImport } from './routes/newHome'
@@ -37,6 +39,18 @@ const UsersRoute = UsersImport.update({
 const UserRegisterRoute = UserRegisterImport.update({
   id: '/userRegister',
   path: '/userRegister',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ResetPasswordRoute = ResetPasswordImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RequestPasswordResetRoute = RequestPasswordResetImport.update({
+  id: '/request-password-reset',
+  path: '/request-password-reset',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -200,6 +214,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportImport
       parentRoute: typeof rootRoute
     }
+    '/request-password-reset': {
+      id: '/request-password-reset'
+      path: '/request-password-reset'
+      fullPath: '/request-password-reset'
+      preLoaderRoute: typeof RequestPasswordResetImport
+      parentRoute: typeof rootRoute
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordImport
+      parentRoute: typeof rootRoute
+    }
     '/userRegister': {
       id: '/userRegister'
       path: '/userRegister'
@@ -232,6 +260,8 @@ export interface FileRoutesByFullPath {
   '/newHome': typeof NewHomeRoute
   '/notfound': typeof NotfoundRoute
   '/report': typeof ReportRoute
+  '/request-password-reset': typeof RequestPasswordResetRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/userRegister': typeof UserRegisterRoute
   '/users': typeof UsersRoute
 }
@@ -249,6 +279,8 @@ export interface FileRoutesByTo {
   '/newHome': typeof NewHomeRoute
   '/notfound': typeof NotfoundRoute
   '/report': typeof ReportRoute
+  '/request-password-reset': typeof RequestPasswordResetRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/userRegister': typeof UserRegisterRoute
   '/users': typeof UsersRoute
 }
@@ -267,6 +299,8 @@ export interface FileRoutesById {
   '/newHome': typeof NewHomeRoute
   '/notfound': typeof NotfoundRoute
   '/report': typeof ReportRoute
+  '/request-password-reset': typeof RequestPasswordResetRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/userRegister': typeof UserRegisterRoute
   '/users': typeof UsersRoute
 }
@@ -286,6 +320,8 @@ export interface FileRouteTypes {
     | '/newHome'
     | '/notfound'
     | '/report'
+    | '/request-password-reset'
+    | '/reset-password'
     | '/userRegister'
     | '/users'
   fileRoutesByTo: FileRoutesByTo
@@ -302,6 +338,8 @@ export interface FileRouteTypes {
     | '/newHome'
     | '/notfound'
     | '/report'
+    | '/request-password-reset'
+    | '/reset-password'
     | '/userRegister'
     | '/users'
   id:
@@ -318,6 +356,8 @@ export interface FileRouteTypes {
     | '/newHome'
     | '/notfound'
     | '/report'
+    | '/request-password-reset'
+    | '/reset-password'
     | '/userRegister'
     | '/users'
   fileRoutesById: FileRoutesById
@@ -336,6 +376,8 @@ export interface RootRouteChildren {
   NewHomeRoute: typeof NewHomeRoute
   NotfoundRoute: typeof NotfoundRoute
   ReportRoute: typeof ReportRoute
+  RequestPasswordResetRoute: typeof RequestPasswordResetRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   UserRegisterRoute: typeof UserRegisterRoute
   UsersRoute: typeof UsersRoute
 }
@@ -353,6 +395,8 @@ const rootRouteChildren: RootRouteChildren = {
   NewHomeRoute: NewHomeRoute,
   NotfoundRoute: NotfoundRoute,
   ReportRoute: ReportRoute,
+  RequestPasswordResetRoute: RequestPasswordResetRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   UserRegisterRoute: UserRegisterRoute,
   UsersRoute: UsersRoute,
 }
@@ -379,6 +423,8 @@ export const routeTree = rootRoute
         "/newHome",
         "/notfound",
         "/report",
+        "/request-password-reset",
+        "/reset-password",
         "/userRegister",
         "/users"
       ]
@@ -418,6 +464,12 @@ export const routeTree = rootRoute
     },
     "/report": {
       "filePath": "report.ts"
+    },
+    "/request-password-reset": {
+      "filePath": "request-password-reset.ts"
+    },
+    "/reset-password": {
+      "filePath": "reset-password.ts"
     },
     "/userRegister": {
       "filePath": "userRegister.ts"
