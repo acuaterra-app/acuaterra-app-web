@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { requestPasswordReset } from "../services/authService";
 import { useNavigate } from "@tanstack/react-router";
+import logo from "../assets/images/logo.png"; // Asegúrate de que el logo esté en esta ruta
 
 export const RequestPasswordReset = (): JSX.Element => {
   const [email, setEmail] = useState("");
@@ -11,13 +12,18 @@ export const RequestPasswordReset = (): JSX.Element => {
   const navigate = useNavigate();
 
   const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Debe contener "@" y ".com"
     return emailRegex.test(email);
   };
 
   const handleSubmit = async (_: React.FormEvent): Promise<void> => {
     _.preventDefault();
     setError(null);
+
+    if (!email.trim()) {
+      setError("Este campo no puede ir vacío.");
+      return;
+    }
 
     if (!validateEmail(email)) {
       setError("Por favor, ingresa un correo electrónico válido.");
@@ -28,20 +34,18 @@ export const RequestPasswordReset = (): JSX.Element => {
     try {
       await requestPasswordReset({ email });
       setSuccess(true);
-      
     } catch (error_) {
       console.error(error_);
-      setError("Error al solicitar el restablecimiento de contraseña. Inténtalo de nuevo.");
+      setError(
+        "Error al solicitar el restablecimiento de contraseña. Inténtalo de nuevo."
+      );
     } finally {
       await navigate({ to: "/auth", replace: true }).catch((error_) => {
         console.error("Error al navegar:", error_);
         setLoading(false);
-      });     
-      
+      });
     }
   };
-
- 
 
   if (success) {
     return (
@@ -52,7 +56,8 @@ export const RequestPasswordReset = (): JSX.Element => {
         transition={{ duration: 0.5 }}
       >
         <p className="text-green-600 text-lg font-bold">
-          ¡Correo enviado! Revisa tu bandeja de entrada para continuar con el restablecimiento de tu contraseña.
+          ¡Correo enviado! Revisa tu bandeja de entrada para continuar con el
+          restablecimiento de tu contraseña.
         </p>
       </motion.div>
     );
@@ -66,11 +71,29 @@ export const RequestPasswordReset = (): JSX.Element => {
       transition={{ duration: 0.5 }}
     >
       <form
-        className="bg-white p-6 rounded shadow-md w-full max-w-md"
+        className="bg-white p-6 rounded shadow-lg w-full max-w-md transition-shadow hover:shadow-2xl"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-2xl font-bold mb-4">Recuperar Contraseña</h1>
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <motion.img
+            alt="Logo"
+            className="h-20 w-auto"
+            src={logo}
+            transition={{ duration: 0.3 }}
+            whileHover={{ scale: 1.1 }} // Animación de escala al pasar el mouse
+          />
+        </div>
+
+        {/* Title */}
+        <h1 className="text-3xl md:text-5xl lg:text-5xl font-bold mb-5 text-center text-gray-700">
+          Recuperar Contraseña
+        </h1>
+
+        {/* Error Message */}
         {error && <p className="text-red-500 mb-4">{error}</p>}
+
+        {/* Email Field */}
         <div className="mb-4">
           <label className="block text-gray-700">Correo Electrónico</label>
           <input
@@ -78,11 +101,15 @@ export const RequestPasswordReset = (): JSX.Element => {
             className="w-full p-2 border border-gray-300 rounded"
             type="email"
             value={email}
-            onChange={(_) => { setEmail(_.target.value); }}
+            onChange={(_) => {
+              setEmail(_.target.value);
+            }}
           />
         </div>
+
+        {/* Submit Button */}
         <button
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+          className="w-full py-2 px-4 rounded hover:brightness-110 transition bg-primary text-white"
           disabled={loading}
           type="submit"
         >
