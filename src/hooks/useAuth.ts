@@ -25,13 +25,19 @@ handleLogin: () => Promise<void>
         try {
             const data = await login(email, password);
             const token = data.data[0]?.token;
+            const mustChangePassword = data.data[0]?.mustChangePassword;
             console.log("data", token);
             if (data.errors.length != 0 || !token) {
                 setError(data.errors[0] ?? "An error occurred");
                 return;
             }
+            if (mustChangePassword) {
+                await navigate({ to: "/request-password-reset" });
+                return;
+            }
             localStorage.setItem("token", token);
             console.log("Login successful", token);
+
             await navigate({ to: "/newHome" });
         } catch (error) {
             setError("Invalid email or password");

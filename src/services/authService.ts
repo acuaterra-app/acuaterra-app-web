@@ -6,6 +6,7 @@ interface tokenResponse {
         id: number;
        
     };
+    mustChangePassword: boolean;
 }
 
 interface LoginResponse {
@@ -44,3 +45,35 @@ export const logout = async (): Promise<void> => {
         throw new Error("Logout failed");
     }
 };
+
+export const resetPassword = async (data: {
+    token: string;
+    newPassword: string;
+    confirmPassword: string;
+  }): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+  
+    if (!response.ok) {
+      throw new Error("Error al cambiar la contraseña");
+    }
+  };
+
+  export const requestPasswordReset = async (data: { email: string }): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/auth/request-password-reset`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+  
+    if (!response.ok) {
+      throw new Error("Error al solicitar el restablecimiento de contraseña");
+    }
+  };
