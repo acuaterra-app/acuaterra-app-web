@@ -4,7 +4,7 @@ interface tokenResponse {
     token: string;
     user: {
         id: number;
-       
+        name: string; // Agregamos el campo "name" para reflejar la estructura de la respuesta
     };
     mustChangePassword: boolean;
 }
@@ -29,7 +29,25 @@ export const login = async (email: string, password: string): Promise<LoginRespo
         throw new Error("Login failed");
     }
 
-    return response.json() as Promise<LoginResponse>;
+    const result = await response.json() as LoginResponse;
+
+    // Guardar el token y el nombre del usuario en localStorage
+    const token = result.data?.[0]?.token;
+    const userName = result.data?.[0]?.user?.name;
+
+    if (!token || !userName) {
+        throw new Error("Invalid login response: Missing token or user name");
+    }
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("userName", userName);
+
+    console.log("Inicio de sesión exitoso. Token y nombre del usuario guardados en localStorage:", {
+        token,
+        userName,
+    });
+
+    return result;
 };
 
 export const logout = async (): Promise<void> => {
@@ -44,36 +62,40 @@ export const logout = async (): Promise<void> => {
     if (!response.ok) {
         throw new Error("Logout failed");
     }
+
+    // Limpiar el localStorage al cerrar sesión
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
 };
 
 export const resetPassword = async (data: {
     token: string;
     newPassword: string;
     confirmPassword: string;
-  }): Promise<void> => {
+}): Promise<void> => {
     const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
     });
-  
-    if (!response.ok) {
-      throw new Error("Error al cambiar la contraseña");
-    }
-  };
 
-  export const requestPasswordReset = async (data: { email: string }): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/auth/request-password-reset`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-  
     if (!response.ok) {
-      throw new Error("Error al solicitar el restablecimiento de contraseña");
+        throw new Error("Error al cambiar la contraseña");
     }
-  };
+};
+
+export const requestPasswordReset = async (data: { email: string }): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/auth/request-password-reset`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        throw new Error("Error al solicitar el restablecimiento de contraseña");
+    }
+};

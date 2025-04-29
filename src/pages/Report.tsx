@@ -32,6 +32,8 @@ const WelcomeText = styled.p`
   font-weight: bold;
   color: #4a4a4a;
   transition: transform 0.3s ease;
+  margin-top: 0.5rem; /* Espacio entre el logo y el texto */
+  text-align: center;
 
   &:hover {
     transform: scale(1.1);
@@ -119,6 +121,7 @@ const Report: FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [userName, setUserName] = useState<string>("Usuario"); // Estado para el nombre del usuario
   const menuRef = useRef<HTMLDivElement>(null);
 
   const sensorLabels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
@@ -154,6 +157,11 @@ const Report: FC = () => {
     if (!isTokenValid()) {
       console.log("Redirigiendo a /auth desde el componente Report");
       void navigate({ to: "/auth" });
+    } else {
+      // Obtener el nombre del usuario desde localStorage
+      const name = localStorage.getItem("userName");
+      console.log("Nombre del usuario obtenido desde localStorage:", name);
+      setUserName(name || "Usuario"); // Si no hay nombre, usar "Usuario" como predeterminado
     }
   }, [navigate]);
 
@@ -208,7 +216,7 @@ const Report: FC = () => {
 
   return (
     <div className="flex h-screen bg-white font-sans">
-      {/* Close and open buttom for side bar */}
+      {/* Close and open button for side bar */}
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -219,7 +227,7 @@ const Report: FC = () => {
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Side bar*/}
+      {/* Side bar */}
       <aside
         ref={menuRef}
         id="sidebar"
@@ -243,103 +251,103 @@ const Report: FC = () => {
           <SidebarLogoWrapper>
             <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
           </SidebarLogoWrapper>
-          <WelcomeText>Bienvenido, usuario!</WelcomeText>
+          <WelcomeText>Bienvenido, {userName}!</WelcomeText>
         </div>
 
-    <nav className="flex-1 overflow-y-auto">
-         <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-           {[
-             { icon: homeIcon, label: "Inicio", path: "/newhome" },
-             { icon: moduleIcon, label: "Granjas", path: "/farm" },
-             { icon: userIcon, label: "Usuarios", path: "/users" },
-             { icon: fishIcon, label: "Módulos", path: "/module" },
-             { icon: reporteIcon, label: "Reporte", path: "/report" }, 
-           ].map((item, index) => (
-      <li
-             key={index}
-             className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-               location.pathname === item.path
-                ? "bg-[#3cacac] text-white shadow-md"
-                : "text-gray-600 group-hover:text-white"
-             }`}
-                  onClick={() => {
+        <nav className="flex-1 overflow-y-auto">
+          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+            {[
+              { icon: homeIcon, label: "Inicio", path: "/newhome" },
+              { icon: moduleIcon, label: "Granjas", path: "/farm" },
+              { icon: userIcon, label: "Usuarios", path: "/users" },
+              { icon: fishIcon, label: "Módulos", path: "/module" },
+              { icon: reporteIcon, label: "Reporte", path: "/report" },
+            ].map((item, index) => (
+              <li
+                key={index}
+                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                  location.pathname === item.path
+                    ? "bg-[#3cacac] text-white shadow-md"
+                    : "text-gray-600 group-hover:text-white"
+                }`}
+                onClick={() => {
                   handleNavigation(item.path);
-             }}
-           >
-           <span
-                 className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                 location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-            }`}
-          ></span>
-        <span className="relative z-10 flex items-center gap-3 font-bold">
-             <img alt={item.label} className="h-6 w-6" src={item.icon} />
-             {item.label}
-          </span>
-         </li>
-        ))}
+                }}
+              >
+                <span
+                  className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                    location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
+                  }`}
+                ></span>
+                <span className="relative z-10 flex items-center gap-3 font-bold">
+                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                  {item.label}
+                </span>
+              </li>
+            ))}
           </ul>
 
-        <div className="mt-4 md:mt-20">
-          <LogoutButtonStyled />
-        </div>
-    </nav>
+          <div className="mt-4 md:mt-20">
+            <LogoutButtonStyled />
+          </div>
+        </nav>
       </aside>
 
-      {/* Main Content*/}
-    <main
+      {/* Main Content */}
+      <main
         className={`flex-1 p-6 bg-white overflow-y-auto ${
           isOpen ? "" : "md:ml-64"
         }`}
-       >
-          {loading ? (
-           <LoaderAcua />
-         ) : (
-       <>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
-            Reportes
-          </h1>
-          <p className="text-gray-600 mb-6 text-center">
-            Visualización y generación de reportes.
-          </p>
+      >
+        {loading ? (
+          <LoaderAcua />
+        ) : (
+          <>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+              Reportes
+            </h1>
+            <p className="text-gray-600 mb-6 text-center">
+              Visualización y generación de reportes.
+            </p>
 
-          {/* Graphs */}
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4 text-center">
-             Comportamiento en Tiempo Real
-            </h2>
-            <SensorChart
-              color="rgba(75, 192, 192, 1)"
-              data={sensorData}
-              labels={sensorLabels}
-            />
-          </div>
+            {/* Graphs */}
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-4 text-center">
+                Comportamiento en Tiempo Real
+              </h2>
+              <SensorChart
+                color="rgba(75, 192, 192, 1)"
+                data={sensorData}
+                labels={sensorLabels}
+              />
+            </div>
 
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4 text-center">
-              Comportamiento Semanal
-            </h2>
-            <SensorChart
-              color="rgba(255, 99, 132, 1)"
-              data={weeklyData}
-              labels={weeklyLabels}
-            />
-          </div>
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-4 text-center">
+                Comportamiento Semanal
+              </h2>
+              <SensorChart
+                color="rgba(255, 99, 132, 1)"
+                data={weeklyData}
+                labels={weeklyLabels}
+              />
+            </div>
 
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4 text-center">
-              Comportamiento Mensual
-            </h2>
-            <SensorChart
-              color="rgba(54, 162, 235, 1)"
-              data={monthlyData}
-             labels={monthlyLabels}
-            />
-          </div>
-        </>
-      )}
-    </main>
-</div>
-);
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-4 text-center">
+                Comportamiento Mensual
+              </h2>
+              <SensorChart
+                color="rgba(54, 162, 235, 1)"
+                data={monthlyData}
+                labels={monthlyLabels}
+              />
+            </div>
+          </>
+        )}
+      </main>
+    </div>
+  );
 };
 
 export default Report;

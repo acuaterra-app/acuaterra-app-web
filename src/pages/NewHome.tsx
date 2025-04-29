@@ -33,6 +33,8 @@ const SidebarLogoWrapper = styled.div`
 const WelcomeText = styled.p`
   font-size: 1.3rem; /* Tamaño ajustado */
   font-weight: bold;
+  text-align: center;
+  margin-top: 0.5rem; /* Espacio entre el logo y el texto */
   color: #4a4a4a;
   transition: transform 0.3s ease;
 
@@ -124,6 +126,7 @@ const NewHome: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
+  const [userName, setUserName] = useState<string>("Usuario"); // State for user name
   const menuRef = useRef<HTMLDivElement>(null);
 
   const slides = [
@@ -136,6 +139,11 @@ const NewHome: FC = () => {
     if (!isTokenValid()) {
       console.log("Redirigiendo a /auth desde el componente NewHome");
       void navigate({ to: "/auth" });
+    } else {
+      // Obtener el nombre del usuario desde localStorage
+      const name = localStorage.getItem("userName");
+      console.log("Nombre del usuario obtenido desde localStorage:", name);
+      setUserName(name || "Usuario"); // Si no hay nombre, usar "Usuario" como predeterminado
     }
   }, [navigate]);
 
@@ -209,7 +217,7 @@ const NewHome: FC = () => {
           <SidebarLogoWrapper>
             <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
           </SidebarLogoWrapper>
-          <WelcomeText>Bienvenido, usuario!</WelcomeText>
+          <WelcomeText>Bienvenido, {userName}!</WelcomeText>
         </div>
 
         <nav className="flex-1 overflow-y-auto">

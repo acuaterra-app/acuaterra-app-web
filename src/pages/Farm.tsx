@@ -37,6 +37,8 @@ const WelcomeText = styled.p`
   font-size: 1.3rem;
   font-weight: bold;
   color: #4a4a4a;
+  margin-top: 0.5rem;
+  text-align: center;
   transition: transform 0.3s ease;
 
   &:hover {
@@ -141,6 +143,7 @@ const FarmsPage: FunctionComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
+  const [userName, setUserName] = useState<string>("Usuario"); // Estado para el nombre del usuario
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -148,6 +151,11 @@ const FarmsPage: FunctionComponent = () => {
     if (!isTokenValid()) {
       console.log("Redirigiendo a /auth desde el componente Farms");
       void navigate({ to: "/auth" });
+    } else {
+      // Obtener el nombre del usuario desde localStorage
+      const name = localStorage.getItem("userName");
+      console.log("Nombre del usuario obtenido desde localStorage:", name);
+      setUserName(name || "Usuario"); // Si no hay nombre, usar "Usuario" como predeterminado
     }
   }, [navigate]);
 
@@ -256,7 +264,7 @@ const FarmsPage: FunctionComponent = () => {
     <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
       <ToastContainer />
 
-      {/* Side bar's open and close buttom */}
+      {/* Side bar's open and close button */}
       <button
         className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -292,148 +300,147 @@ const FarmsPage: FunctionComponent = () => {
           <SidebarLogoWrapper>
             <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
           </SidebarLogoWrapper>
-          <WelcomeText>Bienvenido, usuario!</WelcomeText>
+          <WelcomeText>Bienvenido, {userName}!</WelcomeText>
         </div>
 
-    <nav className="flex-1 overflow-y-auto">
-    <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-       {[
-          { icon: homeIcon, label: "Inicio", path: "/newhome" },
-          { icon: moduleIcon, label: "Granjas", path: "/farm" },
-          { icon: userIcon, label: "Usuarios", path: "/users" },
-          { icon: fishIcon, label: "Módulos", path: "/module" },
-          { icon: reportIcon, label: "Reporte", path: "/report" },
-             ].map((item, index) => (
-      <li
-            key={index}
-            className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-            location.pathname === item.path
-               ? "bg-[#3cacac] text-white shadow-md"
-               : "text-gray-600 group-hover:text-white"
-           }`}
-              onClick={() => {
-              handleNavigation(item.path);
-           }}
-      >
-        <span
-             className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-             location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-             }`}
-        ></span>
-        <span className="relative z-10 flex items-center gap-3 font-bold">
-             <img alt={item.label} className="h-6 w-6" src={item.icon} />
-             {item.label}
-        </span>
-        </li>
-         ))}
-       </ul>
+        <nav className="flex-1 overflow-y-auto">
+          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+            {[
+              { icon: homeIcon, label: "Inicio", path: "/newhome" },
+              { icon: moduleIcon, label: "Granjas", path: "/farm" },
+              { icon: userIcon, label: "Usuarios", path: "/users" },
+              { icon: fishIcon, label: "Módulos", path: "/module" },
+              { icon: reportIcon, label: "Reporte", path: "/report" },
+            ].map((item, index) => (
+              <li
+                key={index}
+                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                  location.pathname === item.path
+                    ? "bg-[#3cacac] text-white shadow-md"
+                    : "text-gray-600 group-hover:text-white"
+                }`}
+                onClick={() => {
+                  handleNavigation(item.path);
+                }}
+              >
+                <span
+                  className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                    location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
+                  }`}
+                ></span>
+                <span className="relative z-10 flex items-center gap-3 font-bold">
+                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                  {item.label}
+                </span>
+              </li>
+            ))}
+          </ul>
 
-       <div className="mt-4 md:mt-20">
-           <LogoutButtonStyled />
-         </div>
-     </nav>
-
-    </aside>
+          <div className="mt-4 md:mt-20">
+            <LogoutButtonStyled />
+          </div>
+        </nav>
+      </aside>
 
       {/* Main content */}
       <main className="flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto">
-  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
-    Granjas
-  </h1>
-  <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
-    Aquí puedes gestionar las granjas acuapónicas.
-  </p>
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+          Granjas
+        </h1>
+        <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
+          Aquí puedes gestionar las granjas acuapónicas.
+        </p>
 
-  {loading ? (
-    <LoaderAcua />
-  ) : (
-    <>
-      {/* Tabla para escritorio */}
-      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right">
-        <TableWithActions
-          data={farms}
-          error={error}
-          limit={limit}
-          loading={loading}
-          page={page}
-          setLimit={setLimit}
-          setPage={setPage}
-          total={total}
-          columns={[
-            { header: "ID", accessor: "id" },
-            { header: "Name", accessor: "name" },
-            { header: "Latitud", accessor: "latitude" },
-            { header: "Longitud", accessor: "longitude" },
-            { header: "Dirección", accessor: "address" },
-            { header: "Date", accessor: "createdAt" },
-            {
-              header: "Users",
-              accessor: "users",
-              render: (farm) =>
-                farm.users.map((user) => (user as User).name).join(", "),
-            },
-          ]}
-          onDelete={handleRemoveFarm}
-          onAdd={() => {
-            setSelectedFarm(null);
-            setIsModalOpen(true);
-          }}
-          onEdit={(farm: FarmRequest) => {
-            setSelectedFarm(farm);
-            setIsModalOpen(true);
-          }}
-        />
-      </div>
+        {loading ? (
+          <LoaderAcua />
+        ) : (
+          <>
+            {/* Tabla para escritorio */}
+            <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right">
+              <TableWithActions
+                data={farms}
+                error={error}
+                limit={limit}
+                loading={loading}
+                page={page}
+                setLimit={setLimit}
+                setPage={setPage}
+                total={total}
+                columns={[
+                  { header: "ID", accessor: "id" },
+                  { header: "Name", accessor: "name" },
+                  { header: "Latitud", accessor: "latitude" },
+                  { header: "Longitud", accessor: "longitude" },
+                  { header: "Dirección", accessor: "address" },
+                  { header: "Date", accessor: "createdAt" },
+                  {
+                    header: "Users",
+                    accessor: "users",
+                    render: (farm) =>
+                      farm.users.map((user) => (user as User).name).join(", "),
+                  },
+                ]}
+                onDelete={handleRemoveFarm}
+                onAdd={() => {
+                  setSelectedFarm(null);
+                  setIsModalOpen(true);
+                }}
+                onEdit={(farm: FarmRequest) => {
+                  setSelectedFarm(farm);
+                  setIsModalOpen(true);
+                }}
+              />
+            </div>
 
-      {/* Tabla para móvil */}
-      <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
-        <TableWithActionsMobile
-          data={farms}
-          error={error}
-          limit={limit}
-          loading={loading}
-          page={page}
-          setLimit={setLimit}
-          setPage={setPage}
-          total={total}
-          columns={[
-            { header: "ID", accessor: "id" },
-            { header: "Name", accessor: "name" },
-            { header: "Latitud", accessor: "latitude" },
-            { header: "Longitud", accessor: "longitude" },
-            { header: "Dirección", accessor: "address" },
-            { header: "Date", accessor: "createdAt" },
-            {
-              header: "Users",
-              accessor: "users",
-              render: (farm) =>
-                farm.users.map((user) => (user as User).name).join(", "),
-            },
-          ]}
-          onDelete={handleRemoveFarm}
-          onAdd={() => {
-            setSelectedFarm(null);
-            setIsModalOpen(true);
-          }}
-          onEdit={(farm: FarmRequest) => {
-            setSelectedFarm(farm);
-            setIsModalOpen(true);
-          }}
-        />
-      </div>
-    </>
-  )}
+            {/* Tabla para móvil */}
+            <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
+              <TableWithActionsMobile
+                data={farms}
+                error={error}
+                limit={limit}
+                loading={loading}
+                page={page}
+                setLimit={setLimit}
+                setPage={setPage}
+                total={total}
+                columns={[
+                  { header: "ID", accessor: "id" },
+                  { header: "Name", accessor: "name" },
+                  { header: "Latitud", accessor: "latitude" },
+                  { header: "Longitud", accessor: "longitude" },
+                  { header: "Dirección", accessor: "address" },
+                  { header: "Date", accessor: "createdAt" },
+                  {
+                    header: "Users",
+                    accessor: "users",
+                    render: (farm) =>
+                      farm.users.map((user) => (user as User).name).join(", "),
+                  },
+                ]}
+                onDelete={handleRemoveFarm}
+                onAdd={() => {
+                  setSelectedFarm(null);
+                  setIsModalOpen(true);
+                }}
+                onEdit={(farm: FarmRequest) => {
+                  setSelectedFarm(farm);
+                  setIsModalOpen(true);
+                }}
+              />
+            </div>
+          </>
+        )}
 
-  {isModalOpen && (
-    <FarmModal
-      farm={selectedFarm}
-      onSave={selectedFarm ? handleEditFarm : handleAddFarm}
-      onClose={() => {
-        setIsModalOpen(false);
-      }}
-    />
-  )}
-</main>
+        {isModalOpen && (
+          <FarmModal
+            farm={selectedFarm}
+            onSave={selectedFarm ? handleEditFarm : handleAddFarm}
+            onClose={() => {
+              setIsModalOpen(false);
+            }}
+          />
+        )}
+      </main>
     </div>
   );
 };

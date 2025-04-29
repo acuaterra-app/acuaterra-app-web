@@ -35,6 +35,8 @@ const WelcomeText = styled.p`
   font-size: 1.3rem;
   font-weight: bold;
   color: #4a4a4a;
+  margin-top: 10px;
+  text-align: center;
   transition: transform 0.3s ease;
 
   &:hover {
@@ -126,6 +128,7 @@ export const Module: FunctionComponent = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [selectedFarmId, setSelectedFarmId] = useState<number | null>(null);
+  const [userName, setUserName] = useState<string>("Usuario"); // Estado para el nombre del usuario
 
   const { modules, loading, error, total, page, perPage, setPage } =
     useModulesByFarm(selectedFarmId || 0);
@@ -136,6 +139,11 @@ export const Module: FunctionComponent = () => {
     if (!isTokenValid()) {
       console.log("Redirigiendo a /auth desde el componente Modules");
       void navigate({ to: "/auth" });
+    } else {
+      // Obtener el nombre del usuario desde localStorage
+      const name = localStorage.getItem("userName");
+      console.log("Nombre del usuario obtenido desde localStorage:", name);
+      setUserName(name || "Usuario"); // Si no hay nombre, usar "Usuario" como predeterminado
     }
   }, [navigate]);
 
@@ -201,7 +209,7 @@ export const Module: FunctionComponent = () => {
   return (
     <Layout>
       <div className="flex min-h-screen bg-white font-sans relative">
-        {/*Side bar's open and close buttom*/}
+        {/*Side bar's open and close button*/}
         <button
           className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
           id="menu-button"
@@ -237,178 +245,177 @@ export const Module: FunctionComponent = () => {
             <SidebarLogoWrapper>
               <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
             </SidebarLogoWrapper>
-            <WelcomeText>Bienvenido, usuario!</WelcomeText>
+            <WelcomeText>Bienvenido, {userName}!</WelcomeText>
           </div>
 
-      <nav className="flex-1 overflow-y-auto">
-          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-               {[
+          <nav className="flex-1 overflow-y-auto">
+            <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+              {[
                 { icon: homeIcon, label: "Inicio", path: "/newhome" },
                 { icon: moduleIcon, label: "Granjas", path: "/farm" },
                 { icon: userIcon, label: "Usuarios", path: "/users" },
                 { icon: fishIcon, label: "Módulos", path: "/module" },
                 { icon: reportIcon, label: "Reporte", path: "/report" },
-               ].map((item, index) => (
-          <li
-              key={index}
-              className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-                  location.pathname === item.path
-                   ? "bg-[#3cacac] text-white shadow-md"
-                   : "text-gray-600 group-hover:text-white"
-              }`}
-                onClick={() => {
-                handleNavigation(item.path);
-             }}
-           >
-              <span
-                className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-               }`}
-              ></span>
-              <span className="relative z-10 flex items-center gap-3 font-bold">
-                <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                {item.label}
-             </span>
-         </li>
-           ))}
-        </ul>
+              ].map((item, index) => (
+                <li
+                  key={index}
+                  className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                    location.pathname === item.path
+                      ? "bg-[#3cacac] text-white shadow-md"
+                      : "text-gray-600 group-hover:text-white"
+                  }`}
+                  onClick={() => {
+                    handleNavigation(item.path);
+                  }}
+                >
+                  <span
+                    className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                      location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
+                    }`}
+                  ></span>
+                  <span className="relative z-10 flex items-center gap-3 font-bold">
+                    <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                    {item.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
 
-           <div className="mt-4 md:mt-20">
-             <LogoutButtonStyled />
-           </div>
-     </nav>
-
-      </aside>
+            <div className="mt-4 md:mt-20">
+              <LogoutButtonStyled />
+            </div>
+          </nav>
+        </aside>
 
         {/* Main Content */}
         <main className="flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto">
-  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
-    Lista de Módulos
-  </h1>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+            Lista de Módulos
+          </h1>
 
-  {/* Selector de granjas */}
-  <div className="mb-6 max-w-md mx-auto">
-    <label className="block text-center text-2xl font-bold mb-4">
-      Seleccione una Granja
-    </label>
-    <select
-      className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
-      disabled={farmsLoading}
-      onChange={(event) => {
-        setSelectedFarmId(Number(event.target.value));
-      }}
-    >
-      <option value="">Seleccione una granja</option>
-      {farms.map((farm) => (
-        <option key={farm.id} value={farm.id}>
-          {farm.name}
-        </option>
-      ))}
-    </select>
-    {farmsError && (
-      <p className="text-red-500 mt-2 text-center">
-        Error al cargar las granjas
-      </p>
-    )}
-  </div>
+          {/* Selector de granjas */}
+          <div className="mb-6 max-w-md mx-auto">
+            <label className="block text-center text-2xl font-bold mb-4">
+              Seleccione una Granja
+            </label>
+            <select
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
+              disabled={farmsLoading}
+              onChange={(event) => {
+                setSelectedFarmId(Number(event.target.value));
+              }}
+            >
+              <option value="">Seleccione una granja</option>
+              {farms.map((farm) => (
+                <option key={farm.id} value={farm.id}>
+                  {farm.name}
+                </option>
+              ))}
+            </select>
+            {farmsError && (
+              <p className="text-red-500 mt-2 text-center">
+                Error al cargar las granjas
+              </p>
+            )}
+          </div>
 
-  {loading ? (
-    <LoaderAcua />
-  ) : (
-    <>
-      {error && <p className="mt-4 text-red-500">Error: {error}</p>}
-      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-square-in-hesitate ">
-        <TableWithActions
-          data={modules}
-          error={error}
-          isVisibleActions={false}
-          isVisibleButton={false}
-          limit={perPage}
-          loading={loading}
-          page={page}
-          setLimit={() => {}}
-          setPage={setPage}
-          total={total}
-          columns={[
-            { header: "ID", accessor: "id" },
-            { header: "Nombre", accessor: "name" },
-            { header: "Ubicación", accessor: "location" },
-            {
-              header: "Especie de Pescados",
-              accessor: "species_fish",
-            },
-            { header: "Cantidad", accessor: "fish_quantity" },
-            { header: "Dimensiones", accessor: "dimensions" },
-            {
-              header: "Creado Por",
-              accessor: "creator",
-              render: (module) => module.creator.name.toString(),
-            },
-            {
-              header: "Granja",
-              accessor: "farm",
-              render: (module) => module.farm.name.toString(),
-            },
-          ]}
-          onAdd={() => {
-            console.log("Add new module");
-          }}
-          onDelete={() => {
-            console.log("Delete module");
-          }}
-          onEdit={() => {
-            console.log("Edit module");
-          }}
-        />
-      </div>
+          {loading ? (
+            <LoaderAcua />
+          ) : (
+            <>
+              {error && <p className="mt-4 text-red-500">Error: {error}</p>}
+              <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-square-in-hesitate ">
+                <TableWithActions
+                  data={modules}
+                  error={error}
+                  isVisibleActions={false}
+                  isVisibleButton={false}
+                  limit={perPage}
+                  loading={loading}
+                  page={page}
+                  setLimit={() => {}}
+                  setPage={setPage}
+                  total={total}
+                  columns={[
+                    { header: "ID", accessor: "id" },
+                    { header: "Nombre", accessor: "name" },
+                    { header: "Ubicación", accessor: "location" },
+                    {
+                      header: "Especie de Pescados",
+                      accessor: "species_fish",
+                    },
+                    { header: "Cantidad", accessor: "fish_quantity" },
+                    { header: "Dimensiones", accessor: "dimensions" },
+                    {
+                      header: "Creado Por",
+                      accessor: "creator",
+                      render: (module) => module.creator.name.toString(),
+                    },
+                    {
+                      header: "Granja",
+                      accessor: "farm",
+                      render: (module) => module.farm.name.toString(),
+                    },
+                  ]}
+                  onAdd={() => {
+                    console.log("Add new module");
+                  }}
+                  onDelete={() => {
+                    console.log("Delete module");
+                  }}
+                  onEdit={() => {
+                    console.log("Edit module");
+                  }}
+                />
+              </div>
 
-      <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
-        <TableWithActionsMobile
-          data={modules}
-          error={error}
-          isVisibleActions={false}
-          isVisibleButton={false}
-          limit={perPage}
-          loading={loading}
-          page={page}
-          setLimit={() => {}}
-          setPage={setPage}
-          total={total}
-          columns={[
-            { header: "ID", accessor: "id" },
-            { header: "Nombre", accessor: "name" },
-            { header: "Ubicación", accessor: "location" },
-            {
-              header: "Especie de Pescados",
-              accessor: "species_fish",
-            },
-            { header: "Cantidad", accessor: "fish_quantity" },
-            { header: "Dimensiones", accessor: "dimensions" },
-            {
-              header: "Creado Por",
-              accessor: "creator",
-              render: (module) => module.creator.name.toString(),
-            },
-            {
-              header: "Granja",
-              accessor: "farm",
-              render: (module) => module.farm.name.toString(),
-            },
-          ]}
-          onAdd={() => {
-            console.log("Add new module");
-          }}
-          onDelete={() => {
-            console.log("Delete module");
-          }}
-          onEdit={() => {
-            console.log("Edit module");
-          }}
-        />
-      </div>
-    </>
-  )}
-</main>
+              <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
+                <TableWithActionsMobile
+                  data={modules}
+                  error={error}
+                  isVisibleActions={false}
+                  isVisibleButton={false}
+                  limit={perPage}
+                  loading={loading}
+                  page={page}
+                  setLimit={() => {}}
+                  setPage={setPage}
+                  total={total}
+                  columns={[
+                    { header: "ID", accessor: "id" },
+                    { header: "Nombre", accessor: "name" },
+                    { header: "Ubicación", accessor: "location" },
+                    {
+                      header: "Especie de Pescados",
+                      accessor: "species_fish",
+                    },
+                    { header: "Cantidad", accessor: "fish_quantity" },
+                    { header: "Dimensiones", accessor: "dimensions" },
+                    {
+                      header: "Creado Por",
+                      accessor: "creator",
+                      render: (module) => module.creator.name.toString(),
+                    },
+                    {
+                      header: "Granja",
+                      accessor: "farm",
+                      render: (module) => module.farm.name.toString(),
+                    },
+                  ]}
+                  onAdd={() => {
+                    console.log("Add new module");
+                  }}
+                  onDelete={() => {
+                    console.log("Delete module");
+                  }}
+                  onEdit={() => {
+                    console.log("Edit module");
+                  }}
+                />
+              </div>
+            </>
+          )}
+        </main>
       </div>
     </Layout>
   );
