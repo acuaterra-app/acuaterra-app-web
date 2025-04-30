@@ -4,6 +4,7 @@ import type { FunctionComponent } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import LoaderAcua from "../components/loaders/LoaderAcua";
+import { useNavigate } from "@tanstack/react-router";
 // eslint-disable-next-line no-duplicate-imports
 import { useState } from "react";
 
@@ -20,6 +21,12 @@ export const Auth: FunctionComponent = () => {
 
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const navigate = useNavigate();
+
+  // Manejar redirección a la página de restablecimiento de contraseña
+  const handleForgotPasswordClick = (): void => {
+    void navigate({ to: "/request-password-reset" });
+  };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleSubmit = (event: React.FormEvent) => {
@@ -144,6 +151,16 @@ export const Auth: FunctionComponent = () => {
           </button>
         </motion.div>
       </motion.form>
+
+      {/* Forgot Password Section */}
+      <div className="text-sm mt-8 text-center">
+        <p
+          className="text-black text-lg font-medium cursor-pointer transition-colors duration-200 hover:text-[#3cacac] hover:underline"
+          onClick={handleForgotPasswordClick}
+        >
+          ¿Olvidaste tu contraseña?
+        </p>
+      </div>
 
       {/* General Error Message */}
       {error && email && password && (
