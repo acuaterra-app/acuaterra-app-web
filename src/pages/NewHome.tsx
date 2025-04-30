@@ -20,7 +20,7 @@ import MobileCarousel from "../components/Slider/MobileCarousel";
 
 const SidebarLogoWrapper = styled.div`
   .logo {
-    width: 80px; /* Tamaño ajustado */
+    width: 80px; /* Updated size */
     height: 80px;
     transition: transform 0.3s ease;
   }
@@ -31,10 +31,10 @@ const SidebarLogoWrapper = styled.div`
 `;
 
 const WelcomeText = styled.p`
-  font-size: 1.3rem; /* Tamaño ajustado */
+  font-size: 1.3rem; /*  updated size */
   font-weight: bold;
   text-align: center;
-  margin-top: 0.5rem; /* Espacio entre el logo y el texto */
+  margin-top: 0.5rem; /*  space between logo n' text */
   color: #4a4a4a;
   transition: transform 0.3s ease;
 
@@ -49,7 +49,7 @@ const LogoutButtonStyledWrapper = styled.div`
     border: none;
     background: #3cacac;
     color: #fff;
-    width: 100px; /* Tamaño ajustado */
+    width: 100px; /* updated size */
     height: 100px;
     border-radius: 50%;
     overflow: hidden;
@@ -70,14 +70,14 @@ const LogoutButtonStyledWrapper = styled.div`
       position: absolute;
       transform: rotate(calc(19deg * var(--index)));
       inset: 7px;
-      font-size: 12px; /* Tamaño ajustado */
+      font-size: 12px; /* updated size */
       color: #fff;
     }
   }
 
   .button__circle {
     position: relative;
-    width: 30px; /* Tamaño ajustado */
+    width: 30px; /* updated size */
     height: 30px;
     overflow: hidden;
     background: #fff;
@@ -140,10 +140,10 @@ const NewHome: FC = () => {
       console.log("Redirigiendo a /auth desde el componente NewHome");
       void navigate({ to: "/auth" });
     } else {
-      // Obtener el nombre del usuario desde localStorage
+      // Get userName from localStorage
       const name = localStorage.getItem("userName");
       console.log("Nombre del usuario obtenido desde localStorage:", name);
-      setUserName(name || "Usuario"); // Si no hay nombre, usar "Usuario" como predeterminado
+      setUserName(name || "Usuario"); //  if there is no name, gotta use "Usuario" as default
     }
   }, [navigate]);
 

@@ -128,7 +128,7 @@ const LogoutButtonStyled = () => {
 
 export const Users: FunctionComponent = () => {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState<string>("Usuario"); // Estado para el nombre del usuario
+  const [userName, setUserName] = useState<string>("Usuario"); // State for user name
   const [reload, setReload] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
@@ -146,10 +146,10 @@ export const Users: FunctionComponent = () => {
       console.log("Redirigiendo a /auth desde el componente Users");
       void navigate({ to: "/auth" });
     } else {
-      // Obtener el nombre del usuario desde localStorage
+      // We get the user name from localStorage
       const name = localStorage.getItem("userName");
       console.log("Nombre del usuario obtenido desde localStorage:", name);
-      setUserName(name || "Usuario"); // Si no hay nombre, usar "Usuario" como predeterminado
+      setUserName(name || "Usuario"); // If there is no name, use "Usuario" as default
     }
   }, [navigate]);
 

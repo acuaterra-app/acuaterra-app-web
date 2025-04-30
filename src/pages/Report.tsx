@@ -121,7 +121,7 @@ const Report: FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [userName, setUserName] = useState<string>("Usuario"); // Estado para el nombre del usuario
+  const [userName, setUserName] = useState<string>("Usuario"); // State for user name
   const menuRef = useRef<HTMLDivElement>(null);
 
   const sensorLabels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
@@ -158,10 +158,10 @@ const Report: FC = () => {
       console.log("Redirigiendo a /auth desde el componente Report");
       void navigate({ to: "/auth" });
     } else {
-      // Obtener el nombre del usuario desde localStorage
+      //We get name from localStorage
       const name = localStorage.getItem("userName");
       console.log("Nombre del usuario obtenido desde localStorage:", name);
-      setUserName(name || "Usuario"); // Si no hay nombre, usar "Usuario" como predeterminado
+      setUserName(name || "Usuario"); //  If there is no name, use "Usuario" as default
     }
   }, [navigate]);
 

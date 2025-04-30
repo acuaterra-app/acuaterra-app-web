@@ -35,8 +35,9 @@ const WelcomeText = styled.p`
   font-size: 1.3rem;
   font-weight: bold;
   color: #4a4a4a;
-  margin-top: 10px;
+  margin-top: 0.5rem;
   text-align: center;
+
   transition: transform 0.3s ease;
 
   &:hover {
@@ -128,7 +129,7 @@ export const Module: FunctionComponent = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [selectedFarmId, setSelectedFarmId] = useState<number | null>(null);
-  const [userName, setUserName] = useState<string>("Usuario"); // Estado para el nombre del usuario
+  const [userName, setUserName] = useState<string>("Usuario"); // State for user name
 
   const { modules, loading, error, total, page, perPage, setPage } =
     useModulesByFarm(selectedFarmId || 0);
@@ -140,10 +141,10 @@ export const Module: FunctionComponent = () => {
       console.log("Redirigiendo a /auth desde el componente Modules");
       void navigate({ to: "/auth" });
     } else {
-      // Obtener el nombre del usuario desde localStorage
+      //  We get the user name from localStorage
       const name = localStorage.getItem("userName");
       console.log("Nombre del usuario obtenido desde localStorage:", name);
-      setUserName(name || "Usuario"); // Si no hay nombre, usar "Usuario" como predeterminado
+      setUserName(name || "Usuario"); // If there is no name, use "Usuario" as default
     }
   }, [navigate]);
 
@@ -293,7 +294,7 @@ export const Module: FunctionComponent = () => {
             Lista de Módulos
           </h1>
 
-          {/* Selector de granjas */}
+          {/* Farm's Selector*/}
           <div className="mb-6 max-w-md mx-auto">
             <label className="block text-center text-2xl font-bold mb-4">
               Seleccione una Granja
