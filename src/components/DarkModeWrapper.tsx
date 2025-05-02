@@ -10,14 +10,14 @@ interface DarkModeWrapperProps {
 const DarkModeWrapper: FC<DarkModeWrapperProps> = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
 
-  // Recuperar el estado del "Modo Oscuro" desde localStorage al cargar la página
+  //  Recover state from localStorage on page load
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedDarkMode);
     document.body.classList.toggle("dark-mode", savedDarkMode);
   }, []);
 
-  // Alternar el "Modo Oscuro" y guardar el estado en localStorage
+  // rotate between "DarkMode" and save the state in localStorage
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
@@ -32,7 +32,7 @@ const DarkModeWrapper: FC<DarkModeWrapperProps> = ({ children }) => {
         darkMode ? "bg-gray-900 text-white" : "bg-[#f5f5f5] text-black"
       }`}
     >
-      {/* Botón para alternar entre modos */}
+      {/* Darmode Buttom */}
       <button
         className="absolute top-4 right-4 z-50 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
         onClick={toggleDarkMode}
@@ -40,7 +40,7 @@ const DarkModeWrapper: FC<DarkModeWrapperProps> = ({ children }) => {
         {darkMode ? <Sun size={24} /> : <Moon size={24} />}
       </button>
 
-      {/* Renderizar contenido hijo con el estado darkMode */}
+      {/* render child content with darkmode state */}
       {children(darkMode)}
     </div>
   );
