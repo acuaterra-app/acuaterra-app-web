@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState, useEffect, useRef } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import type { FunctionComponent } from "react";
@@ -17,10 +18,11 @@ import moduleIcon from "../assets/images/module.png";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 
+// Styled component for the sidebar logo
 const SidebarLogoWrapper = styled.div`
   .logo {
     width: 80px;
@@ -33,19 +35,21 @@ const SidebarLogoWrapper = styled.div`
   }
 `;
 
-const WelcomeText = styled.p`
+// Styled component for the welcome text
+const WelcomeText = styled.p<{ darkMode: boolean }>`
   font-size: 1.3rem;
   font-weight: bold;
-  color: #4a4a4a;
+  color: ${(props: { darkMode: boolean }) => (props.darkMode ? "white" : "#4a4a4a")};
   margin-top: 0.5rem;
   text-align: center;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, color 0.3s ease;
 
   &:hover {
     transform: scale(1.1);
   }
 `;
 
+// Styled component for the logout button
 const LogoutButtonStyledWrapper = styled.div`
   .button {
     cursor: pointer;
@@ -103,7 +107,7 @@ const LogoutButtonStyledWrapper = styled.div`
   }
 `;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// Logout button component
 const LogoutButtonStyled = () => {
   return (
     <LogoutButtonStyledWrapper>
@@ -143,24 +147,39 @@ const FarmsPage: FunctionComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
-  const [userName, setUserName] = useState<string>("Usuario"); // State for user name
+  const [userName, setUserName] = useState<string>("Usuario");
+  const [darkMode, setDarkMode] = useState(false); // State for dark mode
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Check token validity and set user name
   useEffect(() => {
     if (!isTokenValid()) {
       console.log("Redirigiendo a /auth desde el componente Farms");
       void navigate({ to: "/auth" });
     } else {
-      // We get the user name from localStorage
       const name = localStorage.getItem("userName");
       console.log("Nombre del usuario obtenido desde localStorage:", name);
-      setUserName(name || "Usuario"); // if there is no name we set it to "Usuario"
+      setUserName(name || "Usuario");
     }
   }, [navigate]);
 
+  // Retrieve dark mode state from localStorage
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const savedDarkMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(savedDarkMode);
+    document.body.classList.toggle("dark-mode", savedDarkMode);
+  }, []);
+
+  // Toggle dark mode and save state to localStorage
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem("darkMode", newDarkMode.toString());
+    document.body.classList.toggle("dark-mode", newDarkMode);
+  };
+
+  useEffect(() => {
     const handleResize = () => {
       const isMobileView = window.innerWidth < 768;
       setIsMobile(isMobileView);
@@ -176,7 +195,6 @@ const FarmsPage: FunctionComponent = () => {
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -229,42 +247,15 @@ const FarmsPage: FunctionComponent = () => {
     setIsOpen(false);
   };
 
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const handleClickOutside = (event: MouseEvent) => {
-      const sidebar = document.getElementById("sidebar");
-      const menuButton = document.getElementById("menu-button");
-      if (
-        isOpen &&
-        sidebar &&
-        !sidebar.contains(event.target as Node) &&
-        menuButton &&
-        !menuButton.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    document.body.style.overflowY = isOpen ? "hidden" : "auto";
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => {
-      document.body.style.overflowY = "auto";
-    };
-  }, [isOpen]);
-
   return (
-    <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
+    <div
+      className={`flex min-h-screen font-sans relative overflow-x-auto ${
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+      }`}
+    >
       <ToastContainer />
 
-      {/* Side bar's open and close button */}
+      {/* Sidebar toggle button for mobile */}
       <button
         className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -275,11 +266,13 @@ const FarmsPage: FunctionComponent = () => {
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Side Bar */}
+      {/* Sidebar */}
       <aside
         ref={menuRef}
         id="sidebar"
-        className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        className={`fixed top-0 left-0 w-64 h-screen ${
+          darkMode ? "bg-gray-800 text-white" : "bg-[#e0e0e0] text-gray-600"
+        } border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
           isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
         } ${animateSidebar ? "animate-slide-in" : ""}`}
         style={{
@@ -300,24 +293,34 @@ const FarmsPage: FunctionComponent = () => {
           <SidebarLogoWrapper>
             <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
           </SidebarLogoWrapper>
-          <WelcomeText>Bienvenido, {userName}!</WelcomeText>
+          <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
+
+          {/* Dark mode toggle button */}
+          <button
+            className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
+            onClick={toggleDarkMode}
+          >
+            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+          </button>
         </div>
 
         <nav className="flex-1 overflow-y-auto">
-          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
+          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
             {[
-              { icon: homeIcon, label: "Inicio", path: "/newhome" },
-              { icon: moduleIcon, label: "Granjas", path: "/farm" },
-              { icon: userIcon, label: "Usuarios", path: "/users" },
-              { icon: fishIcon, label: "Módulos", path: "/module" },
-              { icon: reportIcon, label: "Reporte", path: "/report" },
+              { icon: homeIcon,   label: "Inicio",   path: "/newhome" },
+              { icon: moduleIcon, label: "Granjas",  path: "/farm" },
+              { icon: userIcon,   label: "Usuarios", path: "/users" },
+              { icon: fishIcon,   label: "Módulos",  path: "/module" },
+              { icon: reportIcon, label: "Reporte",  path: "/report" },
             ].map((item, index) => (
               <li
                 key={index}
                 className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
                   location.pathname === item.path
                     ? "bg-[#3cacac] text-white shadow-md"
-                    : "text-gray-600 group-hover:text-white"
+                    : darkMode
+                    ? "text-white group-hover:text-white"
+                    : "text-gray-600 group-hover:text-gray-800"
                 }`}
                 onClick={() => {
                   handleNavigation(item.path);
@@ -343,8 +346,12 @@ const FarmsPage: FunctionComponent = () => {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
+      <main
+        className={`flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto ${
+          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
+        }`}
+      >
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center">
           Granjas
         </h1>
         <p className="text-gray-500 mb-6 text-lg sm:text-sm text-center">
@@ -352,10 +359,10 @@ const FarmsPage: FunctionComponent = () => {
         </p>
 
         {loading ? (
-          <LoaderAcua />
+          <LoaderAcua darkMode={darkMode} />
         ) : (
           <>
-            {/* Tabla para escritorio */}
+            {/* Desktop table */}
             <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right">
               <TableWithActions
                 data={farms}
@@ -367,12 +374,12 @@ const FarmsPage: FunctionComponent = () => {
                 setPage={setPage}
                 total={total}
                 columns={[
-                  { header: "ID", accessor: "id" },
-                  { header: "Name", accessor: "name" },
-                  { header: "Latitud", accessor: "latitude" },
-                  { header: "Longitud", accessor: "longitude" },
+                  { header: "ID",        accessor: "id" },
+                  { header: "Name",      accessor: "name" },
+                  { header: "Latitud",   accessor: "latitude" },
+                  { header: "Longitud",  accessor: "longitude" },
                   { header: "Dirección", accessor: "address" },
-                  { header: "Date", accessor: "createdAt" },
+                  { header: "Date",      accessor: "createdAt" },
                   {
                     header: "Users",
                     accessor: "users",
@@ -392,7 +399,7 @@ const FarmsPage: FunctionComponent = () => {
               />
             </div>
 
-            {/* Tabla para móvil */}
+            {/* Mobile table */}
             <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
               <TableWithActionsMobile
                 data={farms}
@@ -404,12 +411,12 @@ const FarmsPage: FunctionComponent = () => {
                 setPage={setPage}
                 total={total}
                 columns={[
-                  { header: "ID", accessor: "id" },
-                  { header: "Name", accessor: "name" },
-                  { header: "Latitud", accessor: "latitude" },
-                  { header: "Longitud", accessor: "longitude" },
+                  { header: "ID",        accessor: "id" },
+                  { header: "Name",      accessor: "name" },
+                  { header: "Latitud",   accessor: "latitude" },
+                  { header: "Longitud",  accessor: "longitude" },
                   { header: "Dirección", accessor: "address" },
-                  { header: "Date", accessor: "createdAt" },
+                  { header: "Date",      accessor: "createdAt" },
                   {
                     header: "Users",
                     accessor: "users",
