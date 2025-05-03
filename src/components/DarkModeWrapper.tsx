@@ -32,7 +32,7 @@ const DarkModeWrapper: FC<DarkModeWrapperProps> = ({ children }) => {
         darkMode ? "bg-gray-900 text-white" : "bg-[#f5f5f5] text-black"
       }`}
     >
-      {/* Darmode Buttom */}
+      {/* Darkmode Buttom */}
       <button
         className="absolute top-4 right-4 z-50 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
         onClick={toggleDarkMode}

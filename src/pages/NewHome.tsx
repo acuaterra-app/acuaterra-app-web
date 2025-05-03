@@ -131,10 +131,10 @@ const NewHome: FC = () => {
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [userName, setUserName] = useState<string>("Usuario");
   const menuRef = useRef<HTMLDivElement>(null);
-const slides = [
-    { title: "Acuaterra Modulo", button: "1", src: foto1 },
+  const slides = [
+    { title: "Acuaterra Modulo",  button: "1", src: foto1 },
     { title: "Modulo Acuaponico", button: "2", src: foto2 },
-    { title: "Acuaterra Granja", button: "3", src: foto3 },
+    { title: "Acuaterra Granja",  button: "3", src: foto3 },
   ];
 
   useEffect(() => {
@@ -169,7 +169,7 @@ const slides = [
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+    }, []);
 
   useEffect(() => {
     if (location.pathname === "/newhome") {
@@ -228,11 +228,11 @@ const slides = [
             <nav className="flex-1 overflow-y-auto">
               <ul className="space-y3 md:space-y-20 mt-4 md:mt-20">
                 {[
-                  { icon: homeIcon, label: "Inicio", path: "/newhome" },
-                  { icon: moduleIcon, label: "Granjas", path: "/farm" },
-                  { icon: userIcon, label: "Usuarios", path: "/users" },
-                  { icon: fishIcon, label: "Módulos", path: "/module" },
-                  { icon: reportIcon, label: "Reporte", path: "/report" },
+                  { icon: homeIcon,   label: "Inicio",   path: "/newhome" },
+                  { icon: moduleIcon, label: "Granjas",  path: "/farm" },
+                  { icon: userIcon,   label: "Usuarios", path: "/users" },
+                  { icon: fishIcon,   label: "Módulos",  path: "/module" },
+                  { icon: reportIcon, label: "Reporte",  path: "/report" },
                 ].map((item, index) => (
                   <li
                     key={index}
