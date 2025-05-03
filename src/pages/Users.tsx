@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState, useEffect } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import type { FunctionComponent } from "react";
@@ -19,11 +20,12 @@ import homeIcon from "../assets/images/home.png";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
 import fishIcon from "../assets/images/pez.png";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import LogoutButton from "../components/ui/button/logoutButton";
 import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 
+// Styled component for the sidebar logo
 const SidebarLogoWrapper = styled.div`
   .logo {
     width: 80px;
@@ -36,17 +38,21 @@ const SidebarLogoWrapper = styled.div`
   }
 `;
 
-const WelcomeText = styled.p`
+// Styled component for the welcome text
+const WelcomeText = styled.p<{ darkMode: boolean }>`
   font-size: 1.3rem;
   font-weight: bold;
-  color: #4a4a4a;
-  transition: transform 0.3s ease;
+  text-align: center;
+  margin-top: 0.5rem;
+    color: ${(props) => (props.darkMode ? "white" : "#4a4a4a")};
+  transition: transform 0.3s ease, color 0.3s ease;
 
   &:hover {
     transform: scale(1.1);
   }
 `;
 
+// Styled component for the logout button
 const LogoutButtonStyledWrapper = styled.div`
   .button {
     cursor: pointer;
@@ -104,7 +110,7 @@ const LogoutButtonStyledWrapper = styled.div`
   }
 `;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// Logout button component
 const LogoutButtonStyled = () => {
   return (
     <LogoutButtonStyledWrapper>
@@ -126,16 +132,9 @@ const LogoutButtonStyled = () => {
 
 export const Users: FunctionComponent = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isTokenValid()) {
-      console.log("Redirigiendo a /auth desde el componente Users");
-      void navigate({ to: "/auth" });
-    }
-  }, [navigate]);
-
+  const [userName, setUserName] = useState<string>("Usuario"); // State for user name
   const [reload, setReload] = useState(false);
-
+  const [darkMode, setDarkMode] = useState(false); // State for dark mode
   const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
@@ -146,12 +145,39 @@ export const Users: FunctionComponent = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  // Check token validity and set user name
+  useEffect(() => {
+    if (!isTokenValid()) {
+      console.log("Redirecting to /auth from Users component");
+      void navigate({ to: "/auth" });
+    } else {
+      const name = localStorage.getItem("userName");
+      console.log("User name retrieved from localStorage:", name);
+      setUserName(name || "Usuario");
+    }
+  }, [navigate]);
+
+  // Retrieve dark mode state from localStorage
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(savedDarkMode);
+    document.body.classList.toggle("dark-mode", savedDarkMode);
+  }, []);
+
+  // Toggle dark mode and save state to localStorage
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem("darkMode", newDarkMode.toString());
+    document.body.classList.toggle("dark-mode", newDarkMode);
+  };
+
   const handleRegisterUser = async (userData: UserRequestV2): Promise<void> => {
     try {
       const isRegister = await registerUser(userData);
 
       if (isRegister) {
-        setShowModal(false); // Close the modal after registration
+        setShowModal(false);
         setReload(!reload);
         toast.success("Usuario registrado exitosamente!");
       } else {
@@ -211,7 +237,12 @@ export const Users: FunctionComponent = () => {
     <>
       <ToastContainer />
 
-      <div className="flex min-h-screen font-sans bg-white relative overflow-x-auto">
+      <div
+        className={`flex min-h-screen font-sans relative overflow-x-auto ${
+          darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+        }`}
+      >
+        {/* Sidebar toggle button for mobile */}
         <button
           className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
           id="menu-button"
@@ -222,178 +253,195 @@ export const Users: FunctionComponent = () => {
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-		<aside
-  id="sidebar"
-  className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
-    isOpen ? "translate-x-0" : "-translate-x-full"
-  } md:translate-x-0 md:w-64`}
-  style={{
-    height: "100vh", 
-    boxShadow: "7px 0 15px rgba(0, 0, 0, 0.2)", 
-  }}
->
-  <div className="p-4 flex flex-col items-center relative">
-    <button
-      className="absolute top-2 right-2 p-2 text-gray-700 hover:text-gray-900 md:hidden"
-      onClick={() => {
-        setIsOpen(false);
-      }}
-    >
-      <X size={24} />
-    </button>
-    <SidebarLogoWrapper>
-      <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
-    </SidebarLogoWrapper>
-    <WelcomeText>Bienvenido, usuario!</WelcomeText>
-  </div>
-
-  <nav className="flex-1 overflow-y-auto">
-  <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-    {[
-      { icon: homeIcon, label: "Inicio", path: "/newhome" },
-      { icon: moduleIcon, label: "Granjas", path: "/farm" },
-      { icon: userIcon, label: "Usuarios", path: "/users" }, 
-      { icon: fishIcon, label: "Módulos", path: "/module" },
-      { icon: reportIcon, label: "Reporte", path: "/report" },
-    ].map((item, index) => (
-      <li
-        key={index}
-        className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-          location.pathname === item.path
-            ? "bg-[#3cacac] text-white shadow-md"
-            : "text-gray-600 group-hover:text-white"
-        }`}
-        onClick={() => {
-          void navigate({ to: item.path });
-          setIsOpen(false);
-        }}
-      >
-        <span
-          className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-            location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-          }`}
-        ></span>
-        <span className="relative z-10 flex items-center gap-3 font-bold">
-          <img alt={item.label} className="h-6 w-6" src={item.icon} />
-          {item.label}
-        </span>
-      </li>
-    ))}
-  </ul>
-
-  <div className="mt-4 md:mt-20">
-    <LogoutButtonStyled />
-  </div>
-</nav>
-</aside>
-
-<main className="flex-1 p-9 bg-white md:ml-64 overflow-y-auto">
-  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
-    Lista de Usuarios
-  </h1>
-
-  {loading ? (
-    <div className="flex items-center justify-center min-h-screen">
-      <LoaderAcua />
-    </div>
-  ) : error ? (
-    <div className="mt-4 text-red-500 flex items-center">
-      <p>Error: {String(error)}</p>
-    </div>
-  ) : (
-    <>
-      {/* Desktop Table */}
-      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-[square-in-center_2.5s_cubic-bezier(0.25,1,0.3,1)_both]">
-        <TableWithActions
-          data={users}
-          error={error}
-          limit={limit}
-          loading={loading}
-          page={page}
-          setLimit={setLimit}
-          setPage={setPage}
-          total={total}
-          columns={[
-            { header: "ID", accessor: "id" },
-            { header: "Nombre", accessor: "name" },
-            { header: "Email", accessor: "email" },
-            { header: "DNI", accessor: "dni" },
-            { header: "Teléfono", accessor: "contact" },
-            {
-              header: "Rol",
-              accessor: "rol",
-              render: (u: UserResponse) => u.rol.name,
-            },
-            {
-              header: "Fecha de creación",
-              accessor: "createdAt",
-              render: (u: UserResponse) =>
-                new Date(u.createdAt).toLocaleDateString(),
-            },
-            {
-              header: "Fecha de actualización",
-              accessor: "updatedAt",
-              render: (u: UserResponse) =>
-                new Date(u.updatedAt).toLocaleDateString(),
-            },
-          ]}
-          onDelete={handleDeleteUser}
-          onEdit={handleOpenUpdateModal}
-          onAdd={() => {
-            setShowModal(true);
+        {/* Sidebar */}
+        <aside
+          id="sidebar"
+          className={`fixed top-0 left-0 w-64 h-screen ${
+            darkMode ? "bg-gray-800 text-white" : "bg-[#e0e0e0] text-gray-600"
+          } border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 md:w-64`}
+          style={{
+            height: "100vh",
+            boxShadow: "7px 0 15px rgba(0, 0, 0, 0.2)",
           }}
-        />
-      </div>
+        >
+          <div className="p-4 flex flex-col items-center relative">
+            <button
+              className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 md:hidden"
+              onClick={() => {
+                setIsOpen(false);
+              }}
+            >
+              <X size={24} />
+            </button>
+            <SidebarLogoWrapper>
+              <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
+            </SidebarLogoWrapper>
+            <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
 
-      {/* Mobile table */}
-      <div className="block md:hidden border max-w-sm border-gray-300 rounded-lg p-1 mb-4 shadow-md">
-        <TableWithActionsMobile
-          data={users}
-          error={error}
-          limit={limit}
-          loading={loading}
-          page={page}
-          setLimit={setLimit}
-          setPage={setPage}
-          total={total}
-          columns={[
-            { header: "ID", accessor: "id" },
-            { header: "Name", accessor: "name" },
-            { header: "Email", accessor: "email" },
-            { header: "DNI", accessor: "dni" },
-            {
-              header: "Role",
-              accessor: "rol",
-              render: (u: UserResponse) => u.rol.name,
-            },
-            { header: "Address", accessor: "address" },
-            { header: "Created At", accessor: "createdAt" },
-            { header: "Updated At", accessor: "updatedAt" },
-          ]}
-          onDelete={handleDeleteUser}
-          onEdit={handleOpenUpdateModal}
-          onAdd={() => {
-            setShowModal(true);
-          }}
-        />
-      </div>
-    </>
-  )}
+            {/* Dark mode toggle button */}
+            <button
+              className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
+              onClick={toggleDarkMode}
+            >
+              {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
+          </div>
 
-  <RegisterUserModal
-    setShowModal={setShowModal}
-    showModal={showModal}
-    onRegister={handleRegisterUser}
-  />
-  {selectedUser && (
-    <UpdateUserModal
-      setShowModal={setShowUpdateModal}
-      showModal={showUpdateModal}
-      user={selectedUser}
-      onUpdate={handleUpdateUser}
-    />
-  )}
-</main>
+          <nav className="flex-1 overflow-y-auto">
+            <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
+              {[
+                { icon: homeIcon,   label: "Inicio",   path: "/newhome" },
+                { icon: moduleIcon, label: "Granjas",  path: "/farm" },
+                { icon: userIcon,   label: "Usuarios", path: "/users" },
+                { icon: fishIcon,   label: "Módulos",  path: "/module" },
+                { icon: reportIcon, label: "Reporte",  path: "/report" },
+              ].map((item, index) => (
+                <li
+                  key={index}
+                  className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                    location.pathname === item.path
+                      ? "bg-[#3cacac] text-white shadow-md"
+                      : darkMode
+                      ? "text-white group-hover:text-white"
+                      : "text-gray-600 group-hover:text-gray-600"
+                  }`}
+                  onClick={() => {
+                    void navigate({ to: item.path });
+                    setIsOpen(false);
+                  }}
+                >
+                  <span
+                    className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                      location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
+                    }`}
+                  ></span>
+                  <span className="relative z-10 flex items-center gap-3 font-bold">
+                    <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                    {item.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-4 md:mt-20">
+              <LogoutButtonStyled />
+            </div>
+          </nav>
+        </aside>
+
+        <main
+          className={`flex-1 p-9 ${
+            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
+          } md:ml-64 overflow-y-auto`}
+        >
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center">
+            Lista de Usuarios
+          </h1>
+
+          {loading ? (
+            <div className="flex items-center justify-center min-h-screen">
+              <LoaderAcua darkMode={darkMode} />
+            </div>
+          ) : error ? (
+            <div className="mt-4 text-red-500 flex items-center">
+              <p>Error: {String(error)}</p>
+            </div>
+          ) : (
+            <>
+              {/* Desktop Table */}
+              <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-[square-in-center_2.5s_cubic-bezier(0.25,1,0.3,1)_both]">
+                <TableWithActions
+                  data={users}
+                  error={error}
+                  limit={limit}
+                  loading={loading}
+                  page={page}
+                  setLimit={setLimit}
+                  setPage={setPage}
+                  total={total}
+                  columns={[
+                    { header: "ID",       accessor: "id" },
+                    { header: "Nombre",   accessor: "name" },
+                    { header: "Email",    accessor: "email" },
+                    { header: "DNI",      accessor: "dni" },
+                    { header: "Teléfono", accessor: "contact" },
+                    {
+                      header: "Rol",
+                      accessor: "rol",
+                      render: (u: UserResponse) => u.rol.name,
+                    },
+                    {
+                      header: "Fecha de creación",
+                      accessor: "createdAt",
+                      render: (u: UserResponse) =>
+                        new Date(u.createdAt).toLocaleDateString(),
+                    },
+                    {
+                      header: "Fecha de actualización",
+                      accessor: "updatedAt",
+                      render: (u: UserResponse) =>
+                        new Date(u.updatedAt).toLocaleDateString(),
+                    },
+                  ]}
+                  onDelete={handleDeleteUser}
+                  onEdit={handleOpenUpdateModal}
+                  onAdd={() => {
+                    setShowModal(true);
+                  }}
+                />
+              </div>
+
+              {/* Mobile table */}
+              <div className="block md:hidden border max-w-sm border-gray-300 rounded-lg p-1 mb-4 shadow-md">
+                <TableWithActionsMobile
+                  data={users}
+                  error={error}
+                  limit={limit}
+                  loading={loading}
+                  page={page}
+                  setLimit={setLimit}
+                  setPage={setPage}
+                  total={total}
+                  columns={[
+                    { header: "ID",    accessor: "id" },
+                    { header: "Name",  accessor: "name" },
+                    { header: "Email", accessor: "email" },
+                    { header: "DNI",   accessor: "dni" },
+                    {
+                      header: "Role",
+                      accessor: "rol",
+                      render: (u: UserResponse) => u.rol.name,
+                    },
+                    { header: "Address",    accessor: "address" },
+                    { header: "Created At", accessor: "createdAt" },
+                    { header: "Updated At", accessor: "updatedAt" },
+                  ]}
+                  onDelete={handleDeleteUser}
+                  onEdit={handleOpenUpdateModal}
+                  onAdd={() => {
+                    setShowModal(true);
+                  }}
+                />
+              </div>
+            </>
+          )}
+
+          <RegisterUserModal
+            setShowModal={setShowModal}
+            showModal={showModal}
+            onRegister={handleRegisterUser}
+          />
+          {selectedUser && (
+            <UpdateUserModal
+              setShowModal={setShowUpdateModal}
+              showModal={showUpdateModal}
+              user={selectedUser}
+              onUpdate={handleUpdateUser}
+            />
+          )}
+        </main>
       </div>
     </>
   );

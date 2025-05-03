@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type { FunctionComponent } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import { useState, useEffect, useRef } from "react";
@@ -9,7 +10,7 @@ import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobil
 import useModulesByFarm from "../hooks/useModulesByFarm";
 import useFarms from "../hooks/useFarms";
 import { isTokenValid } from "../common/isTokenValid";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
@@ -19,6 +20,8 @@ import fishIcon from "../assets/images/pez.png";
 import LogoutButton from "../components/ui/button/logoutButton";
 import styled from "styled-components";
 
+
+// Styled component for the sidebar logo
 const SidebarLogoWrapper = styled.div`
   .logo {
     width: 80px;
@@ -31,17 +34,21 @@ const SidebarLogoWrapper = styled.div`
   }
 `;
 
-const WelcomeText = styled.p`
+// Styled component for the welcome text
+const WelcomeText = styled.p<{ darkMode: boolean }>`
   font-size: 1.3rem;
   font-weight: bold;
-  color: #4a4a4a;
-  transition: transform 0.3s ease;
+  color: ${(props) => (props.darkMode ? "white" : "#4a4a4a")};
+  margin-top: 0.5rem;
+  text-align: center;
+  transition: transform 0.3s ease, color 0.3s ease;
 
   &:hover {
     transform: scale(1.1);
   }
 `;
 
+// Styled component for the logout button
 const LogoutButtonStyledWrapper = styled.div`
   .button {
     cursor: pointer;
@@ -99,7 +106,7 @@ const LogoutButtonStyledWrapper = styled.div`
   }
 `;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// Logout button component
 const LogoutButtonStyled = () => {
   return (
     <LogoutButtonStyledWrapper>
@@ -119,28 +126,38 @@ const LogoutButtonStyled = () => {
   );
 };
 
+// Main component for the Module page
 export const Module: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [animateSidebar, setAnimateSidebar] = useState(false);
-  const [selectedFarmId, setSelectedFarmId] = useState<number | null>(null);
+  // State variables
+  const [isOpen, setIsOpen] = useState(false); // Sidebar toggle state
+  const [isMobile, setIsMobile] = useState(false); // Mobile view state
+  const [animateSidebar, setAnimateSidebar] = useState(false); // Sidebar animation state
+  const [selectedFarmId, setSelectedFarmId] = useState<number | null>(null); // Selected farm ID
+  const [userName, setUserName] = useState<string>("Usuario"); // User name
+  const [darkMode, setDarkMode] = useState(false); // Dark mode state
 
+  // Hooks for fetching data
   const { modules, loading, error, total, page, perPage, setPage } =
     useModulesByFarm(selectedFarmId || 0);
   const { farms, loading: farmsLoading, error: farmsError } = useFarms();
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Check token validity and set user name
   useEffect(() => {
     if (!isTokenValid()) {
-      console.log("Redirigiendo a /auth desde el componente Modules");
+      console.log("Redirecting to /auth from Module component");
       void navigate({ to: "/auth" });
+    } else {
+      const name = localStorage.getItem("userName");
+      console.log("User name retrieved from localStorage:", name);
+      setUserName(name || "Usuario");
     }
   }, [navigate]);
 
+  // Handle screen resizing for mobile view
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handleResize = () => {
       const isMobileView = window.innerWidth < 768;
       setIsMobile(isMobileView);
@@ -156,43 +173,27 @@ export const Module: FunctionComponent = () => {
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
+  // Retrieve dark mode state from localStorage
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const handleClickOutside = (event: MouseEvent) => {
-      const sidebar = document.getElementById("sidebar");
-      const menuButton = document.getElementById("menu-button");
-      if (
-        isOpen &&
-        sidebar &&
-        !sidebar.contains(event.target as Node) &&
-        menuButton &&
-        !menuButton.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
+    const savedDarkMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(savedDarkMode);
+    document.body.classList.toggle("dark-mode", savedDarkMode);
+  }, []);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
+  // Toggle dark mode and save state to localStorage
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem("darkMode", newDarkMode.toString());
+    document.body.classList.toggle("dark-mode", newDarkMode);
+  };
 
-  useEffect(() => {
-    document.body.style.overflowY = isOpen ? "hidden" : "auto";
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => {
-      document.body.style.overflowY = "auto";
-    };
-  }, [isOpen]);
-
+  // Handle navigation to a new path
   const handleNavigation = (path: string): void => {
     void navigate({ to: path });
     setIsOpen(false);
@@ -200,8 +201,12 @@ export const Module: FunctionComponent = () => {
 
   return (
     <Layout>
-      <div className="flex min-h-screen bg-white font-sans relative">
-        {/*Side bar's open and close buttom*/}
+      <div
+        className={`flex min-h-screen font-sans relative ${
+          darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+        }`}
+      >
+        {/* Sidebar toggle button for mobile */}
         <button
           className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
           id="menu-button"
@@ -212,11 +217,13 @@ export const Module: FunctionComponent = () => {
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        {/*Side Bar */}
+        {/* Sidebar */}
         <aside
           ref={menuRef}
           id="sidebar"
-          className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
+          className={`fixed top-0 left-0 w-64 h-screen ${
+            darkMode ? "bg-gray-800 text-white" : "bg-[#e0e0e0] text-gray-600"
+          } border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
             isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
           } ${animateSidebar ? "animate-slide-in" : ""}`}
           style={{
@@ -225,6 +232,7 @@ export const Module: FunctionComponent = () => {
           }}
         >
           <div className="p-4 flex flex-col items-center relative">
+            {/* Close button for sidebar */}
             <button
               className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
               onClick={() => {
@@ -234,181 +242,189 @@ export const Module: FunctionComponent = () => {
               <X size={24} />
             </button>
 
+            {/* Sidebar logo */}
             <SidebarLogoWrapper>
               <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
             </SidebarLogoWrapper>
-            <WelcomeText>Bienvenido, usuario!</WelcomeText>
+            <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
+
+            {/* Dark mode toggle button */}
+            <button
+              className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
+              onClick={toggleDarkMode}
+            >
+              {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
           </div>
 
-      <nav className="flex-1 overflow-y-auto">
-          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-               {[
-                { icon: homeIcon, label: "Inicio", path: "/newhome" },
-                { icon: moduleIcon, label: "Granjas", path: "/farm" },
-                { icon: userIcon, label: "Usuarios", path: "/users" },
-                { icon: fishIcon, label: "Módulos", path: "/module" },
-                { icon: reportIcon, label: "Reporte", path: "/report" },
-               ].map((item, index) => (
-          <li
-              key={index}
-              className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-                  location.pathname === item.path
-                   ? "bg-[#3cacac] text-white shadow-md"
-                   : "text-gray-600 group-hover:text-white"
-              }`}
-                onClick={() => {
-                handleNavigation(item.path);
-             }}
-           >
-              <span
-                className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-               }`}
-              ></span>
-              <span className="relative z-10 flex items-center gap-3 font-bold">
-                <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                {item.label}
-             </span>
-         </li>
-           ))}
-        </ul>
+          {/* Navigation menu */}
+          <nav className="flex-1 overflow-y-auto">
+            <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
+              {[
+                { icon: homeIcon,   label: "Inicio",   path: "/newhome" },
+                { icon: moduleIcon, label: "Granjas",  path: "/farm" },
+                { icon: userIcon,   label: "Usuarios", path: "/users" },
+                { icon: fishIcon,   label: "Módulos",  path: "/module" },
+                { icon: reportIcon, label: "Reporte",  path: "/report" },
+              ].map((item, index) => (
+                <li
+                  key={index}
+                  className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                    location.pathname === item.path
+                      ? "bg-[#3cacac] text-white shadow-md"
+                      : darkMode
+                      ? "text-white group-hover:text-white"
+                      : "text-gray-600 group-hover:text-gray-600"
+                  }`}
+                  onClick={() => {
+                    handleNavigation(item.path);
+                  }}
+                >
+                  <span
+                    className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                      location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
+                    }`}
+                  ></span>
+                  <span className="relative z-10 flex items-center gap-3 font-bold">
+                    <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                    {item.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
 
-           <div className="mt-4 md:mt-20">
-             <LogoutButtonStyled />
-           </div>
-     </nav>
-
-      </aside>
+            {/* Logout button */}
+            <div className="mt-4 md:mt-20">
+              <LogoutButtonStyled />
+            </div>
+          </nav>
+        </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto">
-  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
-    Lista de Módulos
-  </h1>
+        <main
+          className={`flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto ${
+            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
+          }`}
+        >
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center">
+            Lista de Módulos
+          </h1>
 
-  {/* Selector de granjas */}
-  <div className="mb-6 max-w-md mx-auto">
-    <label className="block text-center text-2xl font-bold mb-4">
-      Seleccione una Granja
-    </label>
-    <select
-      className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
-      disabled={farmsLoading}
-      onChange={(event) => {
-        setSelectedFarmId(Number(event.target.value));
-      }}
-    >
-      <option value="">Seleccione una granja</option>
-      {farms.map((farm) => (
-        <option key={farm.id} value={farm.id}>
-          {farm.name}
-        </option>
-      ))}
-    </select>
-    {farmsError && (
-      <p className="text-red-500 mt-2 text-center">
-        Error al cargar las granjas
-      </p>
-    )}
-  </div>
+          {/* Farm's Selector */}
+          <div className="mb-6 max-w-md mx-auto">
+            <label className="block text-center text-2xl font-bold mb-4">
+              Seleccione una Granja
+            </label>
+            <select
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none text-black"
+              disabled={farmsLoading}
+              onChange={(event) => {
+                setSelectedFarmId(Number(event.target.value));
+              }}
+            >
+              <option value="">Seleccione una granja</option>
+              {farms.map((farm) => (
+                <option key={farm.id} value={farm.id}>
+                  {farm.name}
+                </option>
+              ))}
+            </select>
+            {farmsError && (
+              <p className="text-red-500 mt-2 text-center">
+                Error al cargar las granjas
+              </p>
+            )}
+          </div>
 
-  {loading ? (
-    <LoaderAcua />
-  ) : (
-    <>
-      {error && <p className="mt-4 text-red-500">Error: {error}</p>}
-      <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-square-in-hesitate ">
-        <TableWithActions
-          data={modules}
-          error={error}
-          isVisibleActions={false}
-          isVisibleButton={false}
-          limit={perPage}
-          loading={loading}
-          page={page}
-          setLimit={() => {}}
-          setPage={setPage}
-          total={total}
-          columns={[
-            { header: "ID", accessor: "id" },
-            { header: "Nombre", accessor: "name" },
-            { header: "Ubicación", accessor: "location" },
-            {
-              header: "Especie de Pescados",
-              accessor: "species_fish",
-            },
-            { header: "Cantidad", accessor: "fish_quantity" },
-            { header: "Dimensiones", accessor: "dimensions" },
-            {
-              header: "Creado Por",
-              accessor: "creator",
-              render: (module) => module.creator.name.toString(),
-            },
-            {
-              header: "Granja",
-              accessor: "farm",
-              render: (module) => module.farm.name.toString(),
-            },
-          ]}
-          onAdd={() => {
-            console.log("Add new module");
-          }}
-          onDelete={() => {
-            console.log("Delete module");
-          }}
-          onEdit={() => {
-            console.log("Edit module");
-          }}
-        />
-      </div>
+          {loading ? (
+            <LoaderAcua darkMode={darkMode} />
+          ) : (
+            <>
+              {error && <p className="mt-4 text-red-500">Error: {error}</p>}
+              <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-square-in-hesitate">
+                <TableWithActions
+                    data={modules}
+                    error={error}
+                    isVisibleActions={false}
+                    isVisibleButton={false}
+                    limit={perPage}
+                    loading={loading}
+                    page={page}
+                    setLimit={() => {} }
+                    setPage={setPage}
+                    total={total}
+                    columns={[
+                      { header: "ID", accessor: "id" },
+                      { header: "Nombre", accessor: "name" },
+                      { header: "Ubicación", accessor: "location" },
+                      {
+                        header: "Especie de Pescados",
+                        accessor: "species_fish",
+                      },
+                      { header: "Cantidad", accessor: "fish_quantity" },
+                      { header: "Dimensiones", accessor: "dimensions" },
+                      {
+                        header: "Creado Por",
+                        accessor: "creator",
+                        render: (module) => module.creator.name.toString(),
+                      },
+                      {
+                        header: "Granja",
+                        accessor: "farm",
+                        render: (module) => module.farm.name.toString(),
+                      },
+                    ]} onAdd={function (): void {
+                      throw new Error("Function not implemented.");
+                    } } onDelete={function (): void {
+                      throw new Error("Function not implemented.");
+                    } } onEdit={function (): void {
+                      throw new Error("Function not implemented.");
+                    } }                />
+              </div>
 
-      <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
-        <TableWithActionsMobile
-          data={modules}
-          error={error}
-          isVisibleActions={false}
-          isVisibleButton={false}
-          limit={perPage}
-          loading={loading}
-          page={page}
-          setLimit={() => {}}
-          setPage={setPage}
-          total={total}
-          columns={[
-            { header: "ID", accessor: "id" },
-            { header: "Nombre", accessor: "name" },
-            { header: "Ubicación", accessor: "location" },
-            {
-              header: "Especie de Pescados",
-              accessor: "species_fish",
-            },
-            { header: "Cantidad", accessor: "fish_quantity" },
-            { header: "Dimensiones", accessor: "dimensions" },
-            {
-              header: "Creado Por",
-              accessor: "creator",
-              render: (module) => module.creator.name.toString(),
-            },
-            {
-              header: "Granja",
-              accessor: "farm",
-              render: (module) => module.farm.name.toString(),
-            },
-          ]}
-          onAdd={() => {
-            console.log("Add new module");
-          }}
-          onDelete={() => {
-            console.log("Delete module");
-          }}
-          onEdit={() => {
-            console.log("Edit module");
-          }}
-        />
-      </div>
-    </>
-  )}
-</main>
+              <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
+                <TableWithActionsMobile
+                    data={modules}
+                    error={error}
+                    isVisibleActions={false}
+                    isVisibleButton={false}
+                    limit={perPage}
+                    loading={loading}
+                    page={page}
+                    setLimit={() => {} }
+                    setPage={setPage}
+                    total={total}
+                    columns={[
+                      { header: "ID", accessor: "id" },
+                      { header: "Nombre", accessor: "name" },
+                      { header: "Ubicación", accessor: "location" },
+                      {
+                        header: "Especie de Pescados",
+                        accessor: "species_fish",
+                      },
+                      { header: "Cantidad", accessor: "fish_quantity" },
+                      { header: "Dimensiones", accessor: "dimensions" },
+                      {
+                        header: "Creado Por",
+                        accessor: "creator",
+                        render: (module) => module.creator.name.toString(),
+                      },
+                      {
+                        header: "Granja",
+                        accessor: "farm",
+                        render: (module) => module.farm.name.toString(),
+                      },
+                    ]} onAdd={function (): void {
+                      throw new Error("Function not implemented.");
+                    } } onDelete={function (): void {
+                      throw new Error("Function not implemented.");
+                    } } onEdit={function (): void {
+                      throw new Error("Function not implemented.");
+                    } }                />
+              </div>
+            </>
+          )}
+        </main>
       </div>
     </Layout>
   );
