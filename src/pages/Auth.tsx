@@ -50,7 +50,7 @@ export const Auth: FunctionComponent = () => {
   };
 
   if (loading) {
-    return <LoaderAcua />;
+    return <LoaderAcua darkMode={false} />;
   }
 
   return (

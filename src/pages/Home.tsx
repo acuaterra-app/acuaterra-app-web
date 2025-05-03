@@ -23,7 +23,7 @@ const Welcome: FC = () => {
   };
 
   if (loading) {
-    return <LoaderAcua />;
+    return <LoaderAcua darkMode={false} />;
   }
 
   return (
@@ -77,7 +77,7 @@ const Welcome: FC = () => {
         initial={{ opacity: 0, x: 100 }}
         transition={{ duration: 0.6 }}
       >
-        <Suspense fallback={<LoaderAcua />}>
+        <Suspense fallback={<LoaderAcua darkMode={false} />}>
           <SplineAnimation />
         </Suspense>
       </motion.div>

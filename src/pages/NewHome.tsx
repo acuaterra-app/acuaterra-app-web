@@ -19,6 +19,7 @@ import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 import MobileCarousel from "../components/Slider/MobileCarousel";
 
+
 // Styled component for the sidebar logo
 const SidebarLogoWrapper = styled.div`
   .logo {
@@ -233,15 +234,15 @@ const NewHome: FC = () => {
         }}
       >
         <div className="p-4 flex flex-col items-center relative">
-          {/* Close button for sidebar */}
-          <button
-            className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
-            onClick={() => {
-              setIsOpen(false);
-            }}
-          >
-            <X size={24} />
-          </button>
+         {/* Close button for sidebar */}
+         <button
+           className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
+           onClick={() => {
+           setIsOpen(false); // Asegúrate de que esto cierre el menú
+       }}
+    >
+       <X size={24} />
+      </button>
 
           {/* Sidebar logo */}
           <SidebarLogoWrapper>
