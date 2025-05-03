@@ -303,7 +303,7 @@ export const Module: FunctionComponent = () => {
         {/* Main Content */}
         <main
           className={`flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto ${
-            darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
           }`}
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center">

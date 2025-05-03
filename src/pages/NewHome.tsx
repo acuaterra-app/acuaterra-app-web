@@ -306,7 +306,7 @@ const NewHome: FC = () => {
       {/* Main content */}
       <main
         className={`flex-1 p-6 lg:ml-0 ${
-          darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
         }`}
       >
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center">
