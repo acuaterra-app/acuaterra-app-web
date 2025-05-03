@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState, useEffect, useRef } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import type { FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import reporteIcon from "../assets/images/reporte.png";
@@ -27,17 +28,26 @@ const SidebarLogoWrapper = styled.div`
   }
 `;
 
-const WelcomeText = styled.p`
+const WelcomeText = styled.p<{ darkMode: boolean }>`
   font-size: 1.3rem;
   font-weight: bold;
-  color: #4a4a4a;
-  transition: transform 0.3s ease;
-  margin-top: 0.5rem; /* Espacio entre el logo y el texto */
   text-align: center;
+  margin-top: 0.5rem;
+  color: ${(props) => (props.darkMode ? "white" : "#4a4a4a")};
+  transition: transform 0.3s ease, color 0.3s ease;
 
   &:hover {
     transform: scale(1.1);
   }
+`;
+
+const SectionTitle = styled.h2<{ darkMode: boolean }>`
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: ${(props) => (props.darkMode ? "white" : "#4a4a4a")};
+  transition: color 0.3s ease;
 `;
 
 const LogoutButtonStyledWrapper = styled.div`
@@ -97,7 +107,6 @@ const LogoutButtonStyledWrapper = styled.div`
   }
 `;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const LogoutButtonStyled = () => {
   return (
     <LogoutButtonStyledWrapper>
@@ -122,6 +131,7 @@ const Report: FC = () => {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState<string>("Usuario"); // State for user name
+  const [darkMode, setDarkMode] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const sensorLabels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
@@ -166,18 +176,31 @@ const Report: FC = () => {
   }, [navigate]);
 
   useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(savedDarkMode);
+    document.body.classList.toggle("dark-mode", savedDarkMode);
+  }, []);
+
+  const toggleDarkMode = (): void => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem("darkMode", newDarkMode.toString());
+    document.body.classList.toggle("dark-mode", newDarkMode);
+  };
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    
     return () => {
       clearTimeout(timer);
     };
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+   
     const handleClickOutside = (event: MouseEvent) => {
       const sidebar = document.getElementById("sidebar");
       const menuButton = document.getElementById("menu-button");
@@ -195,7 +218,7 @@ const Report: FC = () => {
 
     document.addEventListener("mousedown", handleClickOutside);
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -203,7 +226,7 @@ const Report: FC = () => {
 
   useEffect(() => {
     document.body.style.overflowY = isOpen ? "hidden" : "auto";
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    
     return () => {
       document.body.style.overflowY = "auto";
     };
@@ -215,7 +238,11 @@ const Report: FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-white font-sans">
+    <div
+      className={`flex h-screen font-sans ${
+        darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+      }`}
+    >
       {/* Close and open button for side bar */}
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
@@ -231,7 +258,9 @@ const Report: FC = () => {
       <aside
         ref={menuRef}
         id="sidebar"
-        className={`fixed top-0 left-0 w-64 h-screen bg-[#e0e0e0] border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 left-0 w-64 h-screen ${
+          darkMode ? "bg-gray-800 text-white" : "bg-[#e0e0e0] text-gray-600"
+        } border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:w-64`}
         style={{
@@ -251,101 +280,117 @@ const Report: FC = () => {
           <SidebarLogoWrapper>
             <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
           </SidebarLogoWrapper>
-          <WelcomeText>Bienvenido, {userName}!</WelcomeText>
+          <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
+
+          {/* Dark Mode Toggle Button */}
+          <button
+            className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
+            onClick={toggleDarkMode}
+          >
+            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+          </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto">
-          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-20">
-            {[
-              { icon: homeIcon, label: "Inicio", path: "/newhome" },
-              { icon: moduleIcon, label: "Granjas", path: "/farm" },
-              { icon: userIcon, label: "Usuarios", path: "/users" },
-              { icon: fishIcon, label: "Módulos", path: "/module" },
-              { icon: reporteIcon, label: "Reporte", path: "/report" },
-            ].map((item, index) => (
-              <li
+        
+       <nav className="flex-1 overflow-y-auto">
+          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
+           {[
+              { icon: homeIcon,    label: "Inicio",   path: "/newhome" },
+              { icon: moduleIcon,  label: "Granjas",  path: "/farm" },
+              { icon: userIcon,    label: "Usuarios", path: "/users" },
+              { icon: fishIcon,    label: "Módulos",  path: "/module" },
+              { icon: reporteIcon, label: "Reporte",  path: "/report" },
+           ].map((item, index) => (
+               <li
                 key={index}
-                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-                  location.pathname === item.path
-                    ? "bg-[#3cacac] text-white shadow-md"
-                    : "text-gray-600 group-hover:text-white"
-                }`}
-                onClick={() => {
-                  handleNavigation(item.path);
-                }}
-              >
-                <span
-                  className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                    location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
+               className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+               location.pathname === item.path
+                   ? "bg-[#3cacac] text-white shadow-md"
+                : darkMode
+                       ? "text-white group-hover:text-gray-300"
+                       : "text-gray-600 group-hover:text-white"
                   }`}
+                      onClick={() => {
+                      handleNavigation(item.path);
+                  }}
+                  >
+                  <span
+                    className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                   location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
+                   }`}
                 ></span>
                 <span className="relative z-10 flex items-center gap-3 font-bold">
-                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                  {item.label}
+                    <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                    {item.label}
                 </span>
-              </li>
-            ))}
-          </ul>
+                 </li>
+               ))}
+               </ul>
 
-          <div className="mt-4 md:mt-20">
-            <LogoutButtonStyled />
-          </div>
-        </nav>
+                     <div className="mt-4 md:mt-20">
+                     <LogoutButtonStyled />
+               </div>
+           </nav>
+
       </aside>
 
       {/* Main Content */}
-      <main
-        className={`flex-1 p-6 bg-white overflow-y-auto ${
-          isOpen ? "" : "md:ml-64"
+<main
+  className={`flex-1 p-6 overflow-y-auto ${
+    isOpen ? "" : "md:ml-64"
+  }`}
+>
+  {loading ? (
+    <LoaderAcua darkMode={darkMode} /> // Loader component
+  ) : (
+    <>
+      <h1
+        className={`text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center ${
+          darkMode ? "text-white" : "text-black"
         }`}
       >
-        {loading ? (
-          <LoaderAcua />
-        ) : (
-          <>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center text-gray-700">
-              Reportes
-            </h1>
-            <p className="text-gray-600 mb-6 text-center">
-              Visualización y generación de reportes.
-            </p>
+        Reportes
+      </h1>
+      <p className="mb-6 text-center">
+        Visualización y generación de reportes.
+      </p>
 
-            {/* Graphs */}
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold mb-4 text-center">
-                Comportamiento en Tiempo Real
-              </h2>
-              <SensorChart
-                color="rgba(75, 192, 192, 1)"
-                data={sensorData}
-                labels={sensorLabels}
-              />
-            </div>
+      {/* Graphs */}
+      <div className="mt-8">
+        <SectionTitle darkMode={darkMode}>
+          Comportamiento en Tiempo Real
+        </SectionTitle>
+        <SensorChart
+          color="rgba(75, 192, 192, 1)"
+          data={sensorData}
+          labels={sensorLabels}
+        />
+      </div>
 
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold mb-4 text-center">
-                Comportamiento Semanal
-              </h2>
-              <SensorChart
-                color="rgba(255, 99, 132, 1)"
-                data={weeklyData}
-                labels={weeklyLabels}
-              />
-            </div>
+      <div className="mt-8">
+        <SectionTitle darkMode={darkMode}>
+          Comportamiento Semanal
+        </SectionTitle>
+        <SensorChart
+          color="rgba(255, 99, 132, 1)"
+          data={weeklyData}
+          labels={weeklyLabels}
+        />
+      </div>
 
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold mb-4 text-center">
-                Comportamiento Mensual
-              </h2>
-              <SensorChart
-                color="rgba(54, 162, 235, 1)"
-                data={monthlyData}
-                labels={monthlyLabels}
-              />
-            </div>
-          </>
-        )}
-      </main>
+      <div className="mt-8">
+        <SectionTitle darkMode={darkMode}>
+          Comportamiento Mensual
+        </SectionTitle>
+        <SensorChart
+          color="rgba(54, 162, 235, 1)"
+          data={monthlyData}
+          labels={monthlyLabels}
+        />
+      </div>
+    </>
+  )}
+</main>
     </div>
   );
 };
