@@ -16,6 +16,7 @@ import { isTokenValid } from "../common/isTokenValid";
 import SensorChart from "../components/charts/line/SensorChart";
 import styled from "styled-components";
 
+// Styled component for the sidebar logo
 const SidebarLogoWrapper = styled.div`
   .logo {
     width: 80px;
@@ -28,6 +29,7 @@ const SidebarLogoWrapper = styled.div`
   }
 `;
 
+// Styled component for the welcome text
 const WelcomeText = styled.p<{ darkMode: boolean }>`
   font-size: 1.3rem;
   font-weight: bold;
@@ -41,6 +43,7 @@ const WelcomeText = styled.p<{ darkMode: boolean }>`
   }
 `;
 
+// Styled component for section titles
 const SectionTitle = styled.h2<{ darkMode: boolean }>`
   font-size: 1.25rem;
   font-weight: 600;
@@ -50,6 +53,7 @@ const SectionTitle = styled.h2<{ darkMode: boolean }>`
   transition: color 0.3s ease;
 `;
 
+// Styled component for the logout button
 const LogoutButtonStyledWrapper = styled.div`
   .button {
     cursor: pointer;
@@ -107,6 +111,7 @@ const LogoutButtonStyledWrapper = styled.div`
   }
 `;
 
+// Logout button component
 const LogoutButtonStyled = () => {
   return (
     <LogoutButtonStyledWrapper>
@@ -126,14 +131,16 @@ const LogoutButtonStyled = () => {
   );
 };
 
+// Main Report component
 const Report: FC = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(true); // State for loading
+  const [isOpen, setIsOpen] = useState(false); // State for sidebar visibility
   const [userName, setUserName] = useState<string>("Usuario"); // State for user name
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false); // State for dark mode
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Labels and data for charts
   const sensorLabels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
   const sensorData = [20, 25, 22, 30, 28];
   const weeklyLabels = [
@@ -146,7 +153,6 @@ const Report: FC = () => {
     "Domingo",
   ];
   const weeklyData = [25, 28, 22, 30, 26, 24, 27];
-
   const monthlyLabels = [
     "Enero",
     "Febrero",
@@ -163,24 +169,26 @@ const Report: FC = () => {
   ];
   const monthlyData = [22, 24, 26, 28, 30, 32, 34, 33, 31, 29, 27, 25];
 
+  // Check token validity and set user name
   useEffect(() => {
     if (!isTokenValid()) {
-      console.log("Redirigiendo a /auth desde el componente Report");
+      console.log("Redirecting to /auth from Report component");
       void navigate({ to: "/auth" });
     } else {
-      //We get name from localStorage
       const name = localStorage.getItem("userName");
-      console.log("Nombre del usuario obtenido desde localStorage:", name);
-      setUserName(name || "Usuario"); //  If there is no name, use "Usuario" as default
+      console.log("User name retrieved from localStorage:", name);
+      setUserName(name || "Usuario");
     }
   }, [navigate]);
 
+  // Retrieve dark mode state from localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedDarkMode);
     document.body.classList.toggle("dark-mode", savedDarkMode);
   }, []);
 
+  // Toggle dark mode
   const toggleDarkMode = (): void => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
@@ -188,19 +196,19 @@ const Report: FC = () => {
     document.body.classList.toggle("dark-mode", newDarkMode);
   };
 
+  // Simulate loading state
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
 
-    
     return () => {
       clearTimeout(timer);
     };
   }, []);
 
+  // Handle sidebar click outside
   useEffect(() => {
-   
     const handleClickOutside = (event: MouseEvent) => {
       const sidebar = document.getElementById("sidebar");
       const menuButton = document.getElementById("menu-button");
@@ -218,20 +226,21 @@ const Report: FC = () => {
 
     document.addEventListener("mousedown", handleClickOutside);
 
-    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
+  // Prevent scrolling when sidebar is open
   useEffect(() => {
     document.body.style.overflowY = isOpen ? "hidden" : "auto";
-    
+
     return () => {
       document.body.style.overflowY = "auto";
     };
   }, [isOpen]);
 
+  // Handle navigation
   const handleNavigation = (path: string): void => {
     void navigate({ to: path });
     setIsOpen(false);
@@ -243,7 +252,7 @@ const Report: FC = () => {
         darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
     >
-      {/* Close and open button for side bar */}
+      {/* Sidebar toggle button */}
       <button
         className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -254,7 +263,7 @@ const Report: FC = () => {
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Side bar */}
+      {/* Sidebar */}
       <aside
         ref={menuRef}
         id="sidebar"
@@ -281,8 +290,9 @@ const Report: FC = () => {
             <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
           </SidebarLogoWrapper>
           <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
+          
 
-          {/* Dark Mode Toggle Button */}
+          {/* Dark mode toggle button */}
           <button
             className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
             onClick={toggleDarkMode}
@@ -291,106 +301,110 @@ const Report: FC = () => {
           </button>
         </div>
 
-        
-       <nav className="flex-1 overflow-y-auto">
+        <nav className="flex-1 overflow-y-auto">
           <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
-           {[
+            {[
               { icon: homeIcon,    label: "Inicio",   path: "/newhome" },
               { icon: moduleIcon,  label: "Granjas",  path: "/farm" },
               { icon: userIcon,    label: "Usuarios", path: "/users" },
               { icon: fishIcon,    label: "Módulos",  path: "/module" },
               { icon: reporteIcon, label: "Reporte",  path: "/report" },
-           ].map((item, index) => (
-               <li
+            ].map((item, index) => (
+              <li
                 key={index}
-               className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-               location.pathname === item.path
-                   ? "bg-[#3cacac] text-white shadow-md"
-                : darkMode
-                       ? "text-white group-hover:text-gray-300"
-                       : "text-gray-600 group-hover:text-white"
+                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                  location.pathname === item.path
+                    ? "bg-[#3cacac] text-white shadow-md"
+                    : darkMode
+                    ? "text-white group-hover:text-gray-300"
+                    : "text-gray-600 group-hover:text-white"
+                }`}
+                onClick={() => {
+                  handleNavigation(item.path);
+                }}
+              >
+                <span
+                  className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                    location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
                   }`}
-                      onClick={() => {
-                      handleNavigation(item.path);
-                  }}
-                  >
-                  <span
-                    className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                   location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-                   }`}
                 ></span>
                 <span className="relative z-10 flex items-center gap-3 font-bold">
-                    <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                    {item.label}
+                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                  {item.label}
                 </span>
-                 </li>
-               ))}
-               </ul>
+              </li>
+            ))}
+          </ul>
 
-                     <div className="mt-4 md:mt-20">
-                     <LogoutButtonStyled />
-               </div>
-           </nav>
-
+          <div className="mt-4 md:mt-20">
+            <LogoutButtonStyled />
+          </div>
+        </nav>
       </aside>
 
-      {/* Main Content */}
-<main
-  className={`flex-1 p-6 overflow-y-auto ${
-    isOpen ? "" : "md:ml-64"
-  }`}
->
-  {loading ? (
-    <LoaderAcua darkMode={darkMode} /> // Loader component
-  ) : (
-    <>
-      <h1
-        className={`text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center ${
-          darkMode ? "text-white" : "text-black"
+
+
+      {/* Main content */}
+
+
+      <main
+        className={`flex-1 p-6 overflow-y-auto ${
+          isOpen ? "" : "md:ml-64"
         }`}
       >
-        Reportes
-      </h1>
-      <p className="mb-6 text-center">
-        Visualización y generación de reportes.
-      </p>
+        {loading ? (
+          <LoaderAcua darkMode={darkMode} />
+        ) : (
+          <>
+            <h1
+              className={`text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center ${
+                darkMode ? "text-white" : "text-black"
+              }`}
+            >
+              Reportes
+            </h1>
+            <p className="mb-6 text-center">
+              Visualización y generación de reportes.
+            </p>
 
-      {/* Graphs */}
-      <div className="mt-8">
-        <SectionTitle darkMode={darkMode}>
-          Comportamiento en Tiempo Real
-        </SectionTitle>
-        <SensorChart
-          color="rgba(75, 192, 192, 1)"
-          data={sensorData}
-          labels={sensorLabels}
-        />
-      </div>
+            {/* Real-time behavior chart */}
+            <div className="mt-8">
+              <SectionTitle darkMode={darkMode}>
+                Comportamiento en Tiempo Real
+              </SectionTitle>
+              <SensorChart
+                color="rgba(75, 192, 192, 1)"
+                data={sensorData}
+                labels={sensorLabels}
+              />
+            </div>
 
-      <div className="mt-8">
-        <SectionTitle darkMode={darkMode}>
-          Comportamiento Semanal
-        </SectionTitle>
-        <SensorChart
-          color="rgba(255, 99, 132, 1)"
-          data={weeklyData}
-          labels={weeklyLabels}
-        />
-      </div>
+            {/* Weekly behavior chart */}
+            <div className="mt-8">
+              <SectionTitle darkMode={darkMode}>
+                Comportamiento Semanal
+              </SectionTitle>
+              <SensorChart
+                color="rgba(255, 99, 132, 1)"
+                data={weeklyData}
+                labels={weeklyLabels}
+              />
+            </div>
 
-      <div className="mt-8">
-        <SectionTitle darkMode={darkMode}>
-          Comportamiento Mensual
-        </SectionTitle>
-        <SensorChart
-          color="rgba(54, 162, 235, 1)"
-          data={monthlyData}
-          labels={monthlyLabels}
-        />
-      </div>
-    </>
-  )}
-</main>
+            {/* Monthly behavior chart */}
+            <div className="mt-8">
+              <SectionTitle darkMode={darkMode}>
+                Comportamiento Mensual
+              </SectionTitle>
+              <SensorChart
+                color="rgba(54, 162, 235, 1)"
+                data={monthlyData}
+                labels={monthlyLabels}
+              />
+            </div>
+          </>
+        )}
+      </main>
     </div>
   );
 };
