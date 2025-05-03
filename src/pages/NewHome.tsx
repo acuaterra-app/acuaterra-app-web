@@ -74,7 +74,7 @@ const LogoutButtonStyledWrapper = styled.div`
       position: absolute;
       transform: rotate(calc(19deg * var(--index)));
       inset: 7px;
-      font-size: 12px;
+      font-size: 14px;
       color: #fff;
     }
   }

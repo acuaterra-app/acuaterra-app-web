@@ -440,12 +440,11 @@ const FarmsPage: FunctionComponent = () => {
 
         {isModalOpen && (
           <FarmModal
+            darkMode={false}
             farm={selectedFarm}
-            onSave={selectedFarm ? handleEditFarm : handleAddFarm}
-            onClose={() => {
+            onSave={selectedFarm ? handleEditFarm : handleAddFarm} onClose={() => {
               setIsModalOpen(false);
-            }}
-          />
+            } }          />
         )}
       </main>
     </div>
