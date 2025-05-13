@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchDashboardStats } from "../services/dashboardService";
+import { fetchDashboardMetrics, fetchDashboardStats } from "../services/dashboardService";
 
 interface DashboardStats {
   farms: {
@@ -35,3 +35,33 @@ export const useDashboardStats = () => {
 
   return { stats, loading, error };
 };
+
+interface DashboardMetrics {
+    totalFarms: number;
+    totalModules: number;
+    totalUsers: number;
+  }
+  
+  export const useDashboardMetrics = () => {
+    const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+  
+    useEffect(() => {
+      const fetchMetrics = async () => {
+        setLoading(true);
+        try {
+          const data = await fetchDashboardMetrics();
+          setMetrics(data);
+        } catch (err) {
+          setError((err as Error).message);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchMetrics();
+    }, []);
+  
+    return { metrics, loading, error };
+  };
