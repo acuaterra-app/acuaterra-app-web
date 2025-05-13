@@ -137,8 +137,8 @@ const NewHome: FC = () => {
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [userName, setUserName] = useState<string>("Usuario");
   const [darkMode, setDarkMode] = useState(false);
-  const { stats, loading, error } = useDashboardStats();
-  const { metrics, loading: metricsLoading, error: metricsError } = useDashboardMetrics();
+  const { stats } = useDashboardStats();
+  const { metrics,} = useDashboardMetrics();
   const menuRef = useRef<HTMLDivElement>(null);
   const slides = [
     { title: "Acuaterra Modulo",  button: "1", src: foto1 },
@@ -209,138 +209,143 @@ const NewHome: FC = () => {
   };
 
   return (
-    <div
-      className={`flex h-screen ${
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
-      }`}
+  <div
+    className={`flex flex-col lg:flex-row min-h-screen ${
+      darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+    }`}
+  >
+    {/* Sidebar toggle button for mobile */}
+    <button
+      className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
+      id="menu-button"
+      onClick={() => {
+        setIsOpen(!isOpen);
+      }}
     >
-      {/* Sidebar toggle button for mobile */}
-      <button
-        className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
-        id="menu-button"
-        onClick={() => {
-          setIsOpen(!isOpen);
-        }}
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+      {isOpen ? <X size={24} /> : <Menu size={24} />}
+    </button>
 
-      {/* Sidebar */}
-      <aside
-        ref={menuRef}
-        className={`fixed top-0 left-0 w-64 h-screen ${
-          darkMode ? "bg-gray-800 text-white" : "bg-[#e0e0e0] text-gray-600"
-        } border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-          isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
-        } ${animateSidebar ? "animate-slide-in" : ""}`}
-        style={{
-          height: "100vh",
-          boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
-        }}
-      >
-        <div className="p-4 flex flex-col items-center relative">
-         {/* Close button for sidebar */}
-         <button
-           className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
-           onClick={() => {
-           setIsOpen(false); // Asegúrate de que esto cierre el menú
-       }}
+    {/* Sidebar */}
+    <aside
+      ref={menuRef}
+      className={`fixed top-0 left-0 w-64 h-screen ${
+        darkMode ? "bg-gray-800 text-white" : "bg-[#e0e0e0] text-gray-600"
+      } border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
+      } ${animateSidebar ? "animate-slide-in" : ""}`}
+      style={{
+        height: "100vh",
+        boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
+      }}
     >
-       <X size={24} />
-      </button>
+      <div className="p-4 flex flex-col items-center relative">
+        {/* Close button for sidebar */}
+        <button
+          className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >
+          <X size={24} />
+        </button>
 
-          {/* Sidebar logo */}
-          <SidebarLogoWrapper>
-            <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
-          </SidebarLogoWrapper>
+        {/* Sidebar logo */}
+        <SidebarLogoWrapper>
+          <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
+        </SidebarLogoWrapper>
 
-          {/* Welcome text */}
-          <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
+        {/* Welcome text */}
+        <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
 
-          {/* Dark mode toggle button */}
-          <button
-            className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
-            onClick={toggleDarkMode}
-          >
-            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </button>
-        </div>
+        {/* Dark mode toggle button */}
+        <button
+          className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
+          onClick={toggleDarkMode}
+        >
+          {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+        </button>
+      </div>
 
-        {/* Navigation menu */}
-        <nav className="flex-1 overflow-y-auto">
+      {/* Navigation menu */}
+      <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
-             {[
-                   { icon: homeIcon, label: "Inicio", path: "/newhome" },
-                   { icon: moduleIcon, label: "Granjas", path: "/farm" },
-                   { icon: userIcon, label: "Usuarios", path: "/users" },
-                   { icon: fishIcon, label: "Módulos", path: "/module" },
-                   { icon: reportIcon, label: "Reporte", path: "/report" },
-        ].map((item, index) => (
-        <li
-             key={index}
-             className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-                  location.pathname === item.path
+          {[{ icon: homeIcon, label: "Inicio", path: "/newhome" },
+            { icon: moduleIcon, label: "Granjas", path: "/farm" },
+            { icon: userIcon, label: "Usuarios", path: "/users" },
+            { icon: fishIcon, label: "Módulos", path: "/module" },
+            { icon: reportIcon, label: "Reporte", path: "/report" },
+          ].map((item, index) => (
+            <li
+              key={index}
+              className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                location.pathname === item.path
                   ? "bg-[#3cacac] text-white shadow-md"
                   : darkMode
                   ? "text-white group-hover:text-white"
                   : "text-gray-600 group-hover:text-black"
               }`}
-             onClick={() => {
-             handleNavigation(item.path);
-           }}
-          >
-            <span
-                  className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                  location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-            }`}
-             ></span>
-               <span className="relative z-10 flex items-center gap-3 font-bold">
-                   <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                   {item.label}
-               </span>
-           </li>
-        ))}
-       </ul>
+              onClick={() => {
+                handleNavigation(item.path);
+              }}
+            >
+              <span
+                className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                  location.pathname === item.path
+                    ? "bg-[#3cacac]"
+                    : "bg-[#3cacac]"
+                }`}
+              ></span>
+              <span className="relative z-10 flex items-center gap-3 font-bold">
+                <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                {item.label}
+              </span>
+            </li>
+          ))}
+        </ul>
 
-          {/* Logout button */}
-          <div className="mt-4 md:mt-10">
-            <LogoutButtonStyled />
-          </div>
-        </nav>
-      </aside>
+        {/* Logout button */}
+        <div className="mt-4 md:mt-10">
+          <LogoutButtonStyled />
+        </div>
+      </nav>
+    </aside>
 
-      {/* Main content */}
-      <main
-        className={`flex-1 p-6 lg:ml-0 ${
-          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
-        }`}
-      >
-        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center">
-          Acuaterra
-        </h1>
-        <p className="mb-7 text-base sm:text-sm text-center">
-          Acuaterra es una herramienta de software diseñada para sistematizar el
-          proceso de monitoreo en módulos acuapónicos.
-        </p>
+    {/* Main content */}
+    <main
+      className={`flex-1 p-6 lg:ml-64 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
+      }`}
+    >
+      <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center">
+        Acuaterra
+      </h1>
+      <p className="mb-7 text-base sm:text-sm text-center">
+        Acuaterra es una herramienta de software diseñada para sistematizar el
+        proceso de monitoreo en módulos acuapónicos.
+      </p>
 
-        {isMobile ? (
-          <MobileCarousel />
-        ) : (
-          <>
-            <Carousel slides={slides} />
-            {stats && <DashboardStats farms={stats.farms} modules={stats.modules} />}
-            {metrics && (
-            <DashboardMetrics
-              totalFarms={metrics.totalFarms}
-              totalModules={metrics.totalModules}
-              totalUsers={metrics.totalUsers}
-            />
-          )}
-          </>
+      {isMobile ? (
+        <MobileCarousel />
+      ) : (
+        <>
+          <Carousel slides={slides} />
+        </>
+      )}
+
+      {/* Dashboard Section */}
+      <div className="mt-40 space-y-10">
+        {stats && <DashboardStats farms={stats.farms} modules={stats.modules} />}
+        {metrics && (
+          <DashboardMetrics
+            totalFarms={metrics.totalFarms}
+            totalModules={metrics.totalModules}
+            totalUsers={metrics.totalUsers}
+          />
         )}
-      </main>
-    </div>
-  );
+      </div>
+    </main>
+  </div>
+);
 };
 
 export default NewHome;
