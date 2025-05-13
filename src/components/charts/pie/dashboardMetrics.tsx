@@ -9,11 +9,16 @@ interface DashboardMetricsProps {
 
 const StyledWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; /* Una columna por defecto */
   gap: 2rem;
+  padding: 1rem;
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas para tablets */
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr); /* Tres columnas para pantallas grandes */
   }
 
   .cards {
@@ -21,7 +26,8 @@ const StyledWrapper = styled.div`
   }
 
   .card {
-    width: 540px;
+    width: 100%; /* Ajustar al ancho del contenedor */
+    max-width: 600px; /* Limitar el ancho máximo */
     height: 150px;
     background: #80ED99;
     border: 2px solid #80ED99;
@@ -31,7 +37,6 @@ const StyledWrapper = styled.div`
     will-change: transform;
     transition: transform 0.5s;
     margin: 0 auto;
-    
   }
 
   .card:hover {
@@ -42,8 +47,8 @@ const StyledWrapper = styled.div`
     color: #fff;
     position: absolute;
     top: 50%;
-    left: 50%; /* Centrar horizontalmente */
-  transform: translate(-50%, -50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
     transition: transform 0.5s;
     font: 700 1.5rem monospace;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;

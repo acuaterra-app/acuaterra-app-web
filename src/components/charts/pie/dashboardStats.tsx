@@ -8,15 +8,21 @@ interface DashboardStatsProps {
 
 const StyledWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; /* Una columna por defecto */
   gap: 2rem;
+  padding: 1rem;
 
   @media (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas para tablets */
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas para pantallas grandes */
   }
 
   .card {
-    width: 700px;
+    width: 100%; /* Ajustar al ancho del contenedor */
+    max-width: 700px; /* Limitar el ancho máximo */
     height: 200px;
     perspective: 1000px;
     margin: 0 auto;
