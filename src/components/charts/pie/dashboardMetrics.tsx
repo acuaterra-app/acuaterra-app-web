@@ -1,4 +1,5 @@
 import type React from "react";
+import styled from "styled-components";
 
 interface DashboardMetricsProps {
   totalFarms: number;
@@ -6,29 +7,77 @@ interface DashboardMetricsProps {
   totalUsers: number;
 }
 
-const DashboardMetrics: React.FC<DashboardMetricsProps> = ({ totalFarms, totalModules, totalUsers }) => {
-  const cardStyles = "p-6 rounded-lg shadow-md text-center transition-transform transform hover:scale-105";
+const StyledWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
 
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cards {
+    perspective: 500px;
+  }
+
+  .card {
+    width: 540px;
+    height: 150px;
+    background: #80ED99;
+    border: 2px solid #80ED99;
+    border-radius: 20px;
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 0.5s;
+    margin: 0 auto;
+    
+  }
+
+  .card:hover {
+    transform: translateZ(10px) rotateX(20deg) rotateY(20deg);
+  }
+
+  .card_title {
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%; /* Centrar horizontalmente */
+  transform: translate(-50%, -50%);
+    transition: transform 0.5s;
+    font: 700 1.5rem monospace;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  }
+
+  .card:hover .card_title {
+    transform: translateZ(50px);
+  }
+`;
+
+const DashboardMetrics: React.FC<DashboardMetricsProps> = ({ totalFarms, totalModules, totalUsers }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <StyledWrapper>
       {/* Total Farms */}
-      <div className={`${cardStyles}`} style={{ backgroundColor: "#57CC99", color: "#03045E" }}>
-        <h3 className="text-xl font-bold mb-2">Granjas Totales</h3>
-        <p className="text-2xl">{totalFarms}</p>
+      <div className="cards">
+        <figure className="card">
+          <figcaption className="card_title">Granjas Totales: {totalFarms}</figcaption>
+        </figure>
       </div>
 
       {/* Total Modules */}
-      <div className={`${cardStyles}`} style={{ backgroundColor: "#80ED99", color: "#03045E" }}>
-        <h3 className="text-xl font-bold mb-2">Módulos Totales</h3>
-        <p className="text-2xl">{totalModules}</p>
+      <div className="cards">
+        <figure className="card">
+          <figcaption className="card_title">Módulos Totales: {totalModules}</figcaption>
+        </figure>
       </div>
 
       {/* Total Users */}
-      <div className={`${cardStyles}`} style={{ backgroundColor: "#C7F9CC", color: "#03045E" }}>
-        <h3 className="text-xl font-bold mb-2">Usuarios Totales</h3>
-        <p className="text-2xl">{totalUsers}</p>
+      <div className="cards">
+        <figure className="card">
+          <figcaption className="card_title">Usuarios Totales: {totalUsers}</figcaption>
+        </figure>
       </div>
-    </div>
+    </StyledWrapper>
   );
 };
 
