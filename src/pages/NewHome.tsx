@@ -18,6 +18,8 @@ import { Carousel } from "../components/Slider/Carousel";
 import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 import MobileCarousel from "../components/Slider/MobileCarousel";
+import { useDashboardStats } from "../hooks/useDashboardStats";
+import DashboardStats from "../components/charts/pie/dashboardStats";
 
 
 // Styled component for the sidebar logo
@@ -134,6 +136,7 @@ const NewHome: FC = () => {
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [userName, setUserName] = useState<string>("Usuario");
   const [darkMode, setDarkMode] = useState(false);
+  const { stats, loading, error } = useDashboardStats();
   const menuRef = useRef<HTMLDivElement>(null);
   const slides = [
     { title: "Acuaterra Modulo",  button: "1", src: foto1 },
@@ -318,7 +321,14 @@ const NewHome: FC = () => {
           proceso de monitoreo en módulos acuapónicos.
         </p>
 
-        {isMobile ? <MobileCarousel /> : <Carousel slides={slides} />}
+        {isMobile ? (
+          <MobileCarousel />
+        ) : (
+          <>
+            <Carousel slides={slides} />
+            {stats && <DashboardStats farms={stats.farms} modules={stats.modules} />}
+          </>
+        )}
       </main>
     </div>
   );
