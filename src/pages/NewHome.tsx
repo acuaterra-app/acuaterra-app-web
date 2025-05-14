@@ -21,9 +21,20 @@ import MobileCarousel from "../components/Slider/MobileCarousel";
 import { useDashboardStats, useDashboardMetrics } from "../hooks/useDashboardStats";
 import DashboardStats from "../components/charts/pie/dashboardStats";
 import DashboardMetrics from "../components/charts/pie/dashboardMetrics";
+import { motion } from "framer-motion"; // Importar framer-motion
 
+// dashboard animation using vertical scroll
+const fadeInVariants = {
+  hidden: { opacity: 0, y: 100, scale: 0.8 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1, //  normal scale
+    transition: { duration: 1.2, ease: "easeOut" }, 
+  },
+};
 
-// Styled component for the sidebar logo
+// Styled component para el logo del sidebar
 const SidebarLogoWrapper = styled.div`
   .logo {
     width: 80px;
@@ -36,7 +47,7 @@ const SidebarLogoWrapper = styled.div`
   }
 `;
 
-// Styled component for the welcome text
+// Styled component for welcome text
 const WelcomeText = styled.p<{ darkMode: boolean }>`
   font-size: 1.3rem;
   font-weight: bold;
@@ -50,7 +61,7 @@ const WelcomeText = styled.p<{ darkMode: boolean }>`
   }
 `;
 
-// Styled component for the logout button
+// Styled component for logout button
 const LogoutButtonStyledWrapper = styled.div`
   .button {
     cursor: pointer;
@@ -128,7 +139,7 @@ const LogoutButtonStyled = () => {
   );
 };
 
-// Main component for the NewHome page
+//  Main component of NewHome page
 const NewHome: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -138,15 +149,15 @@ const NewHome: FC = () => {
   const [userName, setUserName] = useState<string>("Usuario");
   const [darkMode, setDarkMode] = useState(false);
   const { stats } = useDashboardStats();
-  const { metrics,} = useDashboardMetrics();
+  const { metrics } = useDashboardMetrics();
   const menuRef = useRef<HTMLDivElement>(null);
   const slides = [
-    { title: "Acuaterra Modulo",  button: "1", src: foto1 },
+    { title: "Acuaterra Modulo", button: "1", src: foto1 },
     { title: "Modulo Acuaponico", button: "2", src: foto2 },
-    { title: "Acuaterra Granja",  button: "3", src: foto3 },
+    { title: "Acuaterra Granja", button: "3", src: foto3 },
   ];
 
-  // Check token validity and set user name
+  // we verify the token validity and set the username
   useEffect(() => {
     if (!isTokenValid()) {
       console.log("Redirecting to /auth from NewHome component");
@@ -158,7 +169,7 @@ const NewHome: FC = () => {
     }
   }, [navigate]);
 
-  // Handle screen resizing for mobile view
+  // we control screen size for mobile view
   useEffect(() => {
     const handleResize = () => {
       const isMobileView = window.innerWidth < 768;
@@ -180,14 +191,14 @@ const NewHome: FC = () => {
     };
   }, []);
 
-  // Retrieve dark mode state from localStorage
+  // we retrieve the dark mode state from localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedDarkMode);
     document.body.classList.toggle("dark-mode", savedDarkMode);
   }, []);
 
-  // Toggle dark mode and save state to localStorage
+  // alternate dark mode and save state in localStorage
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
@@ -195,157 +206,176 @@ const NewHome: FC = () => {
     document.body.classList.toggle("dark-mode", newDarkMode);
   };
 
-  // Close sidebar when navigating to /newhome
+  // close the sidebar when navigating to /newhome
   useEffect(() => {
     if (location.pathname === "/newhome") {
       setIsOpen(false);
     }
   }, [location.pathname]);
 
-  // Handle navigation to a new path
+  //  we use the navigate function
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
     setIsOpen(false);
   };
 
   return (
-  <div
-    className={`flex flex-col lg:flex-row min-h-screen ${
-      darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
-    }`}
-  >
-    {/* Sidebar toggle button for mobile */}
-    <button
-      className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
-      id="menu-button"
-      onClick={() => {
-        setIsOpen(!isOpen);
-      }}
-    >
-      {isOpen ? <X size={24} /> : <Menu size={24} />}
-    </button>
-
-    {/* Sidebar */}
-    <aside
-      ref={menuRef}
-      className={`fixed top-0 left-0 w-64 h-screen ${
-        darkMode ? "bg-gray-800 text-white" : "bg-[#e0e0e0] text-gray-600"
-      } border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-        isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
-      } ${animateSidebar ? "animate-slide-in" : ""}`}
-      style={{
-        height: "100vh",
-        boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
-      }}
-    >
-      <div className="p-4 flex flex-col items-center relative">
-        {/* Close button for sidebar */}
-        <button
-          className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
-          onClick={() => {
-            setIsOpen(false);
-          }}
-        >
-          <X size={24} />
-        </button>
-
-        {/* Sidebar logo */}
-        <SidebarLogoWrapper>
-          <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
-        </SidebarLogoWrapper>
-
-        {/* Welcome text */}
-        <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
-
-        {/* Dark mode toggle button */}
-        <button
-          className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
-          onClick={toggleDarkMode}
-        >
-          {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-        </button>
-      </div>
-
-      {/* Navigation menu */}
-      <nav className="flex-1 overflow-y-auto">
-        <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
-          {[{ icon: homeIcon, label: "Inicio", path: "/newhome" },
-            { icon: moduleIcon, label: "Granjas", path: "/farm" },
-            { icon: userIcon, label: "Usuarios", path: "/users" },
-            { icon: fishIcon, label: "Módulos", path: "/module" },
-            { icon: reportIcon, label: "Reporte", path: "/report" },
-          ].map((item, index) => (
-            <li
-              key={index}
-              className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-                location.pathname === item.path
-                  ? "bg-[#3cacac] text-white shadow-md"
-                  : darkMode
-                  ? "text-white group-hover:text-white"
-                  : "text-gray-600 group-hover:text-black"
-              }`}
-              onClick={() => {
-                handleNavigation(item.path);
-              }}
-            >
-              <span
-                className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                  location.pathname === item.path
-                    ? "bg-[#3cacac]"
-                    : "bg-[#3cacac]"
-                }`}
-              ></span>
-              <span className="relative z-10 flex items-center gap-3 font-bold">
-                <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                {item.label}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        {/* Logout button */}
-        <div className="mt-4 md:mt-10">
-          <LogoutButtonStyled />
-        </div>
-      </nav>
-    </aside>
-
-    {/* Main content */}
-    <main
-      className={`flex-1 p-6 lg:ml-64 ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
+    <div
+      className={`flex flex-col lg:flex-row min-h-screen ${
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
       }`}
     >
-      <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center">
-        Acuaterra
-      </h1>
-      <p className="mb-7 text-base sm:text-sm text-center">
-        Acuaterra es una herramienta de software diseñada para sistematizar el
-        proceso de monitoreo en módulos acuapónicos.
-      </p>
+      {/*  toogle button for mobile sidebar   */}
+      <button
+        className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
+        id="menu-button"
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
-      {isMobile ? (
-        <MobileCarousel />
-      ) : (
-        <>
-          <Carousel slides={slides} />
-        </>
-      )}
+      {/* Sidebar */}
+      <aside
+        ref={menuRef}
+        className={`fixed top-0 left-0 w-64 h-screen ${
+          darkMode ? "bg-gray-800 text-white" : "bg-[#e0e0e0] text-gray-600"
+        } border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+          isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
+        } ${animateSidebar ? "animate-slide-in" : ""}`}
+        style={{
+          height: "100vh",
+          boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        <div className="p-4 flex flex-col items-center relative">
+          {/* Clse sidebar button */}
+          <button
+            className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
+            <X size={24} />
+          </button>
 
-      {/* Dashboard Section */}
-      <div className="mt-40 space-y-10">
-        {stats && <DashboardStats farms={stats.farms} modules={stats.modules} />}
-        {metrics && (
-          <DashboardMetrics
-            totalFarms={metrics.totalFarms}
-            totalModules={metrics.totalModules}
-            totalUsers={metrics.totalUsers}
-          />
+          {/* sidebarn logo */}
+          <SidebarLogoWrapper>
+            <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
+          </SidebarLogoWrapper>
+
+          {/* Welcome text*/}
+          <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
+
+          {/* Dark mode button */}
+          <button
+            className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
+            onClick={toggleDarkMode}
+          >
+            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+          </button>
+        </div>
+
+        {/* Navigation section */}
+        <nav className="flex-1 overflow-y-auto">
+          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
+            {[{ icon: homeIcon, label: "Inicio", path: "/newhome" },
+              { icon: moduleIcon, label: "Granjas", path: "/farm" },
+              { icon: userIcon, label: "Usuarios", path: "/users" },
+              { icon: fishIcon, label: "Módulos", path: "/module" },
+              { icon: reportIcon, label: "Reporte", path: "/report" },
+            ].map((item, index) => (
+              <li
+                key={index}
+                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                  location.pathname === item.path
+                    ? "bg-[#3cacac] text-white shadow-md"
+                    : darkMode
+                    ? "text-white group-hover:text-white"
+                    : "text-gray-600 group-hover:text-black"
+                }`}
+                onClick={() => {
+                  handleNavigation(item.path);
+                }}
+              >
+                <span
+                  className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                    location.pathname === item.path
+                      ? "bg-[#3cacac]"
+                      : "bg-[#3cacac]"
+                  }`}
+                ></span>
+                <span className="relative z-10 flex items-center gap-3 font-bold">
+                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                  {item.label}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          {/*  logout button */}
+          <div className="mt-4 md:mt-10">
+            <LogoutButtonStyled />
+          </div>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main
+        className={`flex-1 p-6 lg:ml-64 ${
+          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
+        }`}
+      >
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center">
+          Acuaterra
+        </h1>
+        <p className="mb-7 text-base sm:text-sm text-center">
+          Acuaterra es una herramienta de software diseñada para sistematizar el
+          proceso de monitoreo en módulos acuapónicos.
+        </p>
+
+        {isMobile ? (
+          <MobileCarousel />
+        ) : (
+          <>
+            <Carousel slides={slides} />
+          </>
         )}
-      </div>
-    </main>
-  </div>
-);
+
+        {/* dashboard section*/}
+        <div className="mt-40 space-y-10">
+          {/*  DashboardStats Animation */}
+          {stats && (
+            <motion.div
+              initial="hidden"
+              variants={fadeInVariants}
+              viewport={{ once: true, amount: 0.2 }}
+              whileInView="visible"
+            >
+              <DashboardStats farms={stats.farms} modules={stats.modules} />
+            </motion.div>
+          )}
+
+          {/* DashboardMetrics Animation */}
+          {metrics && (
+            <motion.div
+              initial="hidden"
+              variants={fadeInVariants}
+              viewport={{ once: true, amount: 0.2 }}
+              whileInView="visible"
+            >
+              <DashboardMetrics
+                totalFarms={metrics.totalFarms}
+                totalModules={metrics.totalModules}
+                totalUsers={metrics.totalUsers}
+              />
+            </motion.div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
 };
 
 export default NewHome;

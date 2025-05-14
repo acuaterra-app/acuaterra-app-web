@@ -9,16 +9,16 @@ interface DashboardMetricsProps {
 
 const StyledWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr; /* Una columna por defecto */
+  grid-template-columns: 1fr; /* One object for default */
   gap: 2rem;
   padding: 1rem;
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas para tablets */
+    grid-template-columns: repeat(2, 1fr); /* Two objects for tablets */
   }
 
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr); /* Tres columnas para pantallas grandes */
+    grid-template-columns: repeat(3, 1fr); /* Three objects for normal ps screen size */
   }
 
   .cards {
@@ -26,8 +26,8 @@ const StyledWrapper = styled.div`
   }
 
   .card {
-    width: 100%; /* Ajustar al ancho del contenedor */
-    max-width: 600px; /* Limitar el ancho máximo */
+    width: 100%;  /* Full width */
+    max-width: 600px; /* mas-width limit */
     height: 150px;
     background: #80ED99;
     border: 2px solid #80ED99;

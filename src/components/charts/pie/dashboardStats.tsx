@@ -8,21 +8,21 @@ interface DashboardStatsProps {
 
 const StyledWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr; /* Una columna por defecto */
+  grid-template-columns: 1fr; /* One object for default */
   gap: 2rem;
   padding: 1rem;
 
   @media (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas para tablets */
+    grid-template-columns: repeat(2, 1fr); /* Two objects for tablets */
   }
 
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas para pantallas grandes */
+    grid-template-columns: repeat(2, 1fr); /* Two objects for pc screens */
   }
 
   .card {
-    width: 100%; /* Ajustar al ancho del contenedor */
-    max-width: 700px; /* Limitar el ancho máximo */
+    width: 100%;
+    max-width: 700px; /* max-width limit */
     height: 200px;
     perspective: 1000px;
     margin: 0 auto;
@@ -52,8 +52,8 @@ const StyledWrapper = styled.div`
     font-size: 24px;
     border-radius: 10px;
     color: #fff;
-    font-family: 'YourFontName', sans-serif; /* Reemplaza 'YourFontName' con la fuente utilizada en el título "Acuaterra" */
-    font-weight: bold; /* Aplica el estilo en negrita */
+    font-family: 'YourFontName', sans-serif; 
+    font-weight: bold; 
   }
 
   .card-front {
