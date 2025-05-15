@@ -18,10 +18,12 @@ import { Carousel } from "../components/Slider/Carousel";
 import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 import MobileCarousel from "../components/Slider/MobileCarousel";
-import { useDashboardStats, useDashboardMetrics } from "../hooks/useDashboardStats";
+import { useDashboardStats, useDashboardMetrics, useNotificationStats } from "../hooks/useDashboardStats";
 import DashboardStats from "../components/charts/pie/dashboardStats";
 import DashboardMetrics from "../components/charts/pie/dashboardMetrics";
 import { motion } from "framer-motion"; // Importar framer-motion
+import NotificationStatsCard from "../components/charts/pie/NotificationStatsCard";
+
 
 // dashboard animation using vertical scroll
 const fadeInVariants = {
@@ -150,6 +152,7 @@ const NewHome: FC = () => {
   const [darkMode, setDarkMode] = useState(false);
   const { stats } = useDashboardStats();
   const { metrics } = useDashboardMetrics();
+  const { totalNotifications } = useNotificationStats();
   const menuRef = useRef<HTMLDivElement>(null);
   const slides = [
     { title: "Acuaterra Modulo", button: "1", src: foto1 },
@@ -372,6 +375,19 @@ const NewHome: FC = () => {
               />
             </motion.div>
           )}
+
+           {/* Notificaciones totales */}
+            {typeof totalNotifications === "number" && (
+             <motion.div
+              initial="hidden"
+              variants={fadeInVariants}
+              viewport={{ once: true, amount: 0.2 }}
+              whileInView="visible"
+             >
+           <NotificationStatsCard totalNotifications={totalNotifications} />
+           </motion.div>
+      )}
+
         </div>
       </main>
     </div>

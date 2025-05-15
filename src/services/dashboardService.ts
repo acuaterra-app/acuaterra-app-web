@@ -1,5 +1,16 @@
 const API_BASE_URL: string = import.meta.env["VITE_API_BASE_URL"] as string;
 
+interface DashboardStats {
+  farms: {
+    labels: Array<string>;
+    datasets: Array<{ data: Array<number> }>;
+  };
+  modules: {
+    labels: Array<string>;
+    datasets: Array<{ data: Array<number> }>;
+  };
+}
+
 interface ApiResponse {
     message: string;
     data: Array<DashboardStats>;
@@ -16,17 +27,6 @@ interface ApiResponse {
     };
 }
 
-interface DashboardStats {
-  farms: {
-    labels: string[];
-    datasets: { data: number[] }[];
-  };
-  modules: {
-    labels: string[];
-    datasets: { data: number[] }[];
-  };
-}
-
 interface DashboardMetrics {
     totalFarms: number;
     totalModules: number;
@@ -39,6 +39,45 @@ interface DashboardMetrics {
     errors: Array<string>;
     meta: object;
   }
+
+  interface NotificationStats {
+  labels: Array<string>;
+  datasets: Array<{
+    label: string;
+    data: Array<number>;
+  }>;
+}
+
+interface NotificationApiResponse {
+  message: string;
+  data: Array<NotificationStats>;
+  errors: Array<string>;
+  meta: object;
+}
+
+export const fetchNotificationStats = async (): Promise<number> => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE_URL}/admin/dashboard/notifications`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      Authorization: token ? `${token}` : "",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch notification stats");
+  }
+
+  const result = await response.json() as NotificationApiResponse;
+  const total = result.data.reduce((accumulator, stat) => {
+    const sum = stat.datasets.reduce((dsAccumulator, ds) => dsAccumulator + ds.data.reduce((a, b) => a + b, 0), 0);
+    return accumulator + sum;
+  }, 0);
+
+  return total;
+};
+
 
 export const fetchDashboardStats = async (): Promise<DashboardStats> => {
   const token = localStorage.getItem("token");
