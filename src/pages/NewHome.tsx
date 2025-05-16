@@ -359,36 +359,41 @@ const NewHome: FC = () => {
 
         
        {stats && metrics ? (
-  <motion.div
-    animate="visible"
-    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40"
-    initial="hidden"
-    variants={cardGridVariants}
-  >
-    <motion.div variants={cardVariants}>
-      <FarmsPieChart darkMode={darkMode} farms={stats.farms} />
-    </motion.div>
-    <motion.div variants={cardVariants}>
-      <ModulesPieChart darkMode={darkMode} modules={stats.modules} />
-    </motion.div>
-    <motion.div variants={cardVariants}>
-      <TotalFarmsCard darkMode={darkMode} total={metrics.totalFarms} />
-    </motion.div>
-    <motion.div variants={cardVariants}>
-      <TotalModulesCard darkMode={darkMode} total={metrics.totalModules} />
-    </motion.div>
-    <motion.div variants={cardVariants}>
-      <TotalUsersCard darkMode={darkMode} total={metrics.totalUsers} />
-    </motion.div>
-    <motion.div variants={cardVariants}>
-      <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
-    </motion.div>
-  </motion.div>
-) : (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40">
-    {Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)}
-  </div>
-)}
+      <motion.div
+        animate="visible"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40"
+        initial="hidden"
+        variants={cardGridVariants}
+       >
+          <motion.div variants={cardVariants}>
+            <FarmsPieChart darkMode={darkMode} farms={stats.farms} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <ModulesPieChart darkMode={darkMode} modules={stats.modules} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <TotalFarmsCard darkMode={darkMode} total={metrics.totalFarms} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <TotalModulesCard darkMode={darkMode} total={metrics.totalModules} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <TotalUsersCard darkMode={darkMode} total={metrics.totalUsers} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
+          </motion.div>
+       </motion.div>
+       ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40">
+              {Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)}
+          </div>
+          )}
       </main>
     </div>
   );
@@ -396,9 +401,3 @@ const NewHome: FC = () => {
 
 export default NewHome;
 
-/* 
-
-
-
-
-*/
