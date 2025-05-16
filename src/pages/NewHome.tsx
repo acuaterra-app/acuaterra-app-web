@@ -18,23 +18,16 @@ import { Carousel } from "../components/Slider/Carousel";
 import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 import MobileCarousel from "../components/Slider/MobileCarousel";
-import { useDashboardStats, useDashboardMetrics, useNotificationStats } from "../hooks/useDashboardStats";
-import DashboardStats from "../components/charts/pie/dashboardStats";
-import DashboardMetrics from "../components/charts/pie/dashboardMetrics";
-import { motion } from "framer-motion"; // Importar framer-motion
-import NotificationStatsCard from "../components/charts/pie/NotificationStatsCard";
+import FarmsPieChart from "../components/DashBoard/FarmsPieChart";
+import ModulesPieChart from "../components/DashBoard/ModulesPieChart";
+import TotalFarmsCard from "../components/DashBoard/TotalFarmsCard";
+import TotalModulesCard from "../components/DashBoard/TotalModulesCard";
+import TotalUsersCard from "../components/DashBoard/TotalUsersCard";
+import NotificationsAreaChart from "../components/DashBoard/NotificationsAreaChart";
+import { useDashboardMetrics, useDashboardStats, useNotificationStats } from "../hooks/useDashboardStats";
 
 
-// dashboard animation using vertical scroll
-const fadeInVariants = {
-  hidden: { opacity: 0, y: 100, scale: 0.8 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1, //  normal scale
-    transition: { duration: 1.2, ease: "easeOut" }, 
-  },
-};
+
 
 // Styled component para el logo del sidebar
 const SidebarLogoWrapper = styled.div`
@@ -347,51 +340,33 @@ const NewHome: FC = () => {
         )}
 
         {/* dashboard section*/}
-        <div className="mt-40 space-y-10">
-          {/*  DashboardStats Animation */}
-          {stats && (
-            <motion.div
-              initial="hidden"
-              variants={fadeInVariants}
-              viewport={{ once: true, amount: 0.2 }}
-              whileInView="visible"
-            >
-              <DashboardStats farms={stats.farms} modules={stats.modules} />
-            </motion.div>
-          )}
 
-          {/* DashboardMetrics Animation */}
-          {metrics && (
-            <motion.div
-              initial="hidden"
-              variants={fadeInVariants}
-              viewport={{ once: true, amount: 0.2 }}
-              whileInView="visible"
-            >
-              <DashboardMetrics
-                totalFarms={metrics.totalFarms}
-                totalModules={metrics.totalModules}
-                totalUsers={metrics.totalUsers}
-              />
-            </motion.div>
-          )}
+        
+        {stats && metrics ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40">
+             <FarmsPieChart darkMode={darkMode} farms={stats.farms} />
+             <ModulesPieChart darkMode={darkMode} modules={stats.modules} />
+             <TotalFarmsCard darkMode={darkMode} total={metrics.totalFarms} />
+             <TotalModulesCard darkMode={darkMode} total={metrics.totalModules} />
+             <TotalUsersCard darkMode={darkMode} total={metrics.totalUsers} />
+             <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
+          </div>
+        ) : (
+          <div className="flex justify-center items-center h-64">
+            <span>Cargando estadísticas...</span>
+          </div>
 
-           {/* Notificaciones totales */}
-            {typeof totalNotifications === "number" && (
-             <motion.div
-              initial="hidden"
-              variants={fadeInVariants}
-              viewport={{ once: true, amount: 0.2 }}
-              whileInView="visible"
-             >
-           <NotificationStatsCard totalNotifications={totalNotifications} />
-           </motion.div>
-      )}
-
-        </div>
+        )}
       </main>
     </div>
   );
 };
 
 export default NewHome;
+
+/* 
+
+
+
+
+*/
