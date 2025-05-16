@@ -25,9 +25,21 @@ import TotalModulesCard from "../components/DashBoard/TotalModulesCard";
 import TotalUsersCard from "../components/DashBoard/TotalUsersCard";
 import NotificationsAreaChart from "../components/DashBoard/NotificationsAreaChart";
 import { useDashboardMetrics, useDashboardStats, useNotificationStats } from "../hooks/useDashboardStats";
+import { motion } from "framer-motion";
 
+const cardGridVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
 
-
+const cardVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0 },
+};
 
 // Styled component para el logo del sidebar
 const SidebarLogoWrapper = styled.div`
@@ -186,6 +198,10 @@ const NewHome: FC = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  
+  const SkeletonCard = () => (
+  <div className="rounded-xl p-6 shadow-lg w-full h-64 bg-gray-300 animate-pulse" />
+);
 
   // we retrieve the dark mode state from localStorage
   useEffect(() => {
@@ -342,21 +358,37 @@ const NewHome: FC = () => {
         {/* dashboard section*/}
 
         
-        {stats && metrics ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40">
-             <FarmsPieChart darkMode={darkMode} farms={stats.farms} />
-             <ModulesPieChart darkMode={darkMode} modules={stats.modules} />
-             <TotalFarmsCard darkMode={darkMode} total={metrics.totalFarms} />
-             <TotalModulesCard darkMode={darkMode} total={metrics.totalModules} />
-             <TotalUsersCard darkMode={darkMode} total={metrics.totalUsers} />
-             <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
-          </div>
-        ) : (
-          <div className="flex justify-center items-center h-64">
-            <span>Cargando estadísticas...</span>
-          </div>
-
-        )}
+       {stats && metrics ? (
+  <motion.div
+    animate="visible"
+    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40"
+    initial="hidden"
+    variants={cardGridVariants}
+  >
+    <motion.div variants={cardVariants}>
+      <FarmsPieChart darkMode={darkMode} farms={stats.farms} />
+    </motion.div>
+    <motion.div variants={cardVariants}>
+      <ModulesPieChart darkMode={darkMode} modules={stats.modules} />
+    </motion.div>
+    <motion.div variants={cardVariants}>
+      <TotalFarmsCard darkMode={darkMode} total={metrics.totalFarms} />
+    </motion.div>
+    <motion.div variants={cardVariants}>
+      <TotalModulesCard darkMode={darkMode} total={metrics.totalModules} />
+    </motion.div>
+    <motion.div variants={cardVariants}>
+      <TotalUsersCard darkMode={darkMode} total={metrics.totalUsers} />
+    </motion.div>
+    <motion.div variants={cardVariants}>
+      <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
+    </motion.div>
+  </motion.div>
+) : (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40">
+    {Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)}
+  </div>
+)}
       </main>
     </div>
   );
