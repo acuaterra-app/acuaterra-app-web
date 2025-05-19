@@ -96,18 +96,26 @@ const FarmModal: React.FC<FarmModalProps> = ({ farm, onClose, onSave, darkMode }
         <div className="flex justify-between items-center mb-6">
           {currentSection > 1 && (
             <button
-              className={`font-bold ${darkMode ? "text-cyan-400" : "text-primary"}`}
-              onClick={() => { setCurrentSection(currentSection - 1); }}
-            >
-              ← Anterior
+               className={`font-bold px-4 py-2 rounded border transition-colors duration-200
+                  ${darkMode
+                       ? "text-cyan-400 border-cyan-400 hover:bg-cyan-900"
+                       : "text-primary border-primary hover:bg-cyan-100"
+                  }`}
+                onClick={() => { setCurrentSection(currentSection - 1); }}
+                >
+                 ← Anterior
             </button>
           )}
           {currentSection < 2 && (
             <button
-              className={`font-bold ml-auto ${darkMode ? "text-cyan-400" : "text-primary"}`}
+              className={`font-bold ml-auto px-4 py-2 rounded border transition-colors duration-200
+                 ${darkMode
+                      ? "text-cyan-400 border-cyan-400 hover:bg-cyan-900"
+                      : "text-primary border-primary hover:bg-cyan-100"
+                 }`}
               onClick={() => { setCurrentSection(currentSection + 1); }}
-            >
-              Siguiente →
+              >
+               Siguiente →
             </button>
           )}
         </div>
