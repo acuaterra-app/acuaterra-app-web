@@ -19,6 +19,7 @@ interface TableWithActionsMobileProps<T extends TableItem> {
   setLimit: (limit: number) => void;
   isVisibleButton?: boolean;
   isVisibleActions?: boolean;
+  darkMode?: boolean; // <-- Añade esta prop
 }
 
 const TableWithActionsMobile = <T extends TableItem>({
@@ -36,6 +37,7 @@ const TableWithActionsMobile = <T extends TableItem>({
   setPage,
   isVisibleButton = true,
   isVisibleActions = true,
+  darkMode = false, // <-- Valor por defecto
 }: TableWithActionsMobileProps<T>): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -50,69 +52,101 @@ const TableWithActionsMobile = <T extends TableItem>({
   return (
     <motion.div 
       animate={{ opacity: 1, scale: 1 }} 
-      className="p-4 border border-gray-300 rounded-lg shadow-md bg-white" 
       initial={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.3 }}
+      className={`p-4 border rounded-lg shadow-md transition-colors duration-300 ${
+        darkMode
+          ? "bg-gray-800 border-gray-700 text-gray-100"
+          : "bg-white border-gray-300 text-black"
+      }`}
     >
       {/* Input  */}
       <input
-        className="mb-4 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary"
         placeholder={searchPlaceholder}
         type="text"
         value={searchTerm}
+        className={`mb-4 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-200 ${
+          darkMode
+            ? "bg-gray-900 border-gray-700 text-gray-100 placeholder-gray-400"
+            : "bg-white border-gray-300 text-black"
+        }`}
         // eslint-disable-next-line unicorn/prevent-abbreviations
         onChange={(e) => { setSearchTerm(e.target.value); }}
       />
 
-      {/* Button*/}
-      { isVisibleButton && (<motion.button
-        className="bg-quaternary text-white px-4 py-2 rounded hover:bg-quinary transition duration-200 w-full cursor-pointer"
-        whileTap={{ scale: 0.9 }}
-        onClick={onAdd}
-      >
-        Agregar Nuevo
-      </motion.button>) }
-      
-      
+      {/* Button */}
+      {isVisibleButton && (
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          className={`px-4 py-2 rounded w-full cursor-pointer transition duration-200 ${
+            darkMode
+              ? "bg-cyan-700 text-white hover:bg-cyan-600"
+              : "bg-quaternary text-white hover:bg-quinary"
+          }`}
+          onClick={onAdd}
+        >
+          Agregar Nuevo
+        </motion.button>
+      )}
 
-      {loading && <p className="text-center mt-4 text-primary">Cargando...</p>}
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-      
+      {loading && (
+        <p className={`text-center mt-4 ${darkMode ? "text-cyan-400" : "text-primary"}`}>Cargando...</p>
+      )}
+      {error && (
+        <p className={`${darkMode ? "text-red-400" : "text-red-500"} mt-4`}>{error}</p>
+      )}
+
       {/* table with format in cards */}
       <div className="mt-4 space-y-4">
         {filteredData.map((item, index) => (
           <motion.div 
-            key={item.id} 
-            animate={{ opacity: 1, y: 0 }} 
-            className="p-4 border border-gray-300 rounded-lg shadow-sm bg-lightGray"
+            key={item.id}
+            animate={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.3, delay: index * 0.05 }}
+            className={`p-4 border rounded-lg shadow-sm transition-colors duration-200 ${
+              darkMode
+                ? "bg-gray-900 border-gray-700 text-gray-100"
+                : "bg-lightGray border-gray-300 text-black"
+            }`}
           >
             {columns.map((column) => (
               <div key={String(column.accessor)} className="mb-2">
-                <strong className="text-primary">{column.header}:</strong> 
-                <span className="truncate block">{column.render ? column.render(item) : String(item[column.accessor] ?? '')}</span>
+                <strong className={darkMode ? "text-cyan-400" : "text-primary"}>
+                  {column.header}:
+                </strong>
+                <span className="truncate block">
+                  {column.render ? column.render(item) : String(item[column.accessor] ?? '')}
+                </span>
               </div>
             ))}
             {/* Buttons */}
-            
-            {isVisibleActions && (<div className="flex space-x-2 mt-2">
-              <motion.button
-                className="bg-primary hover:bg-secondary text-white px-3 py-1 rounded flex items-center transition duration-200 cursor-pointer"
-                whileTap={{ scale: 0.9 }}
-                onClick={() => { onEdit(item); }}
-              >
-                <FaEdit className="mr-1" /> Editar
-              </motion.button>
-              <motion.button
-                className="bg-darkGray hover:bg-veryDark text-white px-3 py-1 rounded flex items-center transition duration-200 cursor-pointer"
-                whileTap={{ scale: 0.9 }}
-                onClick={() => { onDelete(item.id); }}
-              >
-                <FaTrash className="mr-1" /> Borrar
-              </motion.button>
-            </div>)}
-
+            {isVisibleActions && (
+              <div className="flex space-x-2 mt-2">
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  className={`px-3 py-1 rounded flex items-center transition duration-200 cursor-pointer ${
+                    darkMode
+                      ? "bg-cyan-700 hover:bg-cyan-600 text-white"
+                      : "bg-primary hover:bg-secondary text-white"
+                  }`}
+                  onClick={() => { onEdit(item); }}
+                >
+                  <FaEdit className="mr-1" /> Editar
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  className={`px-3 py-1 rounded flex items-center transition duration-200 cursor-pointer ${
+                    darkMode
+                      ? "bg-gray-700 hover:bg-gray-900 text-white"
+                      : "bg-darkGray hover:bg-veryDark text-white"
+                  }`}
+                  onClick={() => { onDelete(item.id); }}
+                >
+                  <FaTrash className="mr-1" /> Borrar
+                </motion.button>
+              </div>
+            )}
           </motion.div>
         ))}
       </div>
@@ -120,20 +154,28 @@ const TableWithActionsMobile = <T extends TableItem>({
       {/* Paginatión */}
       <div className="flex justify-between items-center mt-4">
         <motion.button
-          className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded transition duration-200 cursor-pointer"
           disabled={page === 1}
           whileTap={{ scale: 0.9 }}
+          className={`font-semibold py-2 px-4 rounded transition duration-200 cursor-pointer ${
+            darkMode
+              ? "bg-gray-700 hover:bg-gray-600 text-gray-100"
+              : "bg-gray-300 hover:bg-gray-400 text-gray-700"
+          }`}
           onClick={() => { setPage(page - 1); }}
         >
           Anterior
         </motion.button>
-        <span className="text-center">
+        <span className={darkMode ? "text-gray-200" : "text-gray-700"}>
           Página {page} de {totalPages}
         </span>
         <motion.button
-          className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded transition duration-200 cursor-pointer"
           disabled={page === totalPages}
           whileTap={{ scale: 0.9 }}
+          className={`font-semibold py-2 px-4 rounded transition duration-200 cursor-pointer ${
+            darkMode
+              ? "bg-gray-700 hover:bg-gray-600 text-gray-100"
+              : "bg-gray-300 hover:bg-gray-400 text-gray-700"
+          }`}
           onClick={() => { setPage(page + 1); }}
         >
           Siguiente

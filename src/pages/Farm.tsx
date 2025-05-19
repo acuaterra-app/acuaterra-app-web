@@ -365,6 +365,7 @@ const FarmsPage: FunctionComponent = () => {
             {/* Desktop table */}
             <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right">
               <TableWithActions
+                darkMode={darkMode}
                 data={farms}
                 error={error}
                 limit={limit}
@@ -387,6 +388,7 @@ const FarmsPage: FunctionComponent = () => {
                       farm.users.map((user) => (user as User).name).join(", "),
                   },
                 ]}
+                
                 onDelete={handleRemoveFarm}
                 onAdd={() => {
                   setSelectedFarm(null);
@@ -396,12 +398,14 @@ const FarmsPage: FunctionComponent = () => {
                   setSelectedFarm(farm);
                   setIsModalOpen(true);
                 }}
+                
               />
             </div>
 
             {/* Mobile table */}
             <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
               <TableWithActionsMobile
+                darkMode={darkMode}
                 data={farms}
                 error={error}
                 limit={limit}
@@ -433,6 +437,7 @@ const FarmsPage: FunctionComponent = () => {
                   setSelectedFarm(farm);
                   setIsModalOpen(true);
                 }}
+                
               />
             </div>
           </>
