@@ -438,14 +438,16 @@ const FarmsPage: FunctionComponent = () => {
           </>
         )}
 
-        {isModalOpen && (
-          <FarmModal
-            darkMode={false}
-            farm={selectedFarm}
-            onSave={selectedFarm ? handleEditFarm : handleAddFarm} onClose={() => {
-              setIsModalOpen(false);
-            } }          />
-        )}
+       {isModalOpen && (
+         <FarmModal
+             darkMode={darkMode} // <-- Cambia esto a darkMode
+             farm={selectedFarm}
+             onSave={selectedFarm ? handleEditFarm : handleAddFarm}
+             onClose={() => {
+           setIsModalOpen(false);
+           }}
+          />
+     )}
       </main>
     </div>
   );
