@@ -18,12 +18,14 @@ const colors = {
 
 interface RegisterUserModalProps {
   showModal: boolean;
+  darkMode?: boolean;
   setShowModal: (show: boolean) => void;
   onRegister: (userData: UserRequestV2) => Promise<void>;
 }
 
 const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
   showModal,
+  darkMode,
   setShowModal,
   onRegister,
 }) => {
@@ -139,9 +141,10 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div
-        className="w-full max-w-md rounded-lg shadow-lg p-6"
-        style={{ backgroundColor: '#fff' }}
-      >
+    className={`w-full max-w-md rounded-lg shadow-lg p-6 transition-colors duration-300 ${
+      darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-black"
+    }`}
+  >
         <h2
           className="text-center text-xl font-bold mb-4"
           style={{ color: colors.primary }}
@@ -153,8 +156,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
           {/* Name */}
           <div>
             <label
-              className="block text-sm font-medium mb-1"
-              style={{ color: colors.veryDark }}
+              className={`block text-sm font-medium mb-1 transition-colors duration-200 ${
+              darkMode ? "text-gray-200" : "text-gray-700"
+            }`}
             >
               Nombre
             </label>
@@ -180,8 +184,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
           {/* Email */}
           <div>
             <label
-              className="block text-sm font-medium mb-1"
-              style={{ color: colors.veryDark }}
+              className={`block text-sm font-medium mb-1 transition-colors duration-200 ${
+              darkMode ? "text-gray-200" : "text-gray-700"
+              }`}
             >
               Email
             </label>
@@ -207,8 +212,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
           {/* DNI */}
           <div>
             <label
-              className="block text-sm font-medium mb-1"
-              style={{ color: colors.veryDark }}
+              className={`block text-sm font-medium mb-1 transition-colors duration-200 ${
+              darkMode ? "text-gray-200" : "text-gray-700"
+              }`} 
             >
               DNI
             </label>
@@ -234,8 +240,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
           {/* Rol */}
           <div>
             <label
-              className="block text-sm font-medium mb-1"
-              style={{ color: colors.veryDark }}
+              className={`block text-sm font-medium mb-1 transition-colors duration-200 ${
+               darkMode ? "text-gray-200" : "text-gray-700"
+              }`}
             >
               Rol
             </label>
@@ -263,8 +270,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
           {/* Address */}
           <div>
             <label
-              className="block text-sm font-medium mb-1"
-              style={{ color: colors.veryDark }}
+              className={`block text-sm font-medium mb-1 transition-colors duration-200 ${
+              darkMode ? "text-gray-200" : "text-gray-700"
+              }`} 
             >
               Dirección
             </label>
@@ -290,8 +298,9 @@ const RegisterUserModal: React.FC<RegisterUserModalProps> = ({
           {/* Contact */}
           <div>
             <label
-              className="block text-sm font-medium mb-1"
-              style={{ color: colors.veryDark }}
+              className={`block text-sm font-medium mb-1 transition-colors duration-200 ${
+              darkMode ? "text-gray-200" : "text-gray-700"
+              }`}
             >
               Contacto
             </label>
