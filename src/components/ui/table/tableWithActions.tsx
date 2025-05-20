@@ -20,6 +20,7 @@ interface TableWithActionsProps<T extends TableItem> {
   setLimit: (limit: number) => void;
   isVisibleButton?: boolean ;
   isVisibleActions?: boolean;
+  darkMode?: boolean; // <-- Añade la prop
 }
 
 const TableWithActions = <T extends TableItem>({
@@ -38,6 +39,7 @@ const TableWithActions = <T extends TableItem>({
   setLimit, 
   isVisibleButton = true,
   isVisibleActions = true,
+  darkMode = false, // <-- Valor por defecto
 }: TableWithActionsProps<T>): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -54,38 +56,59 @@ const TableWithActions = <T extends TableItem>({
   return (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
-      className="p-4 border border-lightGray rounded-lg shadow-md"
       initial={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.3 }}
+      className={`p-4 rounded-lg shadow-md transition-colors duration-300 border ${
+        darkMode
+          ? "bg-gray-800 border-gray-700 text-gray-100"
+          : "bg-white border-lightGray text-black"
+      }`}
     >
       {/* Desktop section:  */}
       <div className="hidden md:block">
         <input
-          className="mb-4 p-2 border border-lightGray rounded w-full"
           placeholder={searchPlaceholder}
           type="text"
           value={searchTerm}
+          className={`mb-4 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-200 border ${
+            darkMode
+              ? "bg-gray-900 border-gray-700 text-gray-100 placeholder-gray-400"
+              : "bg-white border-lightGray text-black"
+          }`}
           // eslint-disable-next-line unicorn/prevent-abbreviations
           onChange={(e) => { setSearchTerm(e.target.value); }}
         />
-      {isVisibleButton && (<motion.button
-          className="bg-quaternary text-white px-6 py-3 rounded hover:bg-quinary transition w-full"
-          whileTap={{ scale: 0.95 }}
-          onClick={onAdd}
-        >
-          Agregar Nuevo Campo
-        </motion.button>)}
-        
+        {isVisibleButton && (
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className={`px-6 py-3 rounded w-full transition font-semibold ${
+              darkMode
+                ? "bg-cyan-700 text-white hover:bg-cyan-600"
+                : "bg-quaternary text-white hover:bg-quinary"
+            }`}
+            onClick={onAdd}
+          >
+            Agregar Nuevo Campo
+          </motion.button>
+        )}
       </div>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-darkGray">{error}</p>}
+      {loading && (
+        <p className={`mt-4 text-center ${darkMode ? "text-cyan-400" : "text-primary"}`}>Cargando...</p>
+      )}
+      {error && (
+        <p className={`mt-4 ${darkMode ? "text-red-400" : "text-darkGray"}`}>{error}</p>
+      )}
 
       {/* Desktop table */}
       <div className="hidden md:block overflow-x-auto mt-4">
-        <table className="min-w-full bg-lightGray border border-gray-300 rounded-lg shadow-md">
+        <table className={`min-w-full rounded-lg shadow-md border ${
+          darkMode
+            ? "bg-gray-900 border-gray-700 text-gray-100"
+            : "bg-lightGray border-gray-300 text-black"
+        }`}>
           <thead>
-            <tr className=" bg-primary text-white uppercase text-sm leading-normal">
+            <tr className={darkMode ? "bg-gray-900 text-cyan-400 uppercase text-sm leading-normal" : "bg-primary text-white uppercase text-sm leading-normal"}>
               {columns.map((column) => (
                 <th key={String(column.accessor)} className="py-3 px-6 text-left">
                   {column.header}
@@ -94,12 +117,14 @@ const TableWithActions = <T extends TableItem>({
               {isVisibleActions && (<th className="py-3 px-6 text-left">Actions</th>)}
             </tr>
           </thead>
-          <tbody className="text-gray-600 text-sm font-light">
+          <tbody className={darkMode ? "text-gray-100 text-sm font-light" : "text-gray-600 text-sm font-light"}>
             {filteredData.map((item, index) => (
               <tr
                 key={item.id}
-                className={`border-b border-gray-200 hover:bg-greenish ${
-                  index % 2 === 0 ? 'bg-lightGray' : 'bg-white'
+                className={`transition-colors duration-200 border-b cursor-pointer ${
+                  darkMode
+                    ? `${index % 2 === 0 ? "bg-gray-800" : "bg-gray-700"} hover:bg-cyan-900`
+                    : `${index % 2 === 0 ? "bg-lightGray" : "bg-white"} hover:bg-cyan-100`
                 }`}
               >
                 {columns.map((column) => (
@@ -107,25 +132,34 @@ const TableWithActions = <T extends TableItem>({
                     {column.render ? column.render(item) : String(item[column.accessor] ?? '')}
                   </td>
                 ))}
-                {isVisibleActions && (<td className="py-3 px-6 text-left whitespace-nowrap">
-                  <div className="flex space-x-2">
-                    <motion.button
-                      className="bg-primary hover:bg-secondary text-white px-2 py-1 rounded flex items-center"
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => { onEdit(item); }}
-                    >
-                      <FaEdit className="mr-1" /> Editar
-                    </motion.button>
-                    <motion.button
-                      className="bg-darkGray hover:bg-veryDark text-white px-2 py-1 rounded flex items-center"
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => { onDelete(item.id); }}
-                    >
-                      <FaTrash className="mr-1" /> Borrar
-                    </motion.button>
-                  </div>
-                </td>)}
-                
+                {isVisibleActions && (
+                  <td className="py-3 px-6 text-left whitespace-nowrap">
+                    <div className="flex space-x-2">
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        className={`px-2 py-1 rounded flex items-center transition duration-200 ${
+                          darkMode
+                            ? "bg-cyan-700 hover:bg-cyan-600 text-white"
+                            : "bg-primary hover:bg-secondary text-white"
+                        }`}
+                        onClick={() => { onEdit(item); }}
+                      >
+                        <FaEdit className="mr-1" /> Editar
+                      </motion.button>
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        className={`px-2 py-1 rounded flex items-center transition duration-200 ${
+                          darkMode
+                            ? "bg-gray-700 hover:bg-gray-900 text-white"
+                            : "bg-darkGray hover:bg-veryDark text-white"
+                        }`}
+                        onClick={() => { onDelete(item.id); }}
+                      >
+                        <FaTrash className="mr-1" /> Borrar
+                      </motion.button>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -136,6 +170,7 @@ const TableWithActions = <T extends TableItem>({
       <div className="md:hidden mt-4">
         <TableWithActionsMobile
           columns={columns}
+          darkMode={darkMode} // <-- Pasa la prop a la tabla móvil
           data={data}
           error={error}
           isVisibleButton={isVisibleButton}
@@ -160,16 +195,26 @@ const TableWithActions = <T extends TableItem>({
         transition={{ duration: 0.5 }}
       >
         <button
-          className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded"
           disabled={page === 1}
+          className={`font-semibold py-2 px-4 rounded transition duration-200 ${
+            darkMode
+              ? "bg-gray-700 hover:bg-gray-600 text-gray-100"
+              : "bg-gray-300 hover:bg-gray-400 text-gray-700"
+          }`}
           onClick={() => { setPage(page - 1); }}
         >
           Previous
         </button>
-        <span>Page {page} of {totalPages}</span>
+        <span className={darkMode ? "text-gray-200" : "text-gray-700"}>
+          Page {page} of {totalPages}
+        </span>
         <button
-          className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded"
           disabled={page === totalPages}
+          className={`font-semibold py-2 px-4 rounded transition duration-200 ${
+            darkMode
+              ? "bg-gray-700 hover:bg-gray-600 text-gray-100"
+              : "bg-gray-300 hover:bg-gray-400 text-gray-700"
+          }`}
           onClick={() => { setPage(page + 1); }}
         >
           Next

@@ -18,6 +18,7 @@ const colors = {
 
 interface UpdateUserModalProps {
   showModal: boolean;
+  darkMode?: boolean;
   setShowModal: (show: boolean) => void;
   user: UserResponse;
   onUpdate: (userId: number, userData: UserRequestV2) => Promise<void>;
@@ -25,6 +26,7 @@ interface UpdateUserModalProps {
 
 const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
   showModal,
+  darkMode,
   setShowModal,
   user,
   onUpdate,
@@ -137,9 +139,10 @@ const UpdateUserModal: React.FC<UpdateUserModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div
-        className="w-full max-w-md rounded-lg shadow-lg p-6"
-        style={{ backgroundColor: '#fff' }}
-      >
+    className={`w-full max-w-md rounded-lg shadow-lg p-6 transition-colors duration-300 ${
+      darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-black"
+    }`}
+  >
         <h2
           className="text-center text-xl font-bold mb-4"
           style={{ color: colors.primary }}

@@ -351,8 +351,11 @@ export const Users: FunctionComponent = () => {
           ) : (
             <>
               {/* Desktop Table */}
-              <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-[square-in-center_2.5s_cubic-bezier(0.25,1,0.3,1)_both]">
+              <div className={`hidden md:block rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto border transition-colors duration-300 ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-300 text-black"
+              }`}>
                 <TableWithActions
+                  darkMode={darkMode}
                   data={users}
                   error={error}
                   limit={limit}
@@ -394,8 +397,11 @@ export const Users: FunctionComponent = () => {
               </div>
 
               {/* Mobile table */}
-              <div className="block md:hidden border max-w-sm border-gray-300 rounded-lg p-1 mb-4 shadow-md">
+               <div className={`block md:hidden rounded-lg p-4 shadow-md w-full max-w-sm mx-auto border transition-colors duration-300 ${
+                darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-300 text-black"
+               }`}>
                 <TableWithActionsMobile
+                  darkMode={darkMode}
                   data={users}
                   error={error}
                   limit={limit}
@@ -429,12 +435,14 @@ export const Users: FunctionComponent = () => {
           )}
 
           <RegisterUserModal
+            darkMode={darkMode}
             setShowModal={setShowModal}
             showModal={showModal}
             onRegister={handleRegisterUser}
           />
           {selectedUser && (
             <UpdateUserModal
+              darkMode={darkMode}
               setShowModal={setShowUpdateModal}
               showModal={showUpdateModal}
               user={selectedUser}

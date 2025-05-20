@@ -18,9 +18,30 @@ import { Carousel } from "../components/Slider/Carousel";
 import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 import MobileCarousel from "../components/Slider/MobileCarousel";
+import FarmsPieChart from "../components/DashBoard/FarmsPieChart";
+import ModulesPieChart from "../components/DashBoard/ModulesPieChart";
+import TotalFarmsCard from "../components/DashBoard/TotalFarmsCard";
+import TotalModulesCard from "../components/DashBoard/TotalModulesCard";
+import TotalUsersCard from "../components/DashBoard/TotalUsersCard";
+import NotificationsAreaChart from "../components/DashBoard/NotificationsAreaChart";
+import { useDashboardMetrics, useDashboardStats, useNotificationStats } from "../hooks/useDashboardStats";
+import { motion } from "framer-motion";
 
+const cardGridVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
 
-// Styled component for the sidebar logo
+const cardVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0 },
+};
+
+// Styled component para el logo del sidebar
 const SidebarLogoWrapper = styled.div`
   .logo {
     width: 80px;
@@ -33,7 +54,7 @@ const SidebarLogoWrapper = styled.div`
   }
 `;
 
-// Styled component for the welcome text
+// Styled component for welcome text
 const WelcomeText = styled.p<{ darkMode: boolean }>`
   font-size: 1.3rem;
   font-weight: bold;
@@ -47,7 +68,7 @@ const WelcomeText = styled.p<{ darkMode: boolean }>`
   }
 `;
 
-// Styled component for the logout button
+// Styled component for logout button
 const LogoutButtonStyledWrapper = styled.div`
   .button {
     cursor: pointer;
@@ -125,7 +146,7 @@ const LogoutButtonStyled = () => {
   );
 };
 
-// Main component for the NewHome page
+//  Main component of NewHome page
 const NewHome: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -134,14 +155,17 @@ const NewHome: FC = () => {
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [userName, setUserName] = useState<string>("Usuario");
   const [darkMode, setDarkMode] = useState(false);
+  const { stats } = useDashboardStats();
+  const { metrics } = useDashboardMetrics();
+  const { totalNotifications } = useNotificationStats();
   const menuRef = useRef<HTMLDivElement>(null);
   const slides = [
-    { title: "Acuaterra Modulo",  button: "1", src: foto1 },
+    { title: "Acuaterra Modulo", button: "1", src: foto1 },
     { title: "Modulo Acuaponico", button: "2", src: foto2 },
-    { title: "Acuaterra Granja",  button: "3", src: foto3 },
+    { title: "Acuaterra Granja", button: "3", src: foto3 },
   ];
 
-  // Check token validity and set user name
+  // we verify the token validity and set the username
   useEffect(() => {
     if (!isTokenValid()) {
       console.log("Redirecting to /auth from NewHome component");
@@ -153,7 +177,7 @@ const NewHome: FC = () => {
     }
   }, [navigate]);
 
-  // Handle screen resizing for mobile view
+  // we control screen size for mobile view
   useEffect(() => {
     const handleResize = () => {
       const isMobileView = window.innerWidth < 768;
@@ -174,15 +198,19 @@ const NewHome: FC = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  
+  const SkeletonCard = () => (
+  <div className="rounded-xl p-6 shadow-lg w-full h-64 bg-gray-300 animate-pulse" />
+);
 
-  // Retrieve dark mode state from localStorage
+  // we retrieve the dark mode state from localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedDarkMode);
     document.body.classList.toggle("dark-mode", savedDarkMode);
   }, []);
 
-  // Toggle dark mode and save state to localStorage
+  // alternate dark mode and save state in localStorage
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
@@ -190,14 +218,14 @@ const NewHome: FC = () => {
     document.body.classList.toggle("dark-mode", newDarkMode);
   };
 
-  // Close sidebar when navigating to /newhome
+  // close the sidebar when navigating to /newhome
   useEffect(() => {
     if (location.pathname === "/newhome") {
       setIsOpen(false);
     }
   }, [location.pathname]);
 
-  // Handle navigation to a new path
+  //  we use the navigate function
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
     setIsOpen(false);
@@ -205,11 +233,11 @@ const NewHome: FC = () => {
 
   return (
     <div
-      className={`flex h-screen ${
+      className={`flex flex-col lg:flex-row min-h-screen ${
         darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
       }`}
     >
-      {/* Sidebar toggle button for mobile */}
+      {/*  toogle button for mobile sidebar   */}
       <button
         className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
         id="menu-button"
@@ -234,25 +262,25 @@ const NewHome: FC = () => {
         }}
       >
         <div className="p-4 flex flex-col items-center relative">
-         {/* Close button for sidebar */}
-         <button
-           className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
-           onClick={() => {
-           setIsOpen(false); // Asegúrate de que esto cierre el menú
-       }}
-    >
-       <X size={24} />
-      </button>
+          {/* Clse sidebar button */}
+          <button
+            className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
+            <X size={24} />
+          </button>
 
-          {/* Sidebar logo */}
+          {/* sidebarn logo */}
           <SidebarLogoWrapper>
             <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
           </SidebarLogoWrapper>
 
-          {/* Welcome text */}
+          {/* Welcome text*/}
           <WelcomeText darkMode={darkMode}>Bienvenido, {userName}!</WelcomeText>
 
-          {/* Dark mode toggle button */}
+          {/* Dark mode button */}
           <button
             className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
             onClick={toggleDarkMode}
@@ -261,52 +289,53 @@ const NewHome: FC = () => {
           </button>
         </div>
 
-        {/* Navigation menu */}
+        {/* Navigation section */}
         <nav className="flex-1 overflow-y-auto">
-        <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
-             {[
-                   { icon: homeIcon, label: "Inicio", path: "/newhome" },
-                   { icon: moduleIcon, label: "Granjas", path: "/farm" },
-                   { icon: userIcon, label: "Usuarios", path: "/users" },
-                   { icon: fishIcon, label: "Módulos", path: "/module" },
-                   { icon: reportIcon, label: "Reporte", path: "/report" },
-        ].map((item, index) => (
-        <li
-             key={index}
-             className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+          <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
+            {[{ icon: homeIcon, label: "Inicio", path: "/newhome" },
+              { icon: moduleIcon, label: "Granjas", path: "/farm" },
+              { icon: userIcon, label: "Usuarios", path: "/users" },
+              { icon: fishIcon, label: "Módulos", path: "/module" },
+              { icon: reportIcon, label: "Reporte", path: "/report" },
+            ].map((item, index) => (
+              <li
+                key={index}
+                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
                   location.pathname === item.path
-                  ? "bg-[#3cacac] text-white shadow-md"
-                  : darkMode
-                  ? "text-white group-hover:text-white"
-                  : "text-gray-600 group-hover:text-black"
-              }`}
-             onClick={() => {
-             handleNavigation(item.path);
-           }}
-          >
-            <span
+                    ? "bg-[#3cacac] text-white shadow-md"
+                    : darkMode
+                    ? "text-white group-hover:text-white"
+                    : "text-gray-600 group-hover:text-black"
+                }`}
+                onClick={() => {
+                  handleNavigation(item.path);
+                }}
+              >
+                <span
                   className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                  location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-            }`}
-             ></span>
-               <span className="relative z-10 flex items-center gap-3 font-bold">
-                   <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                   {item.label}
-               </span>
-           </li>
-        ))}
-       </ul>
+                    location.pathname === item.path
+                      ? "bg-[#3cacac]"
+                      : "bg-[#3cacac]"
+                  }`}
+                ></span>
+                <span className="relative z-10 flex items-center gap-3 font-bold">
+                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
+                  {item.label}
+                </span>
+              </li>
+            ))}
+          </ul>
 
-          {/* Logout button */}
+          {/*  logout button */}
           <div className="mt-4 md:mt-10">
             <LogoutButtonStyled />
           </div>
         </nav>
       </aside>
 
-      {/* Main content */}
+      {/* Main Content */}
       <main
-        className={`flex-1 p-6 lg:ml-0 ${
+        className={`flex-1 p-6 lg:ml-64 ${
           darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
         }`}
       >
@@ -318,10 +347,57 @@ const NewHome: FC = () => {
           proceso de monitoreo en módulos acuapónicos.
         </p>
 
-        {isMobile ? <MobileCarousel /> : <Carousel slides={slides} />}
+        {isMobile ? (
+          <MobileCarousel />
+        ) : (
+          <>
+            <Carousel slides={slides} />
+          </>
+        )}
+
+        {/* dashboard section*/}
+
+        
+       {stats && metrics ? (
+      <motion.div
+        animate="visible"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40"
+        initial="hidden"
+        variants={cardGridVariants}
+       >
+          <motion.div variants={cardVariants}>
+            <FarmsPieChart darkMode={darkMode} farms={stats.farms} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <ModulesPieChart darkMode={darkMode} modules={stats.modules} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <TotalFarmsCard darkMode={darkMode} total={metrics.totalFarms} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <TotalModulesCard darkMode={darkMode} total={metrics.totalModules} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <TotalUsersCard darkMode={darkMode} total={metrics.totalUsers} />
+          </motion.div>
+
+          <motion.div variants={cardVariants}>
+            <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
+          </motion.div>
+       </motion.div>
+       ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40">
+              {Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)}
+          </div>
+          )}
       </main>
     </div>
   );
 };
 
 export default NewHome;
+

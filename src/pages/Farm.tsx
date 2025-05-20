@@ -363,8 +363,16 @@ const FarmsPage: FunctionComponent = () => {
         ) : (
           <>
             {/* Desktop table */}
-            <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right">
+            <div
+              className={`hidden md:block rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right border transition-colors duration-300 ${
+                darkMode
+                   ? "bg-gray-800 border-gray-700 text-gray-100"
+                   : "bg-white border-gray-300 text-black"
+                }`}
+               >   
+              
               <TableWithActions
+                darkMode={darkMode}
                 data={farms}
                 error={error}
                 limit={limit}
@@ -387,6 +395,7 @@ const FarmsPage: FunctionComponent = () => {
                       farm.users.map((user) => (user as User).name).join(", "),
                   },
                 ]}
+                
                 onDelete={handleRemoveFarm}
                 onAdd={() => {
                   setSelectedFarm(null);
@@ -396,12 +405,21 @@ const FarmsPage: FunctionComponent = () => {
                   setSelectedFarm(farm);
                   setIsModalOpen(true);
                 }}
+                
               />
             </div>
 
             {/* Mobile table */}
-            <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
+            <div
+              className={`block md:hidden rounded-lg p-4 shadow-md w-full max-w-sm mx-auto border transition-colors duration-300 ${
+                 darkMode
+                    ? "bg-gray-800 border-gray-700 text-gray-100"
+                    : "bg-white border-gray-300 text-black"
+                }`}   
+                >   
+
               <TableWithActionsMobile
+                darkMode={darkMode}
                 data={farms}
                 error={error}
                 limit={limit}
@@ -433,19 +451,22 @@ const FarmsPage: FunctionComponent = () => {
                   setSelectedFarm(farm);
                   setIsModalOpen(true);
                 }}
+                
               />
             </div>
           </>
         )}
 
-        {isModalOpen && (
-          <FarmModal
-            darkMode={false}
-            farm={selectedFarm}
-            onSave={selectedFarm ? handleEditFarm : handleAddFarm} onClose={() => {
-              setIsModalOpen(false);
-            } }          />
-        )}
+       {isModalOpen && (
+         <FarmModal
+             darkMode={darkMode} // <-- Cambia esto a darkMode
+             farm={selectedFarm}
+             onSave={selectedFarm ? handleEditFarm : handleAddFarm}
+             onClose={() => {
+           setIsModalOpen(false);
+           }}
+          />
+     )}
       </main>
     </div>
   );

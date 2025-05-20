@@ -341,8 +341,16 @@ export const Module: FunctionComponent = () => {
           ) : (
             <>
               {error && <p className="mt-4 text-red-500">Error: {error}</p>}
-              <div className="hidden md:block border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-square-in-hesitate">
+
+             <div
+              className={`hidden md:block rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right border transition-colors duration-300 ${
+                darkMode
+                   ? "bg-gray-800 border-gray-700 text-gray-100"
+                   : "bg-white border-gray-300 text-black"
+                }`}
+               >
                 <TableWithActions
+                    darkMode={darkMode}
                     data={modules}
                     error={error}
                     isVisibleActions={false}
@@ -384,6 +392,7 @@ export const Module: FunctionComponent = () => {
 
               <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
                 <TableWithActionsMobile
+                    darkMode={darkMode}
                     data={modules}
                     error={error}
                     isVisibleActions={false}
