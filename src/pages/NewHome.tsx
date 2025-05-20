@@ -239,30 +239,35 @@ const NewHome: FC = () => {
     >
       {/*  toogle button for mobile sidebar   */}
       <button
-        className="absolute top-4 left-4 z-50 bg-[#d3d3d3] p-2 rounded shadow-md md:hidden"
         id="menu-button"
-        onClick={() => {
+        className={`absolute top-4 left-4 z-50 p-2 rounded shadow-md md:hidden transition-colors ${
+          darkMode
+            ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
+            : "bg-[#d3d3d3] text-gray-700 hover:bg-gray-300"
+          }`}
+          onClick={() => {
           setIsOpen(!isOpen);
-        }}
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
+         }}
+       >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Sidebar */}
       <aside
         ref={menuRef}
-        className={`fixed top-0 left-0 w-64 h-screen ${
-          darkMode ? "bg-gray-800 text-white" : "bg-[#e0e0e0] text-gray-600"
-        } border-r border-gray-400 flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-          isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"
-        } ${animateSidebar ? "animate-slide-in" : ""}`}
-        style={{
-          height: "100vh",
-          boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
+        className={`fixed top-0 left-0 w-64 h-screen
+           ${darkMode ? "bg-gray-800 text-white border-gray-700" : "bg-[#e0e0e0] text-gray-600 border-gray-400"}
+           border-r flex flex-col transform transition-transform duration-300 ease-in-out z-50 shadow-lg
+           ${isOpen || !isMobile ? "translate-x-0" : "-translate-x-full"}
+           ${animateSidebar ? "animate-slide-in" : ""}
+        `}
+         style={{
+            height: "100vh",
+            boxShadow: "5px 0 15px rgba(0, 0, 0, 0.2)",
         }}
-      >
+      >      
         <div className="p-4 flex flex-col items-center relative">
-          {/* Clse sidebar button */}
+          {/* Close sidebar button */}
           <button
             className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-200 lg:hidden"
             onClick={() => {
@@ -272,7 +277,7 @@ const NewHome: FC = () => {
             <X size={24} />
           </button>
 
-          {/* sidebarn logo */}
+          {/* sidebar logo */}
           <SidebarLogoWrapper>
             <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
           </SidebarLogoWrapper>
@@ -282,10 +287,14 @@ const NewHome: FC = () => {
 
           {/* Dark mode button */}
           <button
-            className="mt-4 bg-gray-300 p-2 rounded shadow-md flex items-center justify-center"
-            onClick={toggleDarkMode}
-          >
-            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+             className={`mt-4 p-2 rounded shadow-md flex items-center justify-center transition-colors ${
+               darkMode
+                ? "bg-gray-700 text-yellow-300 hover:bg-gray-600"
+                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              }`}
+              onClick={toggleDarkMode}
+            >
+              {darkMode ? <Sun size={24} /> : <Moon size={24} />}
           </button>
         </div>
 
