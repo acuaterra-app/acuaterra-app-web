@@ -208,14 +208,18 @@ export const Module: FunctionComponent = () => {
       >
         {/* Sidebar toggle button for mobile */}
         <button
-          className="fixed top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
-          id="menu-button"
+        id="menu-button"
+        className={`absolute top-4 left-4 z-50 p-2 rounded shadow-md md:hidden transition-colors ${
+          darkMode
+            ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
+            : "bg-[#d3d3d3] text-gray-700 hover:bg-gray-300"
+          }`}
           onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        >
+          setIsOpen(!isOpen);
+         }}
+       >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+      </button>
 
         {/* Sidebar */}
         <aside
@@ -265,37 +269,47 @@ export const Module: FunctionComponent = () => {
           {/* Navigation menu */}
           <nav className="flex-1 overflow-y-auto">
             <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
-              {[
-                { icon: homeIcon,   label: "Inicio",   path: "/newhome" },
-                { icon: moduleIcon, label: "Granjas",  path: "/farm" },
-                { icon: userIcon,   label: "Usuarios", path: "/users" },
-                { icon: fishIcon,   label: "Módulos",  path: "/module" },
-                { icon: reportIcon, label: "Reporte",  path: "/report" },
-              ].map((item, index) => (
-                <li
-                  key={index}
-                  className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-                    location.pathname === item.path
-                      ? "bg-[#3cacac] text-white shadow-md"
-                      : darkMode
-                      ? "text-white group-hover:text-white"
-                      : "text-gray-600 group-hover:text-gray-600"
-                  }`}
-                  onClick={() => {
-                    handleNavigation(item.path);
-                  }}
-                >
-                  <span
-                    className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                      location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-                    }`}
-                  ></span>
-                  <span className="relative z-10 flex items-center gap-3 font-bold">
-                    <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                    {item.label}
-                  </span>
-                </li>
-              ))}
+               {[{ icon: homeIcon, label: "Inicio", path: "/newhome" },
+                 { icon: moduleIcon, label: "Granjas", path: "/farm" },
+                 { icon: userIcon, label: "Usuarios", path: "/users" },
+                 { icon: fishIcon, label: "Módulos", path: "/module" },
+                 { icon: reportIcon, label: "Reporte", path: "/report" },
+               ].map((item, index) => (
+                 <li
+                   key={index}
+                   className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                     location.pathname === item.path
+                       ? "bg-[#3cacac] text-white shadow-md"
+                       : darkMode
+                       ? "text-white group-hover:text-white"
+                       : "text-gray-600 group-hover:text-black"
+                   }`}
+                   onClick={() => {
+                     handleNavigation(item.path);
+                   }}
+                 >
+                   <span
+                     className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                       location.pathname === item.path
+                         ? "bg-[#3cacac]"
+                         : "bg-[#3cacac]"
+                     }`}
+                   ></span>
+                   <span className="relative z-10 flex items-center gap-3 font-bold">
+                     <img
+                       alt={item.label}
+                       className="h-6 w-6"
+                       src={item.icon}
+                       style={
+                         darkMode
+                           ? { filter: "invert(1) brightness(1.5) contrast(1.2)" }
+                           : {}
+                       }
+                     />
+                     {item.label}
+                   </span>
+                              </li>
+               ))}
             </ul>
 
             {/* Logout button */}
@@ -316,30 +330,34 @@ export const Module: FunctionComponent = () => {
           </h1>
 
           {/* Farm's Selector */}
-          <div className="mb-6 max-w-md mx-auto">
-            <label className="block text-center text-2xl font-bold mb-4">
-              Seleccione una Granja
-            </label>
-            <select
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none text-black"
-              disabled={farmsLoading}
-              onChange={(event) => {
-                setSelectedFarmId(Number(event.target.value));
-              }}
-            >
-              <option value="">Seleccione una granja</option>
-              {farms.map((farm) => (
-                <option key={farm.id} value={farm.id}>
-                  {farm.name}
-                </option>
-              ))}
-            </select>
-            {farmsError && (
-              <p className="text-red-500 mt-2 text-center">
-                Error al cargar las granjas
-              </p>
-            )}
-          </div>
+         <div className="mb-6 max-w-md mx-auto">
+             <label className="block text-center text-2xl font-bold mb-4">
+               Seleccione una Granja
+             </label>
+             <select
+               disabled={farmsLoading}
+               className={`w-full rounded px-3 py-2 focus:outline-none transition-colors
+                 ${darkMode
+                   ? "bg-gray-800 border border-gray-600 text-white placeholder-gray-400"
+                   : "bg-white border border-gray-300 text-black"
+                 }`}
+               onChange={(event) => {
+                 setSelectedFarmId(Number(event.target.value));
+               }}
+             >
+               <option value="">Seleccione una granja</option>
+               {farms.map((farm) => (
+                 <option key={farm.id} value={farm.id}>
+                   {farm.name}
+                 </option>
+               ))}
+             </select>
+             {farmsError && (
+               <p className="text-red-500 mt-2 text-center">
+                 Error al cargar las granjas
+               </p>
+             )}
+        </div>
 
           {loading ? (
             <LoaderAcua darkMode={darkMode} />
@@ -395,48 +413,55 @@ export const Module: FunctionComponent = () => {
                     } }                />
               </div>
 
-              <div className="block md:hidden border border-gray-300 rounded-lg p-4 shadow-md w-full max-w-sm mx-auto">
-                <TableWithActionsMobile
-                    darkMode={darkMode}
-                    data={modules}
-                    error={error}
-                    isVisibleActions={false}
-                    isVisibleButton={false}
-                    limit={perPage}
-                    loading={loading}
-                    page={page}
-                    setLimit={() => {} }
-                    setPage={setPage}
-                    total={total}
-                    columns={[
-                      { header: "ID", accessor: "id" },
-                      { header: "Nombre", accessor: "name" },
-                      { header: "Ubicación", accessor: "location" },
-                      {
-                        header: "Especie de Pescados",
-                        accessor: "species_fish",
-                      },
-                      { header: "Cantidad", accessor: "fish_quantity" },
-                      { header: "Dimensiones", accessor: "dimensions" },
-                      {
-                        header: "Creado Por",
-                        accessor: "creator",
-                        render: (module) => module.creator.name.toString(),
-                      },
-                      {
-                        header: "Granja",
-                        accessor: "farm",
-                        render: (module) => module.farm.name.toString(),
-                      },
-                    ]} onAdd={function (): void {
-                      throw new Error("Function not implemented.");
-                    } } onDelete={function (): void {
-                      throw new Error("Function not implemented.");
-                    } } onEdit={function (): void {
-                      throw new Error("Function not implemented.");
-                    } }                />
-              </div>
-            </>
+             <div
+                 className={`block md:hidden rounded-lg p-4 shadow-md w-full max-w-sm mx-auto transition-colors border ${
+                   darkMode
+                     ? "bg-gray-800 border-gray-700 text-gray-100"
+                     : "bg-white border-gray-300 text-black"
+                 }`}
+                 >
+                 <TableWithActionsMobile
+                   darkMode={darkMode}
+                   data={modules}
+                   error={error}
+                   isVisibleActions={false}
+                   isVisibleButton={false}
+                   limit={perPage}
+                   loading={loading}
+                   page={page}
+                   setLimit={() => {}}
+                   setPage={setPage}
+                   total={total}
+                   columns={[
+                     { header: "ID", accessor: "id" },
+                     { header: "Nombre", accessor: "name" },
+                     { header: "Ubicación", accessor: "location" },
+                     { header: "Especie de Pescados", accessor: "species_fish" },
+                     { header: "Cantidad", accessor: "fish_quantity" },
+                     { header: "Dimensiones", accessor: "dimensions" },
+                     {
+                       header: "Creado Por",
+                       accessor: "creator",
+                       render: (module) => module.creator.name.toString(),
+                     },
+                     {
+                       header: "Granja",
+                       accessor: "farm",
+                       render: (module) => module.farm.name.toString(),
+                     },
+                   ]}
+                   onAdd={function (): void {
+                     throw new Error("Function not implemented.");
+                   }}
+                   onDelete={function (): void {
+                     throw new Error("Function not implemented.");
+                   }}
+                   onEdit={function (): void {
+                     throw new Error("Function not implemented.");
+                   }}
+                 />
+            </div>
+          </>
           )}
         </main>
       </div>

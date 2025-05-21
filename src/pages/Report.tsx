@@ -254,13 +254,17 @@ const Report: FC = () => {
     >
       {/* Sidebar toggle button */}
       <button
-        className="absolute top-4 left-4 z-50 bg-gray-300 p-2 rounded shadow-md md:hidden"
         id="menu-button"
-        onClick={() => {
+        className={`absolute top-4 left-4 z-50 p-2 rounded shadow-md md:hidden transition-colors ${
+          darkMode
+            ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
+            : "bg-[#d3d3d3] text-gray-700 hover:bg-gray-300"
+          }`}
+          onClick={() => {
           setIsOpen(!isOpen);
-        }}
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
+         }}
+       >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Sidebar */}
@@ -309,38 +313,48 @@ const Report: FC = () => {
 
         <nav className="flex-1 overflow-y-auto">
           <ul className="space-y-3 md:space-y-20 mt-4 md:mt-5">
-            {[
-              { icon: homeIcon,    label: "Inicio",   path: "/newhome" },
-              { icon: moduleIcon,  label: "Granjas",  path: "/farm" },
-              { icon: userIcon,    label: "Usuarios", path: "/users" },
-              { icon: fishIcon,    label: "Módulos",  path: "/module" },
-              { icon: reporteIcon, label: "Reporte",  path: "/report" },
-            ].map((item, index) => (
-              <li
-                key={index}
-                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
-                  location.pathname === item.path
-                    ? "bg-[#3cacac] text-white shadow-md"
-                    : darkMode
-                    ? "text-white group-hover:text-gray-300"
-                    : "text-gray-600 group-hover:text-white"
-                }`}
-                onClick={() => {
-                  handleNavigation(item.path);
-                }}
-              >
-                <span
-                  className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                    location.pathname === item.path ? "bg-[#3cacac]" : "bg-[#3cacac]"
-                  }`}
-                ></span>
-                <span className="relative z-10 flex items-center gap-3 font-bold">
-                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                  {item.label}
-                </span>
-              </li>
-            ))}
-          </ul>
+               {[{ icon: homeIcon, label: "Inicio", path: "/newhome" },
+                 { icon: moduleIcon, label: "Granjas", path: "/farm" },
+                 { icon: userIcon, label: "Usuarios", path: "/users" },
+                 { icon: fishIcon, label: "Módulos", path: "/module" },
+                 { icon: reporteIcon, label: "Reporte", path: "/report" },
+               ].map((item, index) => (
+                 <li
+                   key={index}
+                   className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+                     location.pathname === item.path
+                       ? "bg-[#3cacac] text-white shadow-md"
+                       : darkMode
+                       ? "text-white group-hover:text-white"
+                       : "text-gray-600 group-hover:text-black"
+                   }`}
+                   onClick={() => {
+                     handleNavigation(item.path);
+                   }}
+                 >
+                   <span
+                     className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                       location.pathname === item.path
+                         ? "bg-[#3cacac]"
+                         : "bg-[#3cacac]"
+                     }`}
+                   ></span>
+                   <span className="relative z-10 flex items-center gap-3 font-bold">
+                     <img
+                       alt={item.label}
+                       className="h-6 w-6"
+                       src={item.icon}
+                       style={
+                         darkMode
+                           ? { filter: "invert(1) brightness(1.5) contrast(1.2)" }
+                           : {}
+                       }
+                     />
+                     {item.label}
+                   </span>
+                              </li>
+               ))}
+            </ul>
 
           <div className="mt-4 md:mt-20">
             <LogoutButtonStyled />

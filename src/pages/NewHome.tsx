@@ -307,33 +307,42 @@ const NewHome: FC = () => {
               { icon: fishIcon, label: "Módulos", path: "/module" },
               { icon: reportIcon, label: "Reporte", path: "/report" },
             ].map((item, index) => (
-              <li
-                key={index}
-                className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
+             <li
+               key={index}
+               className={`relative group flex items-center justify-center gap-3 p-2 cursor-pointer overflow-hidden rounded-lg ${
                   location.pathname === item.path
-                    ? "bg-[#3cacac] text-white shadow-md"
-                    : darkMode
-                    ? "text-white group-hover:text-white"
-                    : "text-gray-600 group-hover:text-black"
-                }`}
-                onClick={() => {
-                  handleNavigation(item.path);
-                }}
-              >
-                <span
-                  className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
-                    location.pathname === item.path
-                      ? "bg-[#3cacac]"
-                      : "bg-[#3cacac]"
-                  }`}
-                ></span>
-                <span className="relative z-10 flex items-center gap-3 font-bold">
-                  <img alt={item.label} className="h-6 w-6" src={item.icon} />
-                  {item.label}
-                </span>
-              </li>
-            ))}
-          </ul>
+                      ? "bg-[#3cacac] text-white shadow-md"
+                      : darkMode
+                      ? "text-white group-hover:text-white"
+                      : "text-gray-600 group-hover:text-black"
+                   }`}
+                   onClick={() => {
+                       handleNavigation(item.path);
+                    }}
+                  >
+                   <span
+                      className={`absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-lg ${
+                         location.pathname === item.path
+                           ? "bg-[#3cacac]"
+                           : "bg-[#3cacac]"
+                        }`}
+                    ></span>
+                      <span className="relative z-10 flex items-center gap-3 font-bold">
+                          <img
+                              alt={item.label}
+                              className="h-6 w-6"
+                              src={item.icon}
+                              style={
+                                darkMode
+                                  ? { filter: "invert(1) brightness(1.5) contrast(1.2)" }
+                                  : {}
+                               }
+                              />
+                             {item.label}
+                          </span>
+                       </li>
+                    ))}               
+        </ul>
 
           {/*  logout button */}
           <div className="mt-4 md:mt-10">
