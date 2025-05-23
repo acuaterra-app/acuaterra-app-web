@@ -259,15 +259,27 @@ const Report: FC = () => {
 		setIsOpen(false);
 	};
 
-	const [period, setPeriod] = useState("daily");
-	const [sensorType, setSensorType] = useState("Temperature");
-	const [startDate, setStartDate] = useState("2025-01-01");
-	const [endDate, setEndDate] = useState("2025-04-27");
+	const [period, ] = useState("daily");
+	const [sensorType, ] = useState("Temperature");
+	const [startDate, ] = useState("2025-01-01");
+	const [endDate, ] = useState("2025-04-27");
+
+	// Define types for report data
+	type ChartData = {
+		labels: Array<string>;
+		datasets: Array<{ data: Array<number> }>;
+	};
+
+	type ReportDataItem = {
+		chartData: ChartData;
+	};
+
+	type ReportDataResponse = {
+		data: Array<ReportDataItem>;
+	};
 
 	const {
 		data: reportData,
-		loading: reportLoading,
-		error: reportError,
 	} = useReport({
 		moduleId: selectedModule ?? 0,
 		startDate,
@@ -275,7 +287,11 @@ const Report: FC = () => {
 		period,
 		sensorType,
 		enabled: !!selectedModule,
-	});
+	}) as {
+		data?: ReportDataResponse;
+		loading: boolean;
+		error: unknown;
+	};
 
 	return (
 		<div
@@ -336,8 +352,8 @@ const Report: FC = () => {
 
 						<FarmModuleSelector
 							selectedFarm={selectedFarm}
-							setSelectedFarm={setSelectedFarm}
 							selectedModule={selectedModule}
+							setSelectedFarm={setSelectedFarm}
 							setSelectedModule={setSelectedModule}
 						/>
 

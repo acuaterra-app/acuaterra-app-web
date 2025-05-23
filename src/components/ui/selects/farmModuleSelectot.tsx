@@ -11,8 +11,8 @@ const FarmModuleSelector = ({
   setSelectedFarm: (id: number | null) => void;
   selectedModule: number | null;
   setSelectedModule: (id: number | null) => void;
-}) => {
-  const { farms, loading: farmsLoading } = useFarms();
+}): React.ReactElement => {
+  const { farms } = useFarms();
 
   // Pasa undefined si no hay granja seleccionada
   const { modules, loading: modulesLoading } = useModulesByFarm(selectedFarm ?? 0);
@@ -24,8 +24,8 @@ const FarmModuleSelector = ({
         <select
           className="border rounded px-2 py-1"
           value={selectedFarm ?? ""}
-          onChange={e => {
-            setSelectedFarm(e.target.value ? Number(e.target.value) : null);
+          onChange={event_ => {
+            setSelectedFarm(event_.target.value ? Number(event_.target.value) : null);
             setSelectedModule(null);
           }}
         >
@@ -37,14 +37,14 @@ const FarmModuleSelector = ({
           ))}
         </select>
       </div>
-      
+      |
       <div>
         <label className="block mb-1">Selecciona un módulo:</label>
         <select
           className="border rounded px-2 py-1"
-          value={selectedModule ?? ""}
-          onChange={e => setSelectedModule(e.target.value ? Number(e.target.value) : null)}
           disabled={!selectedFarm || modulesLoading}
+          value={selectedModule ?? ""}
+          onChange={event_ => { setSelectedModule(event_.target.value ? Number(event_.target.value) : null); }}
         >
             
           <option value="">-- Selecciona --</option>
