@@ -10,7 +10,7 @@ import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobil
 import useModulesByFarm from "../hooks/useModulesByFarm";
 import useFarms from "../hooks/useFarms";
 import { isTokenValid } from "../common/isTokenValid";
-import { Menu, X } from "lucide-react";
+import HamburgerMenuButton from "../components/ui/button/HamburgerMenuButton";
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
@@ -189,19 +189,11 @@ export const Module: FunctionComponent = () => {
         }`}
       >
         {/* Sidebar toggle button for mobile */}
-        <button
-        id="menu-button"
-        className={`absolute top-4 left-4 z-50 p-2 rounded shadow-md md:hidden transition-colors ${
-          darkMode
-            ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
-            : "bg-[#d3d3d3] text-gray-700 hover:bg-gray-300"
-          }`}
-          onClick={() => {
-          setIsOpen(!isOpen);
-         }}
-       >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+         <HamburgerMenuButton
+           darkMode={darkMode}
+           isOpen={isOpen}
+           onClick={() => { setIsOpen(!isOpen); }}
+         />
 
         {/* Sidebar */}
         <SideBar

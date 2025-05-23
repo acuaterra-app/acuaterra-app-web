@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import type { FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import HamburgerMenuButton from "../components/ui/button/HamburgerMenuButton";
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import reporteIcon from "../assets/images/reporte.png";
@@ -300,19 +300,11 @@ const Report: FC = () => {
 			}`}
 		>
 			{/* Sidebar toggle button */}
-			<button
-				id="menu-button"
-				className={`absolute top-4 left-4 z-50 p-2 rounded shadow-md md:hidden transition-colors ${
-					darkMode
-						? "bg-gray-800 text-gray-200 hover:bg-gray-700"
-						: "bg-[#d3d3d3] text-gray-700 hover:bg-gray-300"
-				}`}
-				onClick={() => {
-					setIsOpen(!isOpen);
-				}}
-			>
-				{isOpen ? <X size={24} /> : <Menu size={24} />}
-			</button>
+			 <HamburgerMenuButton
+               darkMode={darkMode}
+               isOpen={isOpen}
+               onClick={() => { setIsOpen(!isOpen); }}
+             />
 
 			{/* Sidebar */}
 			<SideBar
