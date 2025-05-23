@@ -351,6 +351,7 @@ const Report: FC = () => {
 						</p>
 
 						<FarmModuleSelector
+							darkMode={darkMode}
 							selectedFarm={selectedFarm}
 							selectedModule={selectedModule}
 							setSelectedFarm={setSelectedFarm}
