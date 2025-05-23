@@ -207,47 +207,68 @@ const NewHome: FC = () => {
     }
   }, [location.pathname]);
 
+   useEffect(() => {
+    if (isMobile && isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobile, isOpen]);
+
   //  we use the navigate function
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
     setIsOpen(false);
   };
 
-  return (
+ return (
     <div
-      className={`flex flex-col lg:flex-row min-h-screen ${
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+      className={`relative min-h-screen bg-gray-100 ${
+        darkMode ? "bg-gray-900 text-white" : "text-black"
       }`}
     >
       {/*  toogle button for mobile sidebar   */}
       <HamburgerMenuButton
-       darkMode={darkMode}
-       isOpen={isOpen}
-       onClick={() => { setIsOpen(!isOpen); }}
-     />
+        darkMode={darkMode}
+        isOpen={isOpen}
+        onClick={() => { setIsOpen(!isOpen); }}
+      />
 
       {/* Sidebar */}
-       <SideBar
-          LogoutButtonStyled ={<LogoutButtonStyled />}
-          acuaterraLogo      ={acuaterraLogo}
-          animateSidebar     ={animateSidebar}
-          darkMode           ={darkMode}
-          handleNavigation   ={handleNavigation}
-          isMobile           ={isMobile}
-          isOpen             ={isOpen}
-          items              ={sidebarItems}
-          location           ={{ pathname: location.pathname }}
-          menuRef            ={menuRef}
-          setIsOpen          ={setIsOpen}
-          toggleDarkMode     ={toggleDarkMode}
-          userName           ={userName}
-        />
+      <SideBar
+        LogoutButtonStyled ={<LogoutButtonStyled />}
+        acuaterraLogo      ={acuaterraLogo}
+        animateSidebar     ={animateSidebar}
+        darkMode           ={darkMode}
+        handleNavigation   ={handleNavigation}
+        isMobile           ={isMobile}
+        isOpen             ={isOpen}
+        items              ={sidebarItems}
+        location           ={{ pathname: location.pathname }}
+        menuRef            ={menuRef}
+        setIsOpen          ={setIsOpen}
+        toggleDarkMode     ={toggleDarkMode}
+        userName           ={userName}
+      />
 
       {/* Main Content */}
       <main
-        className={`flex-1 p-6 lg:ml-64 ${
-          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
-        }`}
+        className={`
+          transition-all duration-300
+          ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"}
+          ${isMobile ? "pt-20" : "lg:ml-64"}
+          min-h-screen
+          overflow-y-auto
+          relative
+        `}
+        style={{
+          // Si el sidebar está abierto en mobile, bloquea el scroll del body, pero no del main
+          filter: isMobile && isOpen ? "blur(2px)" : "none",
+          pointerEvents: isMobile && isOpen ? "none" : "auto",
+        }}
       >
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center">
           Acuaterra
@@ -260,50 +281,41 @@ const NewHome: FC = () => {
         {isMobile ? (
           <MobileCarousel />
         ) : (
-          <>
-            <Carousel slides={slides} />
-          </>
+          <Carousel slides={slides} />
         )}
 
         {/* dashboard section*/}
-
-        
-       {stats && metrics ? (
-      <motion.div
-        animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40"
-        initial="hidden"
-        variants={cardGridVariants}
-       >
-          <motion.div variants={cardVariants}>
-            <FarmsPieChart darkMode={darkMode}   farms={stats.farms} />
+        {stats && metrics ? (
+          <motion.div
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40"
+            initial="hidden"
+            variants={cardGridVariants}
+          >
+            <motion.div variants={cardVariants}>
+              <FarmsPieChart darkMode={darkMode}   farms={stats.farms} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <ModulesPieChart darkMode={darkMode} modules={stats.modules} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <TotalFarmsCard darkMode={darkMode}  total={metrics.totalFarms} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <TotalModulesCard darkMode={darkMode} total={metrics.totalModules} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <TotalUsersCard darkMode={darkMode}   total={metrics.totalUsers} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
+            </motion.div>
           </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <ModulesPieChart darkMode={darkMode} modules={stats.modules} />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <TotalFarmsCard darkMode={darkMode}  total={metrics.totalFarms} />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <TotalModulesCard darkMode={darkMode} total={metrics.totalModules} />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <TotalUsersCard darkMode={darkMode}   total={metrics.totalUsers} />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
-          </motion.div>
-       </motion.div>
-       ) : (
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40">
-              {Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)}
+            {Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)}
           </div>
-          )}
+        )}
       </main>
     </div>
   );
