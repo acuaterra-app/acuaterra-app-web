@@ -265,7 +265,6 @@ const NewHome: FC = () => {
           relative
         `}
         style={{
-          // Si el sidebar está abierto en mobile, bloquea el scroll del body, pero no del main
           filter: isMobile && isOpen ? "blur(2px)" : "none",
           pointerEvents: isMobile && isOpen ? "none" : "auto",
         }}
