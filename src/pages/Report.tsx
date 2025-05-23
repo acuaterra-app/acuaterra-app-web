@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState, useEffect, useRef } from "react";
 // eslint-disable-next-line no-duplicate-imports
@@ -130,6 +133,8 @@ const Report: FC = () => {
 	const menuRef = useRef<HTMLDivElement>(null);
 	const [animateSidebar, setAnimateSidebar] = useState(false);
 	const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Add isMobile state
+
+	
 	// Labels and data for charts
 	const sensorLabels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
 	const sensorData = [20, 25, 22, 30, 28];
@@ -335,9 +340,10 @@ const Report: FC = () => {
 						</p>
 
 						<FarmModuleSelector
+						    darkMode={darkMode}
 							selectedFarm={selectedFarm}
-							setSelectedFarm={setSelectedFarm}
 							selectedModule={selectedModule}
+							setSelectedFarm={setSelectedFarm}
 							setSelectedModule={setSelectedModule}
 						/>
 
