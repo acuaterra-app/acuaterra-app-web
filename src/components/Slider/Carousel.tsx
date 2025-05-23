@@ -93,20 +93,19 @@ interface CarouselProps {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
 export function Carousel({ slides }: CarouselProps) {
-  const [current, setCurrent] = useState(0);
+  // Mostrar la imagen central al iniciar
+  const initialIndex = Math.floor(slides.length / 2);
+  const [current, setCurrent] = useState(initialIndex);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handlePreviousClick = () => {
+  const handlePreviousClick = (): void => {
     setCurrent((previous) => (previous - 1 + slides.length) % slides.length);
   };
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleNextClick = () => {
+  const handleNextClick = (): void => {
     setCurrent((previous) => (previous + 1) % slides.length);
   };
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleSlideClick = (index: number) => {
+  const handleSlideClick = (index: number): void => {
     if (current !== index) {
       setCurrent(index);
     }
