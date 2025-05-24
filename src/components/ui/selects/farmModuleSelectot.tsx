@@ -37,7 +37,7 @@ const FarmModuleSelector = ({
              setSelectedModule(null);
            }}
          >
-           <option value="">-- Selecciona --</option>
+           <option value=""> Selecciona </option>
            {farms.map(farm => (
              <option key={farm.id ?? farm.name} value={farm.id}>
                {farm.name}
@@ -60,7 +60,7 @@ const FarmModuleSelector = ({
                }`}
                onChange={event_ => { setSelectedModule(event_.target.value ? Number(event_.target.value) : null); }}
              >
-               <option value="">-- Selecciona --</option>
+               <option value=""> Selecciona </option>
                {modules.map(module => (
                  <option key={module.id} value={module.id}>
                    {module.name}

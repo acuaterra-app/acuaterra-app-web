@@ -26,7 +26,6 @@ import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 import SideBar from "../components/ui/sidebar/SideBar";
 
-
 // Styled component for the logout button
 const LogoutButtonStyledWrapper = styled.div`
   .button {
@@ -45,12 +44,10 @@ const LogoutButtonStyledWrapper = styled.div`
     font-weight: 600;
     margin: 0 auto;
   }
-
   .button__text {
     position: absolute;
     inset: 0;
     animation: text-rotation 8s linear infinite;
-
     > span {
       position: absolute;
       transform: rotate(calc(19deg * var(--index)));
@@ -59,7 +56,6 @@ const LogoutButtonStyledWrapper = styled.div`
       color: #fff;
     }
   }
-
   .button__circle {
     position: relative;
     width: 40px;
@@ -72,12 +68,10 @@ const LogoutButtonStyledWrapper = styled.div`
     align-items: center;
     justify-content: center;
   }
-
   .button:hover {
     background: #000;
     transform: scale(1.05);
   }
-
   @keyframes text-rotation {
     to {
       rotate: 360deg;
@@ -115,9 +109,9 @@ const sidebarItems = [
 
 export const Users: FunctionComponent = () => {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState<string>("Usuario"); // State for user name
+  const [userName, setUserName] = useState<string>("Usuario");
   const [reload, setReload] = useState(false);
-  const [darkMode, setDarkMode] = useState(false); // State for dark mode
+  const [darkMode, setDarkMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
@@ -127,16 +121,17 @@ export const Users: FunctionComponent = () => {
   const { registerUser } = useRegisterUser();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [animateSidebar, setAnimateSidebar] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(true); 
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   // Check token validity and set user name
   useEffect(() => {
     if (!isTokenValid()) {
-      console.log("Redirecting to /auth from Users component");
       void navigate({ to: "/auth" });
     } else {
       const name = localStorage.getItem("userName");
-      console.log("User name retrieved from localStorage:", name);
       setUserName(name || "Usuario");
     }
   }, [navigate]);
@@ -146,6 +141,28 @@ export const Users: FunctionComponent = () => {
     const savedDarkMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedDarkMode);
     document.body.classList.toggle("dark-mode", savedDarkMode);
+  }, []);
+
+  // Responsive sidebar
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobileView = window.innerWidth < 768;
+      setIsMobile(isMobileView);
+
+      if (!isMobileView) {
+        setAnimateSidebar(true);
+        setTimeout(() => {
+          setAnimateSidebar(false);
+        }, 500);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   // Toggle dark mode and save state to localStorage
@@ -169,8 +186,8 @@ export const Users: FunctionComponent = () => {
           "No se pudo registrar el usuario. Por favor, inténtalo de nuevo."
         );
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Error al registrar el usuario:", error);
       toast.error(
         "No se pudo registrar el usuario. Por favor, inténtalo de nuevo."
       );
@@ -186,8 +203,8 @@ export const Users: FunctionComponent = () => {
       setReload(!reload);
       setShowUpdateModal(false);
       toast.success("Usuario actualizado exitosamente!");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Error al actualizar el usuario:", error);
       toast.error(
         "No se pudo actualizar el usuario. Por favor, inténtalo de nuevo."
       );
@@ -203,8 +220,8 @@ export const Users: FunctionComponent = () => {
         await deleteUser(userId);
         setReload(!reload);
         toast.success("Usuario eliminado exitosamente!");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        console.error("Error al eliminar el usuario:", error);
         toast.error(
           "No se pudo eliminar el usuario. Por favor, inténtalo de nuevo."
         );
@@ -220,7 +237,10 @@ export const Users: FunctionComponent = () => {
   // Function to handle navigation from sidebar
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
+    setIsOpen(false);
   };
+
+  const sidebarWidth = isMobile ? undefined : (sidebarExpanded ? "16rem" : "4.5rem");
 
   return (
     <>
@@ -232,33 +252,39 @@ export const Users: FunctionComponent = () => {
         }`}
       >
         {/* Sidebar toggle button for mobile */}
-         <HamburgerMenuButton
-            darkMode={darkMode}
-            isOpen={isOpen}
-            onClick={() => { setIsOpen(!isOpen); }}
-          />
+        <HamburgerMenuButton
+          darkMode={darkMode}
+          isOpen={isOpen}
+          onClick={() => { setIsOpen(!isOpen); }}
+        />
 
         {/* Sidebar */}
-       <SideBar
-         LogoutButtonStyled   ={<LogoutButtonStyled />}
-         acuaterraLogo        ={acuaterraLogo}
-         animateSidebar       ={false}
-         darkMode             ={darkMode}
-         handleNavigation     ={handleNavigation}
-         isMobile             ={window.innerWidth < 768}
-         isOpen               ={isOpen}
-         items                ={sidebarItems}
-         location             ={location}
-         menuRef              ={menuRef}
-         setIsOpen            ={setIsOpen}
-         toggleDarkMode       ={toggleDarkMode}
-         userName             ={userName}
-      />
+        <SideBar
+          LogoutButtonStyled   ={<LogoutButtonStyled />}
+          acuaterraLogo        ={acuaterraLogo}
+          animateSidebar       ={animateSidebar}
+          darkMode             ={darkMode}
+          handleNavigation     ={handleNavigation}
+          isMobile             ={isMobile}
+          isOpen               ={isOpen}
+          items                ={sidebarItems}
+          location             ={{ pathname: window.location.pathname }}
+          menuRef              ={menuRef}
+          setIsOpen            ={setIsOpen}
+          toggleDarkMode       ={toggleDarkMode}
+          userName             ={userName}
+          onSidebarExpandChange={setSidebarExpanded} 
+        />
 
         <main
           className={`flex-1 p-9 ${
             darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
-          } md:ml-64 overflow-y-auto`}
+          } overflow-y-auto transition-all duration-300`}
+          style={{
+            marginLeft: isMobile ? undefined : sidebarWidth, 
+            background: darkMode ? "#111827" : "#fff",      
+            transition: "margin-left 0.5s cubic-bezier(.4,0,.2,1), background 0.3s cubic-bezier(.4,0,.2,1)",
+          }}
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center">
             Lista de Usuarios
@@ -280,19 +306,19 @@ export const Users: FunctionComponent = () => {
               }`}>
                 <TableWithActions
                   darkMode={darkMode}
-                  data={users}
-                  error={error}
-                  limit={limit}
-                  loading={loading}
-                  page={page}
+                  data        ={users}
+                  error   ={error}
+                  limit   ={limit}
+                  loading ={loading}
+                  page    ={page}
                   setLimit={setLimit}
-                  setPage={setPage}
-                  total={total}
+                  setPage ={setPage}
+                  total   ={total}
                   columns={[
-                    { header: "ID",       accessor: "id" },
-                    { header: "Nombre",   accessor: "name" },
-                    { header: "Email",    accessor: "email" },
-                    { header: "DNI",      accessor: "dni" },
+                    { header: "ID",       accessor: "id"      },
+                    { header: "Nombre",   accessor: "name"    },
+                    { header: "Email",    accessor: "email"   },
+                    { header: "DNI",      accessor: "dni"     },
                     { header: "Teléfono", accessor: "contact" },
                     {
                       header: "Rol",
@@ -321,30 +347,30 @@ export const Users: FunctionComponent = () => {
               </div>
 
               {/* Mobile table */}
-               <div className={`block md:hidden rounded-lg p-4 shadow-md w-full max-w-sm mx-auto border transition-colors duration-300 ${
+              <div className={`block md:hidden rounded-lg p-4 shadow-md w-full max-w-sm mx-auto border transition-colors duration-300 ${
                 darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-300 text-black"
-               }`}>
+              }`}>
                 <TableWithActionsMobile
-                  darkMode={darkMode}
-                  data={users}
-                  error={error}
-                  limit={limit}
-                  loading={loading}
-                  page={page}
-                  setLimit={setLimit}
-                  setPage={setPage}
-                  total={total}
-                  columns={[
-                    { header: "ID",    accessor: "id" },
-                    { header: "Name",  accessor: "name" },
+                  darkMode ={darkMode}
+                  data     ={users}
+                  error    ={error}
+                  limit    ={limit}
+                  loading  ={loading}
+                  page     ={page}
+                  setLimit ={setLimit}
+                  setPage  ={setPage}
+                  total    ={total}
+                  columns  ={[
+                    { header: "ID",    accessor: "id"    },
+                    { header: "Name",  accessor: "name"  },
                     { header: "Email", accessor: "email" },
-                    { header: "DNI",   accessor: "dni" },
+                    { header: "DNI",   accessor: "dni"   },
                     {
                       header: "Role",
                       accessor: "rol",
                       render: (u: UserResponse) => u.rol.name,
                     },
-                    { header: "Address",    accessor: "address" },
+                    { header: "Address",    accessor: "address"   },
                     { header: "Created At", accessor: "createdAt" },
                     { header: "Updated At", accessor: "updatedAt" },
                   ]}
@@ -358,20 +384,20 @@ export const Users: FunctionComponent = () => {
             </>
           )}
 
-          <RegisterUserModal
-            darkMode={darkMode}
-            setShowModal={setShowModal}
-            showModal={showModal}
-            onRegister={handleRegisterUser}
-          />
-          {selectedUser && (
-            <UpdateUserModal
-              darkMode={darkMode}
-              setShowModal={setShowUpdateModal}
-              showModal={showUpdateModal}
-              user={selectedUser}
-              onUpdate={handleUpdateUser}
-            />
+              <RegisterUserModal
+                darkMode={darkMode}
+                setShowModal={setShowModal}
+                showModal={showModal}
+                onRegister={handleRegisterUser}
+              />
+              {selectedUser && (
+                <UpdateUserModal
+                  darkMode={darkMode}
+                  setShowModal={setShowUpdateModal}
+                  showModal={showUpdateModal}
+                  user={selectedUser}
+                  onUpdate={handleUpdateUser}
+              />
           )}
         </main>
       </div>

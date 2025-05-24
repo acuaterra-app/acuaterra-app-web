@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Sun, Moon } from "lucide-react";
 import styled from "styled-components";
 
@@ -22,6 +22,7 @@ interface SideBarProps {
   acuaterraLogo: string;
   toggleDarkMode: () => void;
   LogoutButtonStyled: React.ReactNode;
+  onSidebarExpandChange?: (expanded: boolean) => void; // <--- NUEVO
 }
 
 const SidebarLogoWrapper = styled.div<{ expanded: boolean }>`
@@ -33,7 +34,7 @@ const SidebarLogoWrapper = styled.div<{ expanded: boolean }>`
       opacity 0.35s cubic-bezier(.4,0,.2,1),
       visibility 0.35s cubic-bezier(.4,0,.2,1);
     opacity: ${({ expanded }: { expanded: boolean }): number => (expanded ? 1 : 0)};
-    visibility: ${({ expanded }: { expanded: boolean }): "visible" | "hidden" => (expanded ? "visible" : "hidden")};
+    visibility: ${({ expanded }: { expanded: boolean }): string => (expanded ? "visible" : "hidden")};
   }
   .logo:hover {
     transform: scale(1.1);
@@ -52,7 +53,7 @@ const WelcomeText = styled.p<{ darkMode: boolean; expanded: boolean }>`
     opacity 0.35s cubic-bezier(.4,0,.2,1),
     visibility 0.35s cubic-bezier(.4,0,.2,1);
   opacity: ${({ expanded }: { expanded: boolean }): number => (expanded ? 1 : 0)};
-  visibility: ${({ expanded }: { expanded: boolean }): "visible" | "hidden" => (expanded ? "visible" : "hidden")};
+  visibility: ${({ expanded }): string => (expanded ? "visible" : "hidden")};
   &:hover {
     transform: scale(1.1);
   }
@@ -66,15 +67,13 @@ const LogoutButtonStyledWrapper = styled.div<{ expanded: boolean }>`
   transition: 
     opacity 0.35s cubic-bezier(.4,0,.2,1),
     visibility 0.35s cubic-bezier(.4,0,.2,1);
-  opacity: ({ expanded }: { expanded: boolean }): number => (expanded ? 1 : 0);
-  visibility: ${({ expanded }: { expanded: boolean }): "visible" | "hidden" => (expanded ? "visible" : "hidden")};
+  opacity: ${({ expanded }: { expanded: boolean }): number => (expanded ? 1 : 0)};
+  visibility: ${({ expanded }: { expanded: boolean }): string => (expanded ? "visible" : "hidden")};
 `;
 
-// Nuevo: Scrollbar personalizado para el nav
 const ScrollableNav = styled.nav<{ darkMode: boolean }>`
   flex: 1;
   overflow-y: auto;
-  /* Scrollbar styles for Webkit browsers */
   &::-webkit-scrollbar {
     width: 8px;
     background: ${({ darkMode }: { darkMode: boolean }): string => (darkMode ? "#23272f" : "#e0e0e0")};
@@ -83,7 +82,6 @@ const ScrollableNav = styled.nav<{ darkMode: boolean }>`
     background: ${({ darkMode }: { darkMode: boolean }): string => (darkMode ? "#444950" : "#bdbdbd")};
     border-radius: 4px;
   }
-  /* Scrollbar styles for Firefox */
   scrollbar-width: thin;
   scrollbar-color: ${({ darkMode }: { darkMode: boolean }): string =>
     darkMode ? "#444950 #23272f" : "#bdbdbd #e0e0e0"};
@@ -103,12 +101,18 @@ const SideBar: React.FC<SideBarProps> = ({
   acuaterraLogo,
   toggleDarkMode,
   LogoutButtonStyled,
+  onSidebarExpandChange, 
 }) => {
-  // Estado para controlar el hover solo en escritorio
   const [isHovered, setIsHovered] = useState(false);
 
-  // Determina si la barra está expandida (en móvil siempre expandida)
   const expanded = isMobile || isOpen || isHovered;
+
+  
+  useEffect(() => {
+    if (onSidebarExpandChange) {
+      onSidebarExpandChange(expanded);
+    }
+  }, [expanded, onSidebarExpandChange]);
 
   return (
     <aside
@@ -143,17 +147,17 @@ const SideBar: React.FC<SideBarProps> = ({
           <X size={24} />
         </button>
 
-        {/* Sidebar logo solo si está expandido */}
+        
         <SidebarLogoWrapper expanded={expanded}>
           <img alt="Acuaterra Logo" className="logo mb-2" src={acuaterraLogo} />
         </SidebarLogoWrapper>
 
-        {/* Welcome text solo si está expandido */}
+       
         <WelcomeText darkMode={darkMode} expanded={expanded}>
           Bienvenido, {userName}!
         </WelcomeText>
 
-        {/* Dark mode button SIEMPRE visible */}
+       
         <button
           className={`mt-4 p-2 rounded shadow-md flex items-center justify-center transition-colors ${
             darkMode
@@ -205,13 +209,13 @@ const SideBar: React.FC<SideBarProps> = ({
                       : {}
                   }
                 />
-                {/* Solo muestra el label si está expandido */}
+             
                 {expanded && item.label}
               </span>
             </li>
           ))}
         </ul>
-        {/* Logout button solo si está expandido */}
+        
         <LogoutButtonStyledWrapper expanded={expanded}>
           {LogoutButtonStyled}
         </LogoutButtonStyledWrapper>
