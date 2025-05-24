@@ -18,6 +18,8 @@ import styled from "styled-components";
 import SideBar from "../components/ui/sidebar/SideBar";
 import FarmModuleSelector from "../components/ui/selects/farmModuleSelectot";
 import useReport from "../hooks/useReport";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const sidebarItems = [
     { icon: homeIcon, label: "Inicio", path: "/newhome" },
@@ -130,7 +132,7 @@ const Report: FC = () => {
     const menuRef = useRef<HTMLDivElement>(null);
     const [animateSidebar, setAnimateSidebar] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-    const [sidebarExpanded, setSidebarExpanded] = useState(true); // NUEVO
+    const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
     // Labels and data for charts
     const sensorLabels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
@@ -252,16 +254,20 @@ const Report: FC = () => {
         };
     }, [isOpen]);
 
+    const [period]     = useState("daily");
+    const [sensorType] = useState("Temperature");
+    const [startDate, setStartDate] = useState("2025-01-01");
+    const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
+
+    useEffect(() => {
+  setEndDate(new Date().toISOString().slice(0, 10));
+}, [selectedFarm, selectedModule]);
+
     // Handle navigation
     const handleNavigation = (path: string): void => {
         void navigate({ to: path });
         setIsOpen(false);
     };
-
-    const [period]     = useState("daily");
-    const [sensorType] = useState("Temperature");
-    const [startDate]  = useState("2025-01-01");
-    const [endDate]    = useState("2025-04-27");
 
     // Define types for report data
     type ChartData = {
@@ -351,13 +357,52 @@ const Report: FC = () => {
                             Visualización y generación de reportes.
                         </p>
 
+                        
                         <FarmModuleSelector
-                            darkMode         ={darkMode}
-                            selectedFarm     ={selectedFarm}
-                            selectedModule   ={selectedModule}
-                            setSelectedFarm  ={setSelectedFarm}
-                            setSelectedModule={setSelectedModule}
+                          darkMode           ={darkMode}
+                          selectedFarm       ={selectedFarm}
+                          selectedModule     ={selectedModule}
+                          setSelectedFarm    ={setSelectedFarm}
+                          setSelectedModule  ={setSelectedModule}
                         />
+                        
+                       <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                         <div className="w-full sm:w-auto max-w-xs">
+                           <label className="block mb-1">Fecha inicio:</label>
+                           <DatePicker
+                             calendarClassName={darkMode ? "react-datepicker__calendar--dark" : ""}
+                             dateFormat="yyyy-MM-dd"
+                             selected={startDate ? new Date(startDate) : null}
+                             className={`w-full border rounded px-2 py-1 transition-colors duration-200 ${
+                               darkMode
+                                 ? "bg-gray-800 text-gray-100 border-gray-600"
+                                 : "bg-white text-gray-900 border-gray-300"
+                             }`}
+                             onChange={(date: Date | null) =>
+                               { setStartDate(date ? date.toISOString().slice(0, 10) : ""); }
+                             }
+                           />
+                         </div>
+                         <div className="w-full sm:w-auto max-w-xs">
+                           <label className="block mb-1">Fecha fin:</label>
+                           <DatePicker
+                             calendarClassName={darkMode ? "react-datepicker__calendar--dark" : ""}
+                             dateFormat="yyyy-MM-dd"
+                             maxDate={new Date()}
+                             minDate={startDate ? new Date(startDate) : undefined}
+                             selected={endDate ? new Date(endDate) : null}
+                             className={`w-full border rounded px-2 py-1 transition-colors duration-200 ${
+                               darkMode
+                                 ? "bg-gray-800 text-gray-100 border-gray-600"
+                                 : "bg-white text-gray-900 border-gray-300"
+                             }`}
+                             onChange={(date: Date | null) =>
+                               { setEndDate(date ? date.toISOString().slice(0, 10) : ""); }
+                             }
+                           />
+                         </div>
+                       </div>
+
 
                         {/* Real-time behavior chart */}
                         <div className="mt-8">
