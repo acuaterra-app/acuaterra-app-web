@@ -18,7 +18,7 @@ import moduleIcon from "../assets/images/module.png";
 import userIcon from "../assets/images/userlogo.png";
 import fishIcon from "../assets/images/pez.png";
 import LoaderAcua from "../components/loaders/LoaderAcua";
-import { Menu, X, } from "lucide-react";
+import HamburgerMenuButton from "../components/ui/button/HamburgerMenuButton";
 import styled from "styled-components";
 import { isTokenValid } from "../common/isTokenValid";
 import SideBar from "../components/ui/sidebar/SideBar";
@@ -30,7 +30,7 @@ const sidebarItems = [
   { icon: fishIcon,   label: "Módulos",  path: "/module"  },
   { icon: reportIcon, label: "Reporte",  path: "/report"  },
 ];
-// Styled component for the logout button
+
 const LogoutButtonStyledWrapper = styled.div`
   .button {
     cursor: pointer;
@@ -48,12 +48,10 @@ const LogoutButtonStyledWrapper = styled.div`
     font-weight: 600;
     margin: 0 auto;
   }
-
   .button__text {
     position: absolute;
     inset: 0;
     animation: text-rotation 8s linear infinite;
-
     > span {
       position: absolute;
       transform: rotate(calc(19deg * var(--index)));
@@ -62,7 +60,6 @@ const LogoutButtonStyledWrapper = styled.div`
       color: #fff;
     }
   }
-
   .button__circle {
     position: relative;
     width: 40px;
@@ -75,12 +72,10 @@ const LogoutButtonStyledWrapper = styled.div`
     align-items: center;
     justify-content: center;
   }
-
   .button:hover {
     background: #000;
     transform: scale(1.05);
   }
-
   @keyframes text-rotation {
     to {
       rotate: 360deg;
@@ -88,7 +83,6 @@ const LogoutButtonStyledWrapper = styled.div`
   }
 `;
 
-// Logout button component
 const LogoutButtonStyled = () => {
   return (
     <LogoutButtonStyledWrapper>
@@ -129,30 +123,26 @@ const FarmsPage: FunctionComponent = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [userName, setUserName] = useState<string>("Usuario");
-  const [darkMode, setDarkMode] = useState(false); // State for dark mode
+  const [darkMode, setDarkMode] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(true); // NUEVO
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Check token validity and set user name
   useEffect(() => {
     if (!isTokenValid()) {
-      console.log("Redirigiendo a /auth desde el componente Farms");
       void navigate({ to: "/auth" });
     } else {
       const name = localStorage.getItem("userName");
-      console.log("Nombre del usuario obtenido desde localStorage:", name);
       setUserName(name || "Usuario");
     }
   }, [navigate]);
 
-  // Retrieve dark mode state from localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedDarkMode);
     document.body.classList.toggle("dark-mode", savedDarkMode);
   }, []);
 
-  // Toggle dark mode and save state to localStorage
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
@@ -228,6 +218,8 @@ const FarmsPage: FunctionComponent = () => {
     setIsOpen(false);
   };
 
+  const sidebarWidth = isMobile ? undefined : (sidebarExpanded ? "16rem" : "4.5rem");
+
   return (
     <div
       className={`flex min-h-screen font-sans relative overflow-x-auto ${
@@ -237,42 +229,42 @@ const FarmsPage: FunctionComponent = () => {
       <ToastContainer />
 
       {/* Sidebar toggle button for mobile */}
-      <button
-        id="menu-button"
-        className={`absolute top-4 left-4 z-50 p-2 rounded shadow-md md:hidden transition-colors ${
-          darkMode
-            ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
-            : "bg-[#d3d3d3] text-gray-700 hover:bg-gray-300"
-          }`}
-          onClick={() => {
-          setIsOpen(!isOpen);
-         }}
-       >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+      <HamburgerMenuButton
+        darkMode={darkMode}
+        isOpen={isOpen}
+        onClick={() => { setIsOpen(!isOpen); }}
+      />
 
       {/* Sidebar */}
       <SideBar
-          LogoutButtonStyled={<LogoutButtonStyled />}
-          acuaterraLogo   ={acuaterraLogo}
-          animateSidebar  ={animateSidebar}
-          darkMode        ={darkMode}
-          handleNavigation={handleNavigation}
-          isMobile        ={isMobile}
-          isOpen          ={isOpen}
-          items           ={sidebarItems}
-          location        ={{ pathname: location.pathname }}
-          menuRef         ={menuRef}
-          setIsOpen       ={setIsOpen}
-          toggleDarkMode  ={toggleDarkMode}
-          userName        ={userName}
-        />
+        LogoutButtonStyled   ={<LogoutButtonStyled />}
+        acuaterraLogo        ={acuaterraLogo}
+        animateSidebar       ={animateSidebar}
+        darkMode             ={darkMode}
+        handleNavigation     ={handleNavigation}
+        isMobile             ={isMobile}
+        isOpen               ={isOpen}
+        items                ={sidebarItems}
+        location             ={{ pathname: location.pathname }}
+        menuRef              ={menuRef}
+        setIsOpen            ={setIsOpen}
+        toggleDarkMode       ={toggleDarkMode}
+        userName             ={userName}
+        onSidebarExpandChange={setSidebarExpanded} 
+      />
 
       {/* Main content */}
       <main
-        className={`flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto ${
-          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
-        }`}
+        className={`
+          flex-1 p-6 max-w-full overflow-x-auto
+          transition-all duration-300
+          ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"}
+        `}
+        style={{
+          marginLeft: isMobile ? undefined : sidebarWidth, 
+          background: darkMode ? "#111827" : "#fff",      
+          transition: "margin-left 0.5s cubic-bezier(.4,0,.2,1), background 0.3s cubic-bezier(.4,0,.2,1)",
+        }}
       >
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center">
           Granjas
@@ -289,27 +281,26 @@ const FarmsPage: FunctionComponent = () => {
             <div
               className={`hidden md:block rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right border transition-colors duration-300 ${
                 darkMode
-                   ? "bg-gray-800 border-gray-700 text-gray-100"
-                   : "bg-white border-gray-300 text-black"
-                }`}
-               >   
-              
+                  ? "bg-gray-800 border-gray-700 text-gray-100"
+                  : "bg-white border-gray-300 text-black"
+              }`}
+            >
               <TableWithActions
                 darkMode={darkMode}
-                data={farms}
-                error={error}
-                limit={limit}
-                loading={loading}
-                page={page}
+                data    ={farms}
+                error   ={error}
+                limit   ={limit}
+                loading ={loading}
+                page    ={page}
                 setLimit={setLimit}
-                setPage={setPage}
-                total={total}
+                setPage ={setPage}
+                total   ={total}
                 columns={[
-                  { header: "ID",        accessor: "id" },
-                  { header: "Name",      accessor: "name" },
-                  { header: "Latitud",   accessor: "latitude" },
+                  { header: "ID",        accessor: "id"        },
+                  { header: "Name",      accessor: "name"      },
+                  { header: "Latitud",   accessor: "latitude"  },
                   { header: "Longitud",  accessor: "longitude" },
-                  { header: "Dirección", accessor: "address" },
+                  { header: "Dirección", accessor: "address"   },
                   { header: "Date",      accessor: "createdAt" },
                   {
                     header: "Users",
@@ -318,7 +309,6 @@ const FarmsPage: FunctionComponent = () => {
                       farm.users.map((user) => (user as User).name).join(", "),
                   },
                 ]}
-                
                 onDelete={handleRemoveFarm}
                 onAdd={() => {
                   setSelectedFarm(null);
@@ -328,19 +318,17 @@ const FarmsPage: FunctionComponent = () => {
                   setSelectedFarm(farm);
                   setIsModalOpen(true);
                 }}
-                
               />
             </div>
 
             {/* Mobile table */}
             <div
               className={`block md:hidden rounded-lg p-4 shadow-md w-full max-w-sm mx-auto border transition-colors duration-300 ${
-                 darkMode
-                    ? "bg-gray-800 border-gray-700 text-gray-100"
-                    : "bg-white border-gray-300 text-black"
-                }`}   
-                >   
-
+                darkMode
+                  ? "bg-gray-800 border-gray-700 text-gray-100"
+                  : "bg-white border-gray-300 text-black"
+              }`}
+            >
               <TableWithActionsMobile
                 darkMode={darkMode}
                 data={farms}
@@ -352,11 +340,11 @@ const FarmsPage: FunctionComponent = () => {
                 setPage={setPage}
                 total={total}
                 columns={[
-                  { header: "ID",        accessor: "id" },
-                  { header: "Name",      accessor: "name" },
-                  { header: "Latitud",   accessor: "latitude" },
+                  { header: "ID",        accessor: "id"        },
+                  { header: "Name",      accessor: "name"      },
+                  { header: "Latitud",   accessor: "latitude"  },
                   { header: "Longitud",  accessor: "longitude" },
-                  { header: "Dirección", accessor: "address" },
+                  { header: "Dirección", accessor: "address"   },
                   { header: "Date",      accessor: "createdAt" },
                   {
                     header: "Users",
@@ -374,22 +362,21 @@ const FarmsPage: FunctionComponent = () => {
                   setSelectedFarm(farm);
                   setIsModalOpen(true);
                 }}
-                
               />
             </div>
           </>
         )}
 
-       {isModalOpen && (
-         <FarmModal
-             darkMode={darkMode} 
-             farm={selectedFarm}
-             onSave={selectedFarm ? handleEditFarm : handleAddFarm}
-             onClose={() => {
-           setIsModalOpen(false);
-           }}
+        {isModalOpen && (
+          <FarmModal
+            darkMode={darkMode}
+            farm={selectedFarm}
+            onSave={selectedFarm ? handleEditFarm : handleAddFarm}
+            onClose={() => {
+              setIsModalOpen(false);
+            }}
           />
-     )}
+        )}
       </main>
     </div>
   );

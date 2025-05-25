@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import type { FC } from "react";
-// eslint-disable-next-line no-duplicate-imports
-import { useEffect, useState, useRef } from "react";
+import { type FC, useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import HamburgerMenuButton from "../components/ui/button/HamburgerMenuButton";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
 import acuaterraLogo from "../assets/images/logo.png";
@@ -42,7 +40,6 @@ const cardVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-// Styled component for logout button
 const LogoutButtonStyledWrapper = styled.div`
   .button {
     cursor: pointer;
@@ -60,12 +57,10 @@ const LogoutButtonStyledWrapper = styled.div`
     font-weight: 600;
     margin: 0 auto;
   }
-
   .button__text {
     position: absolute;
     inset: 0;
     animation: text-rotation 8s linear infinite;
-
     > span {
       position: absolute;
       transform: rotate(calc(19deg * var(--index)));
@@ -74,7 +69,6 @@ const LogoutButtonStyledWrapper = styled.div`
       color: #fff;
     }
   }
-
   .button__circle {
     position: relative;
     width: 40px;
@@ -87,12 +81,10 @@ const LogoutButtonStyledWrapper = styled.div`
     align-items: center;
     justify-content: center;
   }
-
   .button:hover {
     background: #000;
     transform: scale(1.1);
   }
-
   @keyframes text-rotation {
     to {
       rotate: 360deg;
@@ -100,35 +92,31 @@ const LogoutButtonStyledWrapper = styled.div`
   }
 `;
 
-// Logout button component
-const LogoutButtonStyled = () => {
-  return (
-    <LogoutButtonStyledWrapper>
-      <button className="button">
-        <p className="button__text">
-          {Array.from("CERRAR SESIÓN").map((char, index) => (
-            <span key={index} style={{ "--index": index } as React.CSSProperties}>
-              {char}
-            </span>
-          ))}
-        </p>
-        <div className="button__circle">
-          <LogoutButton />
-        </div>
-      </button>
-    </LogoutButtonStyledWrapper>
-  );
-};
+const LogoutButtonStyled = () => (
+  <LogoutButtonStyledWrapper>
+    <button className="button">
+      <p className="button__text">
+        {Array.from("CERRAR SESIÓN").map((char, index) => (
+          <span key={index} style={{ "--index": index } as React.CSSProperties}>
+            {char}
+          </span>
+        ))}
+      </p>
+      <div className="button__circle">
+        <LogoutButton />
+      </div>
+    </button>
+  </LogoutButtonStyledWrapper>
+);
 
 const sidebarItems = [
   { icon: homeIcon,   label: "Inicio",   path: "/newhome" },
-  { icon: moduleIcon, label: "Granjas",  path: "/farm" },
-  { icon: userIcon,   label: "Usuarios", path: "/users" },
-  { icon: fishIcon,   label: "Módulos",  path: "/module" },
-  { icon: reportIcon, label: "Reporte",  path: "/report" },
+  { icon: moduleIcon, label: "Granjas",  path: "/farm"    },
+  { icon: userIcon,   label: "Usuarios", path: "/users"   },
+  { icon: fishIcon,   label: "Módulos",  path: "/module"  },
+  { icon: reportIcon, label: "Reporte",  path: "/report"  },
 ];
 
-//  Main component of NewHome page
 const NewHome: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -137,29 +125,26 @@ const NewHome: FC = () => {
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [userName, setUserName] = useState<string>("Usuario");
   const [darkMode, setDarkMode] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(true); 
   const { stats } = useDashboardStats();
   const { metrics } = useDashboardMetrics();
   const { totalNotifications } = useNotificationStats();
   const menuRef = useRef<HTMLDivElement>(null);
   const slides = [
-    { title: "Acuaterra Modulo", button: "1", src: foto1 },
+    { title: "Acuaterra Modulo", button:  "1", src: foto1 },
     { title: "Modulo Acuaponico", button: "2", src: foto2 },
-    { title: "Acuaterra Granja", button: "3", src: foto3 },
+    { title: "Acuaterra Granja", button:  "3", src: foto3 },
   ];
 
-  // we verify the token validity and set the username
   useEffect(() => {
     if (!isTokenValid()) {
-      console.log("Redirecting to /auth from NewHome component");
       void navigate({ to: "/auth" });
     } else {
       const name = localStorage.getItem("userName");
-      console.log("User name retrieved from localStorage:", name);
       setUserName(name || "Usuario");
     }
   }, [navigate]);
 
-  // we control screen size for mobile view
   useEffect(() => {
     const handleResize = () => {
       const isMobileView = window.innerWidth < 768;
@@ -182,17 +167,15 @@ const NewHome: FC = () => {
   }, []);
   
   const SkeletonCard = () => (
-  <div className="rounded-xl p-6 shadow-lg w-full h-64 bg-gray-300 animate-pulse" />
-);
+    <div className="rounded-xl p-6 shadow-lg w-full h-64 bg-gray-300 animate-pulse" />
+  );
 
-  // we retrieve the dark mode state from localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedDarkMode);
     document.body.classList.toggle("dark-mode", savedDarkMode);
   }, []);
 
-  // alternate dark mode and save state in localStorage
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
@@ -200,62 +183,78 @@ const NewHome: FC = () => {
     document.body.classList.toggle("dark-mode", newDarkMode);
   };
 
-  // close the sidebar when navigating to /newhome
   useEffect(() => {
     if (location.pathname === "/newhome") {
       setIsOpen(false);
     }
   }, [location.pathname]);
 
-  //  we use the navigate function
+  useEffect(() => {
+    if (isMobile && isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobile, isOpen]);
+
   const handleNavigation = (path: string) => {
     void navigate({ to: path });
     setIsOpen(false);
   };
 
+  const sidebarWidth = isMobile ? undefined : (sidebarExpanded ? "16rem" : "4.5rem");
+
   return (
     <div
-      className={`flex flex-col lg:flex-row min-h-screen ${
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+      className={`relative min-h-screen bg-gray-100 ${
+        darkMode ? "bg-gray-900 text-white" : "text-black"
       }`}
     >
       {/*  toogle button for mobile sidebar   */}
-      <button
-        id="menu-button"
-        className={`absolute top-4 left-4 z-50 p-2 rounded shadow-md md:hidden transition-colors ${
-          darkMode
-            ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
-            : "bg-[#d3d3d3] text-gray-700 hover:bg-gray-300"
-          }`}
-          onClick={() => {
-          setIsOpen(!isOpen);
-         }}
-       >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+      <HamburgerMenuButton
+        darkMode={darkMode}
+        isOpen={isOpen}
+        onClick={() => { setIsOpen(!isOpen); }}
+      />
 
       {/* Sidebar */}
-       <SideBar
-          LogoutButtonStyled ={<LogoutButtonStyled />}
-          acuaterraLogo      ={acuaterraLogo}
-          animateSidebar     ={animateSidebar}
-          darkMode           ={darkMode}
-          handleNavigation   ={handleNavigation}
-          isMobile           ={isMobile}
-          isOpen             ={isOpen}
-          items              ={sidebarItems}
-          location           ={{ pathname: location.pathname }}
-          menuRef            ={menuRef}
-          setIsOpen          ={setIsOpen}
-          toggleDarkMode     ={toggleDarkMode}
-          userName           ={userName}
-        />
+      <SideBar
+        LogoutButtonStyled   ={<LogoutButtonStyled />}
+        acuaterraLogo        ={acuaterraLogo}
+        animateSidebar       ={animateSidebar}
+        darkMode             ={darkMode}
+        handleNavigation     ={handleNavigation}
+        isMobile             ={isMobile}
+        isOpen               ={isOpen}
+        items                ={sidebarItems}
+        location             ={{ pathname: location.pathname }}
+        menuRef              ={menuRef}
+        setIsOpen            ={setIsOpen}
+        toggleDarkMode       ={toggleDarkMode}
+        userName             ={userName}
+        onSidebarExpandChange={setSidebarExpanded} 
+      />
 
       {/* Main Content */}
       <main
-        className={`flex-1 p-6 lg:ml-64 ${
-          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
-        }`}
+        className={`
+          transition-all duration-300
+          ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"}
+          ${isMobile ? "pt-20" : ""}
+          min-h-screen
+          overflow-y-auto
+          relative
+        `}
+        style={{
+          filter: isMobile && isOpen ? "blur(2px)" : "none",
+          pointerEvents: isMobile && isOpen ? "none" : "auto",
+          marginLeft: isMobile ? undefined : sidebarWidth, 
+          background: darkMode ? "#111827" : "#fff",     
+          transition: "margin-left 0.5s cubic-bezier(.4,0,.2,1), background 0.3s cubic-bezier(.4,0,.2,1)",
+        }}
       >
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center">
           Acuaterra
@@ -268,54 +267,44 @@ const NewHome: FC = () => {
         {isMobile ? (
           <MobileCarousel />
         ) : (
-          <>
-            <Carousel slides={slides} />
-          </>
+          <Carousel slides={slides} />
         )}
 
         {/* dashboard section*/}
-
-        
-       {stats && metrics ? (
-      <motion.div
-        animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40"
-        initial="hidden"
-        variants={cardGridVariants}
-       >
-          <motion.div variants={cardVariants}>
-            <FarmsPieChart darkMode={darkMode}   farms={stats.farms} />
+        {stats && metrics ? (
+          <motion.div
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40"
+            initial="hidden"
+            variants={cardGridVariants}
+          >
+            <motion.div variants={cardVariants}>
+              <FarmsPieChart darkMode={darkMode}          farms={stats.farms} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <ModulesPieChart darkMode={darkMode}        modules={stats.modules} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <TotalFarmsCard darkMode={darkMode}         total={metrics.totalFarms} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <TotalModulesCard darkMode={darkMode}       total={metrics.totalModules} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <TotalUsersCard darkMode={darkMode}         total={metrics.totalUsers} />
+            </motion.div>
+            <motion.div variants={cardVariants}>
+              <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
+            </motion.div>
           </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <ModulesPieChart darkMode={darkMode} modules={stats.modules} />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <TotalFarmsCard darkMode={darkMode}  total={metrics.totalFarms} />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <TotalModulesCard darkMode={darkMode} total={metrics.totalModules} />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <TotalUsersCard darkMode={darkMode}   total={metrics.totalUsers} />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <NotificationsAreaChart darkMode={darkMode} total={totalNotifications ?? 0} />
-          </motion.div>
-       </motion.div>
-       ) : (
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40">
-              {Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)}
+            {Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)}
           </div>
-          )}
+        )}
       </main>
     </div>
   );
 };
 
 export default NewHome;
-

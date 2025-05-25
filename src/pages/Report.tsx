@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 // eslint-disable-next-line no-duplicate-imports
 import type { FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Menu, X, } from "lucide-react";
+import HamburgerMenuButton from "../components/ui/button/HamburgerMenuButton";
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import reporteIcon from "../assets/images/reporte.png";
@@ -16,340 +16,449 @@ import { isTokenValid } from "../common/isTokenValid";
 import SensorChart from "../components/charts/line/SensorChart";
 import styled from "styled-components";
 import SideBar from "../components/ui/sidebar/SideBar";
+import FarmModuleSelector from "../components/ui/selects/farmModuleSelectot";
+import useReport from "../hooks/useReport";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const sidebarItems = [
-  { icon: homeIcon,    label: "Inicio",   path: "/newhome" },
-  { icon: moduleIcon,  label: "Granjas",  path: "/farm"    },
-  { icon: userIcon,    label: "Usuarios", path: "/users"   },
-  { icon: fishIcon,    label: "Módulos",  path: "/module"  },
-  { icon: reporteIcon, label: "Reporte",  path: "/report"  },
+    { icon: homeIcon, label: "Inicio", path: "/newhome" },
+    { icon: moduleIcon, label: "Granjas", path: "/farm" },
+    { icon: userIcon, label: "Usuarios", path: "/users" },
+    { icon: fishIcon, label: "Módulos", path: "/module" },
+    { icon: reporteIcon, label: "Reporte", path: "/report" },
 ];
-
 
 // Styled component for section titles
 const SectionTitle = styled.h2<{ darkMode: boolean }>`
-  font-size: 1.25rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 1rem;
-  color: ${(props) => (props.darkMode ? "white" : "#4a4a4a")};
-  transition: color 0.3s ease;
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: ${(props) => (props.darkMode ? "white" : "#4a4a4a")};
+    transition: color 0.3s ease;
 `;
 
 // Styled component for the logout button
 const LogoutButtonStyledWrapper = styled.div`
-  .button {
-    cursor: pointer;
-    border: none;
-    background: #3cacac;
-    color: #fff;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-    display: grid;
-    place-content: center;
-    transition: background 300ms, transform 200ms;
-    font-weight: 600;
-    margin: 0 auto;
-  }
-
-  .button__text {
-    position: absolute;
-    inset: 0;
-    animation: text-rotation 8s linear infinite;
-
-    > span {
-      position: absolute;
-      transform: rotate(calc(19deg * var(--index)));
-      inset: 7px;
-      font-size: 14px;
-      color: #fff;
+    .button {
+        cursor: pointer;
+        border: none;
+        background: #3cacac;
+        color: #fff;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        position: relative;
+        display: grid;
+        place-content: center;
+        transition:
+            background 300ms,
+            transform 200ms;
+        font-weight: 600;
+        margin: 0 auto;
     }
-  }
 
-  .button__circle {
-    position: relative;
-    width: 40px;
-    height: 40px;
-    overflow: hidden;
-    background: #fff;
-    color: #84db7;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .button:hover {
-    background: #000;
-    transform: scale(1.05);
-  }
-     @keyframes text-rotation {
-    to {
-      rotate: 360deg;
+    .button__text {
+        position: absolute;
+        inset: 0;
+        animation: text-rotation 8s linear infinite;
+
+        > span {
+            position: absolute;
+            transform: rotate(calc(19deg * var(--index)));
+            inset: 7px;
+            font-size: 14px;
+            color: #fff;
+        }
     }
-  }
+
+    .button__circle {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        overflow: hidden;
+        background: #fff;
+        color: #84db7;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .button:hover {
+        background: #000;
+        transform: scale(1.05);
+    }
+    @keyframes text-rotation {
+        to {
+            rotate: 360deg;
+        }
+    }
 `;
 
 // Logout button component
 const LogoutButtonStyled = () => {
-  return (
-    <LogoutButtonStyledWrapper>
-      <button className="button">
-        <p className="button__text">
-          {Array.from("CERRAR SESIÓN").map((char, index) => (
-            <span key={index} style={{ "--index": index } as React.CSSProperties}>
-              {char}
-            </span>
-          ))}
-        </p>
-        <div className="button__circle">
-          <LogoutButton />
-        </div>
-      </button>
-    </LogoutButtonStyledWrapper>
-  );
+    return (
+        <LogoutButtonStyledWrapper>
+            <button className="button">
+                <p className="button__text">
+                    {Array.from("CERRAR SESIÓN").map((char, index) => (
+                        <span
+                            key={index}
+                            style={{ "--index": index } as React.CSSProperties}
+                        >
+                            {char}
+                        </span>
+                    ))}
+                </p>
+                <div className="button__circle">
+                    <LogoutButton />
+                </div>
+            </button>
+        </LogoutButtonStyledWrapper>
+    );
 };
 
 // Main Report component
 const Report: FC = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true); // State for loading
-  const [isOpen, setIsOpen] = useState(false); // State for sidebar visibility
-  const [userName, setUserName] = useState<string>("Usuario"); // State for user name
-  const [darkMode, setDarkMode] = useState(false); // State for dark mode
-  const menuRef = useRef<HTMLDivElement>(null);
-  const [animateSidebar, setAnimateSidebar] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Add isMobile state
-  // Labels and data for charts
-  const sensorLabels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
-  const sensorData = [20, 25, 22, 30, 28];
-  const weeklyLabels = [
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-    "Domingo",
-  ];
-  const weeklyData = [25, 28, 22, 30, 26, 24, 27];
-  const monthlyLabels = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
-  ];
-  const monthlyData = [22, 24, 26, 28, 30, 32, 34, 33, 31, 29, 27, 25];
+    const [selectedFarm, setSelectedFarm] = useState<number | null>(null);
+    const [selectedModule, setSelectedModule] = useState<number | null>(null);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
+    const [userName, setUserName] = useState<string>("Usuario");
+    const [darkMode, setDarkMode] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+    const [animateSidebar, setAnimateSidebar] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
-  // Check token validity and set user name
-  useEffect(() => {
-    if (!isTokenValid()) {
-      console.log("Redirecting to /auth from Report component");
-      void navigate({ to: "/auth" });
-    } else {
-      const name = localStorage.getItem("userName");
-      console.log("User name retrieved from localStorage:", name);
-      setUserName(name || "Usuario");
-    }
-  }, [navigate]);
+    // Labels and data for charts
+    const sensorLabels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
+    const sensorData = [20, 25, 22, 30, 28];
+    const weeklyLabels = [
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+        "Domingo",
+    ];
+    const weeklyData = [25, 28, 22, 30, 26, 24, 27];
+    const monthlyLabels = [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+    ];
+    const monthlyData = [22, 24, 26, 28, 30, 32, 34, 33, 31, 29, 27, 25];
 
-  // Handle screen resizing for mobile view
-  useEffect(() => {
-    const handleResize = () => {
-      const isMobileView = window.innerWidth < 768;
-      setIsMobile(isMobileView);
+    // Check token validity and set user name
+    useEffect(() => {
+        if (!isTokenValid()) {
+            void navigate({ to: "/auth" });
+        } else {
+            const name = localStorage.getItem("userName");
+            setUserName(name || "Usuario");
+        }
+    }, [navigate]);
 
-      if (!isMobileView) {
-        setAnimateSidebar(true);
-        setTimeout(() => {
-          setAnimateSidebar(false);
-        }, 500);
-      }
+    // Handle screen resizing for mobile view
+    useEffect(() => {
+        const handleResize = () => {
+            const isMobileView = window.innerWidth < 768;
+            setIsMobile(isMobileView);
+
+            if (!isMobileView) {
+                setAnimateSidebar(true);
+                setTimeout(() => {
+                    setAnimateSidebar(false);
+                }, 500);
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        handleResize();
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    // Retrieve dark mode state from localStorage
+    useEffect(() => {
+        const savedDarkMode = localStorage.getItem("darkMode") === "true";
+        setDarkMode(savedDarkMode);
+        document.body.classList.toggle("dark-mode", savedDarkMode);
+    }, []);
+
+    // Toggle dark mode
+    const toggleDarkMode = (): void => {
+        const newDarkMode = !darkMode;
+        setDarkMode(newDarkMode);
+        localStorage.setItem("darkMode", newDarkMode.toString());
+        document.body.classList.toggle("dark-mode", newDarkMode);
     };
 
-    window.addEventListener("resize", handleResize);
-    // Call once to set initial state
-    handleResize();
+    // Simulate loading state
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 2000);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
 
-  // Retrieve dark mode state from localStorage
-  useEffect(() => {
-    const savedDarkMode = localStorage.getItem("darkMode") === "true";
-    setDarkMode(savedDarkMode);
-    document.body.classList.toggle("dark-mode", savedDarkMode);
-  }, []);
+    // Handle sidebar click outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const sidebar = document.getElementById("sidebar");
+            const menuButton = document.getElementById("menu-button");
 
-  // Toggle dark mode
-  const toggleDarkMode = (): void => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem("darkMode", newDarkMode.toString());
-    document.body.classList.toggle("dark-mode", newDarkMode);
-  };
+            if (
+                isOpen &&
+                sidebar &&
+                !sidebar.contains(event.target as Node) &&
+                menuButton &&
+                !menuButton.contains(event.target as Node)
+            ) {
+                setIsOpen(false);
+            }
+        };
 
-  // Simulate loading state
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+        document.addEventListener("mousedown", handleClickOutside);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen]);
 
-  // Handle sidebar click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const sidebar = document.getElementById("sidebar");
-      const menuButton = document.getElementById("menu-button");
+    // Prevent scrolling when sidebar is open
+    useEffect(() => {
+        document.body.style.overflowY = isOpen ? "hidden" : "auto";
 
-      if (
-        isOpen &&
-        sidebar &&
-        !sidebar.contains(event.target as Node) &&
-        menuButton &&
-        !menuButton.contains(event.target as Node)
-      ) {
+        return () => {
+            document.body.style.overflowY = "auto";
+        };
+    }, [isOpen]);
+
+    const [period]     = useState("daily");
+    const [sensorType] = useState("Temperature");
+    const [startDate, setStartDate] = useState("2025-01-01");
+    const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
+
+    useEffect(() => {
+  setEndDate(new Date().toISOString().slice(0, 10));
+}, [selectedFarm, selectedModule]);
+
+    // Handle navigation
+    const handleNavigation = (path: string): void => {
+        void navigate({ to: path });
         setIsOpen(false);
-      }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+    // Define types for report data
+    type ChartData = {
+        labels: Array<string>;
+        datasets: Array<{ data: Array<number> }>;
     };
-  }, [isOpen]);
 
-  // Prevent scrolling when sidebar is open
-  useEffect(() => {
-    document.body.style.overflowY = isOpen ? "hidden" : "auto";
-
-    return () => {
-      document.body.style.overflowY = "auto";
+    type ReportDataItem = {
+        chartData: ChartData;
     };
-  }, [isOpen]);
 
-  // Handle navigation
-  const handleNavigation = (path: string): void => {
-    void navigate({ to: path });
-    setIsOpen(false);
-  };
+    type ReportDataResponse = {
+        data: Array<ReportDataItem>;
+    };
 
-  return (
-    <div
-      className={`flex h-screen font-sans ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-      }`}
-    >
-      {/* Sidebar toggle button */}
-      <button
-        id="menu-button"
-        className={`absolute top-4 left-4 z-50 p-2 rounded shadow-md md:hidden transition-colors ${
-          darkMode
-            ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
-            : "bg-[#d3d3d3] text-gray-700 hover:bg-gray-300"
-          }`}
-          onClick={() => {
-          setIsOpen(!isOpen);
-         }}
-       >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+    const {
+        data: reportData,
+    } = useReport({
+        moduleId: selectedModule ?? 0,
+        startDate,
+        endDate,
+        period,
+        sensorType,
+        enabled: !!selectedModule,
+    }) as {
+        data?: ReportDataResponse;
+        loading: boolean;
+        error: unknown;
+    };
 
-      {/* Sidebar */}
-      <SideBar
-          LogoutButtonStyled ={<LogoutButtonStyled />}
-          acuaterraLogo      ={acuaterraLogo}
-          animateSidebar     ={animateSidebar}
-          darkMode           ={darkMode}
-          handleNavigation   ={handleNavigation}
-          isMobile           ={isMobile}
-          isOpen             ={isOpen}
-          items              ={sidebarItems}
-          location           ={{ pathname: location.pathname }}
-          menuRef            ={menuRef}
-          setIsOpen          ={setIsOpen}
-          toggleDarkMode     ={toggleDarkMode}
-          userName            ={userName}
-        />
+    const sidebarWidth = isMobile ? undefined : (sidebarExpanded ? "16rem" : "4.5rem");
 
-      {/* Main content */}
-      <main
-        className={`flex-1 p-6 overflow-y-auto ${
-          isOpen ? "" : "md:ml-64"
-        }`}
-      >
-        {loading ? (
-          <LoaderAcua darkMode={darkMode} />
-        ) : (
-          <>
-            <h1
-              className={`text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center ${
-                darkMode ? "text-white" : "text-black"
-              }`}
+    return (
+        <div
+            className={`flex h-screen font-sans ${
+                darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+            }`}
+        >
+            {/* Sidebar toggle button */}
+            <HamburgerMenuButton
+                darkMode={darkMode}
+                isOpen={isOpen}
+                onClick={() => { setIsOpen(!isOpen); }}
+            />
+
+            {/* Sidebar */}
+            <SideBar
+                LogoutButtonStyled    ={<LogoutButtonStyled />}
+                acuaterraLogo         ={acuaterraLogo}
+                animateSidebar        ={animateSidebar}
+                darkMode              ={darkMode}
+                handleNavigation      ={handleNavigation}
+                isMobile              ={isMobile}
+                isOpen                ={isOpen}
+                items                 ={sidebarItems}
+                location              ={{ pathname: window.location.pathname }}
+                menuRef               ={menuRef}
+                setIsOpen             ={setIsOpen}
+                toggleDarkMode        ={toggleDarkMode}
+                userName              ={userName}
+                onSidebarExpandChange ={setSidebarExpanded} 
+            />
+
+            {/* Main content */}
+            <main
+                className={`flex-1 p-6 overflow-y-auto transition-all duration-300 ${
+                    darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
+                }`}
+                style={{
+                    marginLeft: isMobile ? undefined : sidebarWidth, 
+                    background: darkMode ? "#111827" : "#fff",      
+                    transition: "margin-left 0.5s cubic-bezier(.4,0,.2,1), background 0.3s cubic-bezier(.4,0,.2,1)",
+                }}
             >
-              Reportes
-            </h1>
-            <p className="mb-6 text-center">
-              Visualización y generación de reportes.
-            </p>
+                {loading ? (
+                    <LoaderAcua darkMode={darkMode} />
+                ) : (
+                    <>
+                        <h1
+                            className={`text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center ${
+                                darkMode ? "text-white" : "text-black"
+                            }`}
+                        >
+                            Reportes
+                        </h1>
+                        <p className="mb-6 text-center">
+                            Visualización y generación de reportes.
+                        </p>
 
-            {/* Real-time behavior chart */}
-            <div className="mt-8">
-              <SectionTitle darkMode={darkMode}>
-                Comportamiento en Tiempo Real
-              </SectionTitle>
-              <SensorChart
-                color="rgba(75, 192, 192, 1)"
-                data={sensorData}
-                labels={sensorLabels}
-              />
-            </div>
+                        
+                        <FarmModuleSelector
+                          darkMode           ={darkMode}
+                          selectedFarm       ={selectedFarm}
+                          selectedModule     ={selectedModule}
+                          setSelectedFarm    ={setSelectedFarm}
+                          setSelectedModule  ={setSelectedModule}
+                        />
+                        
+                       <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                         <div className="w-full sm:w-auto max-w-xs">
+                           <label className="block mb-1">Fecha inicio:</label>
+                           <DatePicker
+                             calendarClassName={darkMode ? "react-datepicker__calendar--dark" : ""}
+                             dateFormat="yyyy-MM-dd"
+                             selected={startDate ? new Date(startDate) : null}
+                             className={`w-full border rounded px-2 py-1 transition-colors duration-200 ${
+                               darkMode
+                                 ? "bg-gray-800 text-gray-100 border-gray-600"
+                                 : "bg-white text-gray-900 border-gray-300"
+                             }`}
+                             onChange={(date: Date | null) =>
+                               { setStartDate(date ? date.toISOString().slice(0, 10) : ""); }
+                             }
+                           />
+                         </div>
+                         <div className="w-full sm:w-auto max-w-xs">
+                           <label className="block mb-1">Fecha fin:</label>
+                           <DatePicker
+                             calendarClassName={darkMode ? "react-datepicker__calendar--dark" : ""}
+                             dateFormat="yyyy-MM-dd"
+                             maxDate={new Date()}
+                             minDate={startDate ? new Date(startDate) : undefined}
+                             selected={endDate ? new Date(endDate) : null}
+                             className={`w-full border rounded px-2 py-1 transition-colors duration-200 ${
+                               darkMode
+                                 ? "bg-gray-800 text-gray-100 border-gray-600"
+                                 : "bg-white text-gray-900 border-gray-300"
+                             }`}
+                             onChange={(date: Date | null) =>
+                               { setEndDate(date ? date.toISOString().slice(0, 10) : ""); }
+                             }
+                           />
+                         </div>
+                       </div>
 
-            {/* Weekly behavior chart */}
-            <div className="mt-8">
-              <SectionTitle darkMode={darkMode}>
-                Comportamiento Semanal
-              </SectionTitle>
-              <SensorChart
-                color="rgba(255, 99, 132, 1)"
-                data={weeklyData}
-                labels={weeklyLabels}
-              />
-            </div>
 
-            {/* Monthly behavior chart */}
-            <div className="mt-8">
-              <SectionTitle darkMode={darkMode}>
-                Comportamiento Mensual
-              </SectionTitle>
-              <SensorChart
-                color="rgba(54, 162, 235, 1)"
-                data={monthlyData}
-                labels={monthlyLabels}
-              />
-            </div>
-          </>
-        )}
-      </main>
-    </div>
-  );
+                        {/* Real-time behavior chart */}
+                        <div className="mt-8">
+                            <SectionTitle darkMode={darkMode}>
+                                Comportamiento en Tiempo Real
+                            </SectionTitle>
+                            <SensorChart
+                                color="rgba(75, 192, 192, 1)"
+                                data={sensorData}
+                                labels={sensorLabels}
+                            />
+                        </div>
+
+                        {/* Weekly behavior chart */}
+                        <div className="mt-8">
+                            <SectionTitle darkMode={darkMode}>
+                                Comportamiento Semanal
+                            </SectionTitle>
+                            <SensorChart
+                                color="rgba(255, 99, 132, 1)"
+                                data={weeklyData}
+                                labels={weeklyLabels}
+                            />
+                        </div>
+
+                        {/* Monthly behavior chart */}
+                        <div className="mt-8">
+                            <SectionTitle darkMode={darkMode}>
+                                Comportamiento Mensual
+                            </SectionTitle>
+                            <SensorChart
+                                color="rgba(54, 162, 235, 1)"
+                                data={monthlyData}
+                                labels={monthlyLabels}
+                            />
+                        </div>
+
+                        {/* Report data display */}
+                        <div className="mt-8">
+                            <SectionTitle darkMode={darkMode}>Reporte de Datos servicio</SectionTitle>
+                            <SensorChart
+                                color="rgba(75, 192, 192, 1)"
+                                data={
+                                    reportData?.data?.[0]?.chartData?.datasets?.[0]?.data ??
+                                    sensorData
+                                }
+                                labels={
+                                    reportData?.data?.[0]?.chartData?.labels ?? sensorLabels
+                                }
+                            />
+                        </div>
+                    </>
+                )}
+            </main>
+        </div>
+    );
 };
 
 export default Report;

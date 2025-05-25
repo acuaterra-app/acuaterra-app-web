@@ -10,7 +10,7 @@ import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobil
 import useModulesByFarm from "../hooks/useModulesByFarm";
 import useFarms from "../hooks/useFarms";
 import { isTokenValid } from "../common/isTokenValid";
-import { Menu, X } from "lucide-react";
+import HamburgerMenuButton from "../components/ui/button/HamburgerMenuButton";
 import acuaterraLogo from "../assets/images/logo.png";
 import homeIcon from "../assets/images/home.png";
 import moduleIcon from "../assets/images/module.png";
@@ -20,7 +20,6 @@ import fishIcon from "../assets/images/pez.png";
 import LogoutButton from "../components/ui/button/logoutButton";
 import styled from "styled-components";
 import SideBar from "../components/ui/sidebar/SideBar";
-
 
 // Styled component for the logout button
 const LogoutButtonStyledWrapper = styled.div`
@@ -90,23 +89,23 @@ const sidebarItems = [
 
 // Logout button component
 const LogoutButtonStyled = () => {
-      return (
-        <LogoutButtonStyledWrapper>
-          <button className="button">
-            <p className="button__text">
-              {Array.from("CERRAR SESIÓN").map((char, index) => (
-                <span key={index} style={{ "--index": index } as React.CSSProperties}>
-                  {char}
-                </span>
-              ))}
-            </p>
-            <div className="button__circle">
-              <LogoutButton />
-            </div>
-          </button>
-        </LogoutButtonStyledWrapper>
-      );
-    };
+  return (
+    <LogoutButtonStyledWrapper>
+      <button className="button">
+        <p className="button__text">
+          {Array.from("CERRAR SESIÓN").map((char, index) => (
+            <span key={index} style={{ "--index": index } as React.CSSProperties}>
+              {char}
+            </span>
+          ))}
+        </p>
+        <div className="button__circle">
+          <LogoutButton />
+        </div>
+      </button>
+    </LogoutButtonStyledWrapper>
+  );
+};
 
 // Main component for the Module page
 export const Module: FunctionComponent = () => {
@@ -119,6 +118,7 @@ export const Module: FunctionComponent = () => {
   const [selectedFarmId, setSelectedFarmId] = useState<number | null>(null); // Selected farm ID
   const [userName, setUserName] = useState<string>("Usuario"); // User name
   const [darkMode, setDarkMode] = useState(false); // Dark mode state
+  const [sidebarExpanded, setSidebarExpanded] = useState(true); // NUEVO
 
   // Hooks for fetching data
   const { modules, loading, error, total, page, perPage, setPage } =
@@ -129,11 +129,9 @@ export const Module: FunctionComponent = () => {
   // Check token validity and set user name
   useEffect(() => {
     if (!isTokenValid()) {
-      console.log("Redirecting to /auth from Module component");
       void navigate({ to: "/auth" });
     } else {
       const name = localStorage.getItem("userName");
-      console.log("User name retrieved from localStorage:", name);
       setUserName(name || "Usuario");
     }
   }, [navigate]);
@@ -181,6 +179,8 @@ export const Module: FunctionComponent = () => {
     setIsOpen(false);
   };
 
+  const sidebarWidth = isMobile ? undefined : (sidebarExpanded ? "16rem" : "4.5rem");
+
   return (
     <Layout>
       <div
@@ -189,76 +189,74 @@ export const Module: FunctionComponent = () => {
         }`}
       >
         {/* Sidebar toggle button for mobile */}
-        <button
-        id="menu-button"
-        className={`absolute top-4 left-4 z-50 p-2 rounded shadow-md md:hidden transition-colors ${
-          darkMode
-            ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
-            : "bg-[#d3d3d3] text-gray-700 hover:bg-gray-300"
-          }`}
-          onClick={() => {
-          setIsOpen(!isOpen);
-         }}
-       >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+        <HamburgerMenuButton
+          darkMode={darkMode}
+          isOpen={isOpen}
+          onClick={() => { setIsOpen(!isOpen); }}
+        />
 
         {/* Sidebar */}
         <SideBar
-          LogoutButtonStyled={<LogoutButtonStyled />}
-          acuaterraLogo={acuaterraLogo}
-          animateSidebar={animateSidebar}
-          darkMode={darkMode}
-          handleNavigation={handleNavigation}
-          isMobile={isMobile}
-          isOpen={isOpen}
-          items={sidebarItems}
-          location={{ pathname: location.pathname }}
-          menuRef={menuRef}
-          setIsOpen={setIsOpen}
-          toggleDarkMode={toggleDarkMode}
-          userName={userName}
+          LogoutButtonStyled     ={<LogoutButtonStyled />}
+          acuaterraLogo          ={acuaterraLogo}
+          animateSidebar         ={animateSidebar}
+          darkMode               ={darkMode}
+          handleNavigation       ={handleNavigation}
+          isMobile               ={isMobile}
+          isOpen                 ={isOpen}
+          items                  ={sidebarItems}
+          location               ={{ pathname: window.location.pathname }}
+          menuRef                ={menuRef}
+          setIsOpen              ={setIsOpen}
+          toggleDarkMode         ={toggleDarkMode}
+          userName               ={userName}
+          onSidebarExpandChange  ={setSidebarExpanded} 
         />
         
         {/* Main Content */}
         <main
-          className={`flex-1 p-6 lg:ml-64 max-w-full overflow-x-auto ${
+          className={`flex-1 p-6 max-w-full overflow-x-auto ${
             darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"
           }`}
+          style={{
+            marginLeft: isMobile ? undefined : sidebarWidth, 
+            background: darkMode ? "#111827" : "#fff",      
+            transition: "margin-left 0.5s cubic-bezier(.4,0,.2,1), background 0.3s cubic-bezier(.4,0,.2,1)",
+          }}
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-5 text-center">
             Lista de Módulos
           </h1>
 
           {/* Farm's Selector */}
-         <div className="mb-6 max-w-md mx-auto">
-             <label className="block text-center text-2xl font-bold mb-4">
-               Seleccione una Granja
-             </label>
-             <select
-               disabled={farmsLoading}
-               className={`w-full rounded px-3 py-2 focus:outline-none transition-colors
-                 ${darkMode
-                   ? "bg-gray-800 border border-gray-600 text-white placeholder-gray-400"
-                   : "bg-white border border-gray-300 text-black"
-                 }`}
-               onChange={(event) => {
-                 setSelectedFarmId(Number(event.target.value));
-               }}
-             >
-               <option value="">Seleccione una granja</option>
-               {farms.map((farm) => (
-                 <option key={farm.id} value={farm.id}>
-                   {farm.name}
-                 </option>
-               ))}
-             </select>
-             {farmsError && (
-               <p className="text-red-500 mt-2 text-center">
-                 Error al cargar las granjas
-               </p>
-             )}
-        </div>
+          <div className="mb-6 max-w-md mx-auto">
+            <label className="block text-center text-2xl font-bold mb-4">
+              Seleccione una Granja
+            </label>
+            <select
+              disabled={farmsLoading}
+              className={`w-full rounded px-3 py-2 focus:outline-none transition-colors
+                ${darkMode
+                  ? "bg-gray-800 border border-gray-600 text-white placeholder-gray-400"
+                  : "bg-white border border-gray-300 text-black"
+                }`}
+              onChange={(event) => {
+                setSelectedFarmId(Number(event.target.value));
+              }}
+            >
+              <option value="">Seleccione una granja</option>
+              {farms.map((farm) => (
+                <option key={farm.id} value={farm.id}>
+                  {farm.name}
+                </option>
+              ))}
+            </select>
+            {farmsError && (
+              <p className="text-red-500 mt-2 text-center">
+                Error al cargar las granjas
+              </p>
+            )}
+          </div>
 
           {loading ? (
             <LoaderAcua darkMode={darkMode} />
@@ -266,103 +264,107 @@ export const Module: FunctionComponent = () => {
             <>
               {error && <p className="mt-4 text-red-500">Error: {error}</p>}
 
-             <div
-              className={`hidden md:block rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right border transition-colors duration-300 ${
-                darkMode
-                   ? "bg-gray-800 border-gray-700 text-gray-100"
-                   : "bg-white border-gray-300 text-black"
+              <div
+                className={`hidden md:block rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right border transition-colors duration-300 ${
+                  darkMode
+                    ? "bg-gray-800 border-gray-700 text-gray-100"
+                    : "bg-white border-gray-300 text-black"
                 }`}
-               >
+              >
                 <TableWithActions
-                    darkMode={darkMode}
-                    data={modules}
-                    error={error}
-                    isVisibleActions={false}
-                    isVisibleButton={false}
-                    limit={perPage}
-                    loading={loading}
-                    page={page}
-                    setLimit={() => {} }
-                    setPage={setPage}
-                    total={total}
-                    columns={[
-                      { header: "ID", accessor: "id" },
-                      { header: "Nombre", accessor: "name" },
-                      { header: "Ubicación", accessor: "location" },
-                      {
-                        header: "Especie de Pescados",
-                        accessor: "species_fish",
-                      },
-                      { header: "Cantidad", accessor: "fish_quantity" },
-                      { header: "Dimensiones", accessor: "dimensions" },
-                      {
-                        header: "Creado Por",
-                        accessor: "creator",
-                        render: (module) => module.creator.name.toString(),
-                      },
-                      {
-                        header: "Granja",
-                        accessor: "farm",
-                        render: (module) => module.farm.name.toString(),
-                      },
-                    ]} onAdd={function (): void {
-                      throw new Error("Function not implemented.");
-                    } } onDelete={function (): void {
-                      throw new Error("Function not implemented.");
-                    } } onEdit={function (): void {
-                      throw new Error("Function not implemented.");
-                    } }                />
+                  darkMode         ={darkMode}
+                  data             ={modules}
+                  error            ={error}
+                  isVisibleActions ={false}
+                  isVisibleButton  ={false}
+                  limit            ={perPage}
+                  loading          ={loading}
+                  page             ={page}
+                  setLimit         ={() => {}}
+                  setPage          ={setPage}
+                  total            ={total}
+                  columns          ={[
+                    { header: "ID",        accessor: "id"       },
+                    { header: "Nombre",    accessor: "name"     },
+                    { header: "Ubicación", accessor: "location" },
+                    {
+                      header:   "Especie de Pescados",
+                      accessor: "species_fish",
+                    },
+                    { header: "Cantidad",    accessor: "fish_quantity" },
+                    { header: "Dimensiones", accessor: "dimensions"    },
+                    {
+                      header: "Creado Por",
+                      accessor: "creator",
+                      render: (module) => module.creator.name.toString(),
+                    },
+                    {
+                      header: "Granja",
+                      accessor: "farm",
+                      render: (module) => module.farm.name.toString(),
+                    },
+                  ]}
+                  onAdd={function (): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                  onDelete={function (): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                  onEdit={function (): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
               </div>
 
-             <div
-                 className={`block md:hidden rounded-lg p-4 shadow-md w-full max-w-sm mx-auto transition-colors border ${
-                   darkMode
-                     ? "bg-gray-800 border-gray-700 text-gray-100"
-                     : "bg-white border-gray-300 text-black"
-                 }`}
-                 >
-                 <TableWithActionsMobile
-                   darkMode={darkMode}
-                   data={modules}
-                   error={error}
-                   isVisibleActions={false}
-                   isVisibleButton={false}
-                   limit={perPage}
-                   loading={loading}
-                   page={page}
-                   setLimit={() => {}}
-                   setPage={setPage}
-                   total={total}
-                   columns={[
-                     { header: "ID", accessor: "id" },
-                     { header: "Nombre", accessor: "name" },
-                     { header: "Ubicación", accessor: "location" },
-                     { header: "Especie de Pescados", accessor: "species_fish" },
-                     { header: "Cantidad", accessor: "fish_quantity" },
-                     { header: "Dimensiones", accessor: "dimensions" },
-                     {
-                       header: "Creado Por",
-                       accessor: "creator",
-                       render: (module) => module.creator.name.toString(),
-                     },
-                     {
-                       header: "Granja",
-                       accessor: "farm",
-                       render: (module) => module.farm.name.toString(),
-                     },
-                   ]}
-                   onAdd={function (): void {
-                     throw new Error("Function not implemented.");
-                   }}
-                   onDelete={function (): void {
-                     throw new Error("Function not implemented.");
-                   }}
-                   onEdit={function (): void {
-                     throw new Error("Function not implemented.");
-                   }}
-                 />
-            </div>
-          </>
+              <div
+                className={`block md:hidden rounded-lg p-4 shadow-md w-full max-w-sm mx-auto transition-colors border ${
+                  darkMode
+                    ? "bg-gray-800 border-gray-700 text-gray-100"
+                    : "bg-white border-gray-300 text-black"
+                }`}
+              >
+                <TableWithActionsMobile
+                  darkMode         ={darkMode}
+                  data             ={modules}
+                  error            ={error}
+                  isVisibleActions ={false}
+                  isVisibleButton  ={false}
+                  limit            ={perPage}
+                  loading          ={loading}
+                  page             ={page}
+                  setLimit         ={() => {}}
+                  setPage          ={setPage}
+                  total            ={total}
+                  columns          ={[
+                    { header: "ID", accessor:                  "id"            },
+                    { header: "Nombre", accessor:              "name"          },
+                    { header: "Ubicación", accessor:           "location"      },
+                    { header: "Especie de Pescados", accessor: "species_fish"  },
+                    { header: "Cantidad", accessor:            "fish_quantity" },
+                    { header: "Dimensiones", accessor:         "dimensions"    },
+                    {
+                      header: "Creado Por",
+                      accessor: "creator",
+                      render: (module) => module.creator.name.toString(),
+                    },
+                    {
+                      header: "Granja",
+                      accessor: "farm",
+                      render: (module) => module.farm.name.toString(),
+                    },
+                  ]}
+                  onAdd={function (): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                  onDelete={function (): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                  onEdit={function (): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              </div>
+            </>
           )}
         </main>
       </div>
