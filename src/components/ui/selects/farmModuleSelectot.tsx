@@ -14,8 +14,8 @@ const FarmModuleSelector = ({
   setSelectedModule: (id: number | null) => void;
   darkMode: boolean;
 }): React.ReactElement => {
-  const { farms } = useFarms();
-  const { modules, loading: modulesLoading } = useModulesByFarm(selectedFarm ?? 0);
+  const { farms } = useFarms(1, 30);
+  const { modules, loading: modulesLoading } = useModulesByFarm(selectedFarm ?? 0, 1 , 30);
 
   return (
     <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center">

@@ -39,6 +39,24 @@ const SensorChart: React.FC<SensorChartProps> = ({ labels, data, color }) => {
         borderWidth: 2,
         tension: 0.4,
       },
+      {
+        label: "Límite Inferior de Temperatura (24°C)",
+        data: Array(labels.length).fill(24),
+        borderColor: "blue",
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: false,
+        borderDash: [8, 4], // dashed line (optional)
+      },
+       {
+        label: "Límite Superior de Temperatura (27°C)",
+        data: Array(labels.length).fill(27),
+        borderColor: "red",
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: false,
+        borderDash: [8, 4], // dashed line (optional)
+      },
     ],
   };
 
@@ -50,20 +68,20 @@ const SensorChart: React.FC<SensorChartProps> = ({ labels, data, color }) => {
       },
       title: {
         display: true,
-        text: "Gráfico de Sensor (Tiempo vs Valores)",
+        text: "Gráfico de Sensor (Tiempo vs Temperatura)",
       },
     },
     scales: {
       x: {
         title: {
           display: true,
-          text: "Tiempo",
+          text: "Tiempo en minutos",
         },
       },
       y: {
         title: {
           display: true,
-          text: "Valores",
+          text: "Valores en centígrados",
         },
       },
     },
