@@ -6,7 +6,6 @@ interface TokenClaims {
 
 export const isTokenValid = (): boolean => {
   const token = localStorage.getItem("token");
-  console.log("Token encontrado:", token); 
   return !!token;
 };
 
