@@ -1,6 +1,21 @@
 const API_BASE_URL: string = import.meta.env["VITE_API_BASE_URL"] as string;
 import type { ResponseType, UserResponse, UserRequestV2 } from "../common/types";
 
+
+export interface BackendFieldError {
+  type: string;
+  value: string;
+  msg: string;
+  path: string;
+  location: string;
+}
+
+export interface BackendErrorResponse {
+  message: string;
+  data: Array<unknown>;
+  errors: Array<BackendFieldError>;
+  meta: Record<string, unknown>;
+}
 export const fetchUsers = async (page: number, limit: number): Promise<ResponseType<UserResponse>> => {
     const token = localStorage.getItem("token");
     const response = await fetch(
@@ -34,7 +49,10 @@ export const createUser = async (userData: UserRequestV2): Promise<ResponseType<
         body: JSON.stringify(userData),
     });
     if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorResponse = await response.json() as BackendErrorResponse;
+        const errorMessage = errorResponse.errors.length > 0 ? errorResponse.errors.map((error) => error.msg).join("; ") : errorResponse.message;
+        // Aquí puedes manejar el error de manera más específica si es necesario
+        throw new Error(errorMessage || "Error creating user");
     }
     return response.json() as Promise<ResponseType<UserResponse>>;
 }

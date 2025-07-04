@@ -137,32 +137,7 @@ const Report: FC = () => {
     // Labels and data for charts
     const sensorLabels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
     const sensorData = [20, 25, 22, 30, 28];
-    const weeklyLabels = [
-        "Lunes",
-        "Martes",
-        "Miércoles",
-        "Jueves",
-        "Viernes",
-        "Sábado",
-        "Domingo",
-    ];
-    const weeklyData = [25, 28, 22, 30, 26, 24, 27];
-    const monthlyLabels = [
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        "Agosto",
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre",
-    ];
-    const monthlyData = [22, 24, 26, 28, 30, 32, 34, 33, 31, 29, 27, 25];
-
+    
     // Check token validity and set user name
     useEffect(() => {
         if (!isTokenValid()) {
@@ -404,41 +379,7 @@ const Report: FC = () => {
                        </div>
 
 
-                        {/* Real-time behavior chart */}
-                        <div className="mt-8">
-                            <SectionTitle darkMode={darkMode}>
-                                Comportamiento en Tiempo Real
-                            </SectionTitle>
-                            <SensorChart
-                                color="rgba(75, 192, 192, 1)"
-                                data={sensorData}
-                                labels={sensorLabels}
-                            />
-                        </div>
-
-                        {/* Weekly behavior chart */}
-                        <div className="mt-8">
-                            <SectionTitle darkMode={darkMode}>
-                                Comportamiento Semanal
-                            </SectionTitle>
-                            <SensorChart
-                                color="rgba(255, 99, 132, 1)"
-                                data={weeklyData}
-                                labels={weeklyLabels}
-                            />
-                        </div>
-
-                        {/* Monthly behavior chart */}
-                        <div className="mt-8">
-                            <SectionTitle darkMode={darkMode}>
-                                Comportamiento Mensual
-                            </SectionTitle>
-                            <SensorChart
-                                color="rgba(54, 162, 235, 1)"
-                                data={monthlyData}
-                                labels={monthlyLabels}
-                            />
-                        </div>
+            
 
                         {/* Report data display */}
                         <div className="mt-8">

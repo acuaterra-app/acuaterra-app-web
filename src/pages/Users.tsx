@@ -177,19 +177,19 @@ export const Users: FunctionComponent = () => {
     try {
       const isRegister = await registerUser(userData);
 
-      if (isRegister) {
+      if (isRegister.success) {
         setShowModal(false);
         setReload(!reload);
         toast.success("Usuario registrado exitosamente!");
       } else {
         toast.error(
-          "No se pudo registrar el usuario. Por favor, inténtalo de nuevo."
+          "No se pudo registrar el usuario. Por: " + (isRegister.message || "favor, inténtalo de nuevo.")
         );
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
     } catch (error) {
       toast.error(
-        "No se pudo registrar el usuario. Por favor, inténtalo de nuevo."
+        "No se pudo registrar el usuario. Por: " + (error as string || "favor, inténtalo de nuevo.")
       );
     }
   };

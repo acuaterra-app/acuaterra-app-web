@@ -6,7 +6,8 @@ interface tokenResponse {
         id: number;
         name: string; // Agregamos el campo "name" para reflejar la estructura de la respuesta
         id_rol?: number; // Añadimos id_rol como opcional
-        rol?: string;    // Añadimos rol como opcional
+        rol?: string; 
+        mustChangePassword?: boolean;   // Añadimos mustChangePassword como opcional
     };
     mustChangePassword: boolean;
 }
@@ -36,13 +37,11 @@ export const login = async (email: string, password: string): Promise<LoginRespo
     // Guardar el token y el nombre del usuario en localStorage
     const token = result.data?.[0]?.token;
     const userName = result.data?.[0]?.user?.name;
-    const isAdmin = result.data?.[0]?.user?.id_rol == 1 || result.data?.[0]?.user.rol == "ADMIN" || false ;
+    const isAdmin = result.data?.[0]?.user?.id_rol == 1 || result.data?.[0]?.user.rol == "ADMIN" || false;
 
     if (!token || !userName || !isAdmin) {
         throw new Error("Invalid login response: Missing token or user name");
     }
-
-    localStorage.setItem("token", token);
     localStorage.setItem("userName", userName);
 
     console.log("Inicio de sesión exitoso. Token y nombre del usuario guardados en localStorage:", {

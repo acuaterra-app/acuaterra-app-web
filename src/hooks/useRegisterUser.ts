@@ -2,29 +2,58 @@ import { useState } from "react";
 import type {  UserResponse, ResponseType, UserRequestV2 } from "../common/types";
 import { createUser } from "../services/userService";
 
+export interface BackendFieldError {
+  type: string;
+  value: string;
+  msg: string;
+  path: string;
+  location: string;
+}
+
+export interface BackendErrorResponse {
+  message: string;
+  data: Array<unknown>;
+  errors: Array<BackendFieldError>;
+  meta: Record<string, unknown>;
+}
+
 const useRegisterUser = (): {
-    registerUser: (user: UserRequestV2) => Promise<boolean>;
+    registerUser: (user: UserRequestV2) => Promise<{ success: boolean; errors?: Array<BackendFieldError>; message?: string }>;
     loading: boolean;
-    error: string | null;
+    error: string;
 } => {
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const registerUser = async (user: UserRequestV2): Promise<boolean> => {
+
+    const registerUser = async (
+        user: UserRequestV2
+    ): Promise<{ success: boolean; message?: string }> => {
         try {
             setLoading(true);
             const response: ResponseType<UserResponse> = await createUser(user);
-            const userResponse = response.data[0];
-            if (response.errors.length === 0 || !userResponse) {
-                return await Promise.resolve(true);
+            const userResponse = response.data as unknown as UserResponse;
+            if (response.errors.length === 0 && userResponse) {
+                setError("");
+                return { success: true };
             } else {
                 setError(response.errors[0] as string);
-                return false;
+                return { success: false, message: "Error al crear el usuario" };
             }
            
-        } catch (error) {
+        } catch (error: unknown) {
             console.error("Error creating user:", error);
-            setError("Error creating user");
-            return false;
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("Error al crear el usuario");
+            }
+            
+            return { 
+                success: false, 
+                message: (typeof error === "object" && error !== null && "message" in error && typeof (error as { message?: unknown }).message === "string")
+                    ? (error as { message: string }).message
+                    : "Error al crear el usuario"
+            };
         } finally {
             setLoading(false);
         }
