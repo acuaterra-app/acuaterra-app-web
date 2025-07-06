@@ -8,6 +8,7 @@ import LoaderAcua from "../components/loaders/LoaderAcua";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobile";
 import useModulesByFarm from "../hooks/useModulesByFarm";
+import useAllModulesByFarm from "../hooks/useAllModulesByFarm";
 import { fetchAllFarms } from "../services/farmSevice";
 import type { Farm } from "../common/types";
 import { isTokenValid } from "../common/isTokenValid";
@@ -125,8 +126,21 @@ export const Module: FunctionComponent = () => {
   const [allFarmsError, setAllFarmsError] = useState<string | null>(null); // Error al cargar granjas
 
   // Hooks for fetching data
-  const { modules, loading, error, total, page, perPage, setPage } =
-    useModulesByFarm(selectedFarmId || 0);
+  const { loading, error } = useModulesByFarm(selectedFarmId || 0);
+  
+  // Hook para búsqueda global de módulos con paginación local
+  const {
+    paginatedModules,
+    loading: allModulesLoading,
+    error: allModulesError,
+    searchTerm,
+    setSearchTerm,
+    page,
+    perPage,
+    setPage,
+    filteredTotal
+  } = useAllModulesByFarm(selectedFarmId || 0);
+  
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Check token validity and set user name
@@ -296,11 +310,15 @@ export const Module: FunctionComponent = () => {
             )}
           </div>
 
-          {loading ? (
+          {allModulesLoading || loading ? (
             <LoaderAcua darkMode={darkMode} />
           ) : (
             <>
-              {error && <p className="mt-4 text-red-500">Error: {error}</p>}
+              {(error || allModulesError) && (
+                <p className="mt-4 text-red-500">
+                  Error: {error || allModulesError}
+                </p>
+              )}
 
               <div
                 className={`hidden md:block rounded-lg p-4 shadow-md w-full max-w-7xl mx-auto animate-wipe-in-right border transition-colors duration-300 ${
@@ -311,16 +329,18 @@ export const Module: FunctionComponent = () => {
               >
                 <TableWithActions
                   darkMode         ={darkMode}
-                  data             ={modules}
-                  error            ={error}
+                  data             ={paginatedModules}
+                  error            ={error || allModulesError}
                   isVisibleActions ={false}
                   isVisibleButton  ={false}
                   limit            ={perPage}
-                  loading          ={loading}
+                  loading          ={allModulesLoading || loading}
                   page             ={page}
+                  searchPlaceholder="🔍 Buscar módulos (nombre, ubicación, especie, etc.)"
+                  searchTerm       ={searchTerm}
                   setLimit         ={() => {}}
                   setPage          ={setPage}
-                  total            ={total}
+                  total            ={filteredTotal}
                   columns          ={[
                     { header: "ID",        accessor: "id"       },
                     { header: "Nombre",    accessor: "name"     },
@@ -342,6 +362,7 @@ export const Module: FunctionComponent = () => {
                       render: (module) => module.farm.name.toString(),
                     },
                   ]}
+                  onGlobalSearch   ={setSearchTerm}
                   onAdd={function (): void {
                     throw new Error("Function not implemented.");
                   }}
@@ -363,16 +384,18 @@ export const Module: FunctionComponent = () => {
               >
                 <TableWithActionsMobile
                   darkMode         ={darkMode}
-                  data             ={modules}
-                  error            ={error}
+                  data             ={paginatedModules}
+                  error            ={error || allModulesError}
                   isVisibleActions ={false}
                   isVisibleButton  ={false}
                   limit            ={perPage}
-                  loading          ={loading}
+                  loading          ={allModulesLoading || loading}
                   page             ={page}
+                  searchPlaceholder="🔍 Buscar módulos"
+                  searchTerm       ={searchTerm}
                   setLimit         ={() => {}}
                   setPage          ={setPage}
-                  total            ={total}
+                  total            ={filteredTotal}
                   columns          ={[
                     { header: "ID", accessor:                  "id"            },
                     { header: "Nombre", accessor:              "name"          },
@@ -391,6 +414,7 @@ export const Module: FunctionComponent = () => {
                       render: (module) => module.farm.name.toString(),
                     },
                   ]}
+                  onGlobalSearch   ={setSearchTerm}
                   onAdd={function (): void {
                     throw new Error("Function not implemented.");
                   }}
