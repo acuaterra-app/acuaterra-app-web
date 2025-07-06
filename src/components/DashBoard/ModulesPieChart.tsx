@@ -1,7 +1,4 @@
-import { Pie } from "react-chartjs-2";
-import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
 import { motion } from "framer-motion";
-Chart.register(ArcElement, Tooltip, Legend);
 
 interface ModulesPieChartProps {
   modules: { labels: Array<string>; datasets: Array<{ data: Array<number> }> };
@@ -9,15 +6,7 @@ interface ModulesPieChartProps {
 }
 
 const ModulesPieChart: React.FC<ModulesPieChartProps> = ({ modules, darkMode }) => {
-  const data = {
-    labels: ["Activos", "Inactivos"],
-    datasets: [
-      {
-        data: modules.datasets[0]?.data ?? [0, 0],
-        backgroundColor: ["#57CC99", "#22577A"],
-      },
-    ],
-  };
+  const activeModules = modules.datasets[0]?.data[0] ?? 0;
 
   return (
     <motion.div
@@ -26,30 +15,40 @@ const ModulesPieChart: React.FC<ModulesPieChartProps> = ({ modules, darkMode }) 
       viewport={{ once: true, amount: 0.2 }}
       whileHover={{ scale: 1.05 }}
       whileInView={{ opacity: 1, y: 0 }}
-      className={`rounded-xl p-6 shadow-lg flex flex-col items-center w-full transition-colors duration-300
+      className={`rounded-xl p-6 shadow-lg flex flex-col items-center justify-center w-full transition-colors duration-300
         ${darkMode
-          ? "bg-gray-800 bg-opacity-80 backdrop-blur-md"
-          : "bg-gray-200 bg-opacity-70 backdrop-blur-md"}
+          ? "bg-gradient-to-br from-gray-800 to-gray-900 bg-opacity-80 backdrop-blur-md"
+          : "bg-gradient-to-br from-green-50 to-green-100 bg-opacity-70 backdrop-blur-md"}
         hover:shadow-2xl hover:scale-105 transition-transform duration-300
       `}
     >
-      <h3 className={`text-lg font-bold mb-2 ${darkMode ? "text-white" : "text-gray-800"}`}>Estado de Módulos</h3>
-      <div className="w-32 h-32 sm:w-40 sm:h-40">
-        <Pie data={data} />
+      <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-4 ${
+        darkMode ? "bg-green-600" : "bg-green-500"
+      }`}>
+        <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <path clipRule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" fillRule="evenodd" />
+          <path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V9a1 1 0 00-1-1h-1v-1z" />
+        </svg>
       </div>
-      <span className="flex items-center gap-1 mt-2">
-        <span className={`text-4xl font-extrabold ${darkMode ? "text-white" : "text-gray-800"}`}>
-          {modules.datasets[0]?.data[0] ?? 0}
+      
+      <h3 className={`text-lg font-bold mb-2 ${darkMode ? "text-white" : "text-gray-800"}`}>
+        Módulos Activos
+      </h3>
+      
+      <div className="flex items-center gap-2 mb-3">
+        <span className={`text-5xl font-extrabold ${darkMode ? "text-green-400" : "text-green-600"}`}>
+          {activeModules}
         </span>
         <span
-          className="text-green-400 text-sm cursor-help"
+          className="text-green-500 text-sm cursor-help font-semibold"
           title="Crecimiento respecto a la semana pasada"
         >
           ▲ 3%
         </span>
-      </span>
-      <p className={`mt-2 text-sm text-center ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-        Distribución de módulos activos e inactivos.
+      </div>
+      
+      <p className={`text-sm text-center ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+        Módulos operativos en el sistema
       </p>
     </motion.div>
   );
