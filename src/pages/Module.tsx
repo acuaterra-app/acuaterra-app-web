@@ -8,7 +8,8 @@ import LoaderAcua from "../components/loaders/LoaderAcua";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobile";
 import useModulesByFarm from "../hooks/useModulesByFarm";
-import useFarms from "../hooks/useFarms";
+import { fetchAllFarms } from "../services/farmSevice";
+import type { Farm } from "../common/types";
 import { isTokenValid } from "../common/isTokenValid";
 import HamburgerMenuButton from "../components/ui/button/HamburgerMenuButton";
 import acuaterraLogo from "../assets/images/logo.png";
@@ -119,11 +120,13 @@ export const Module: FunctionComponent = () => {
   const [userName, setUserName] = useState<string>("Usuario"); // User name
   const [darkMode, setDarkMode] = useState(false); // Dark mode state
   const [sidebarExpanded, setSidebarExpanded] = useState(true); // NUEVO
+  const [allFarms, setAllFarms] = useState<Array<Farm>>([]); // Todas las granjas para selector
+  const [allFarmsLoading, setAllFarmsLoading] = useState(false); // Loading de todas las granjas
+  const [allFarmsError, setAllFarmsError] = useState<string | null>(null); // Error al cargar granjas
 
   // Hooks for fetching data
   const { modules, loading, error, total, page, perPage, setPage } =
     useModulesByFarm(selectedFarmId || 0);
-  const { farms, loading: farmsLoading, error: farmsError } = useFarms();
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Check token validity and set user name
@@ -156,6 +159,25 @@ export const Module: FunctionComponent = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  // Cargar todas las granjas para el selector al inicializar el componente
+  useEffect(() => {
+    const loadAllFarms = async (): Promise<void> => {
+      setAllFarmsLoading(true);
+      setAllFarmsError(null);
+      try {
+        const response = await fetchAllFarms();
+        setAllFarms(response.data);
+      } catch (error) {
+        console.error('Error loading all farms:', error);
+        setAllFarmsError('Error al cargar las granjas');
+      } finally {
+        setAllFarmsLoading(false);
+      }
+    };
+
+    void loadAllFarms();
   }, []);
 
   // Retrieve dark mode state from localStorage
@@ -228,32 +250,48 @@ export const Module: FunctionComponent = () => {
             Lista de Módulos
           </h1>
 
-          {/* Farm's Selector */}
-          <div className="mb-6 max-w-md mx-auto">
-            <label className="block text-center text-2xl font-bold mb-4">
-              Seleccione una Granja
+          {/* Farm's Selector - Mejorado para mostrar todas las granjas */}
+          <div className="mb-8 max-w-md mx-auto">
+            <label className="block text-center text-2xl font-bold mb-4 text-blue-600">
+              🏠 Seleccione una Granja
             </label>
             <select
-              disabled={farmsLoading}
-              className={`w-full rounded px-3 py-2 focus:outline-none transition-colors
+              disabled={allFarmsLoading}
+              value={selectedFarmId || ""}
+              className={`w-full rounded-lg px-4 py-3 text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-lg border-2
+                ${allFarmsLoading 
+                  ? "opacity-50 cursor-not-allowed" 
+                  : "cursor-pointer hover:shadow-xl"
+                }
                 ${darkMode
-                  ? "bg-gray-800 border border-gray-600 text-white placeholder-gray-400"
-                  : "bg-white border border-gray-300 text-black"
+                  ? "bg-gray-800 border-gray-600 text-white"
+                  : "bg-white border-gray-300 text-gray-800"
                 }`}
               onChange={(event) => {
-                setSelectedFarmId(Number(event.target.value));
+                const value = event.target.value;
+                setSelectedFarmId(value ? Number(value) : null);
               }}
             >
-              <option value="">Seleccione una granja</option>
-              {farms.map((farm) => (
+              <option disabled value="">
+                {allFarmsLoading ? "🔄 Cargando granjas..." : "Seleccione una granja"}
+              </option>
+              {allFarms.map((farm: Farm) => (
                 <option key={farm.id} value={farm.id}>
-                  {farm.name}
+                  🌊 {farm.name}
                 </option>
               ))}
             </select>
-            {farmsError && (
+            
+            {/* Mensajes de estado */}
+            {allFarmsError && (
               <p className="text-red-500 mt-2 text-center">
-                Error al cargar las granjas
+                ⚠️ {allFarmsError}
+              </p>
+            )}
+            
+            {!allFarmsLoading && allFarms.length === 0 && !allFarmsError && (
+              <p className="text-yellow-600 mt-2 text-center">
+                📭 No hay granjas disponibles
               </p>
             )}
           </div>
