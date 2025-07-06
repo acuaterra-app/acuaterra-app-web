@@ -94,7 +94,7 @@ src/
 
 ### **1. Clonar el Repositorio**
 ```bash
-git clone [URL_DEL_REPOSITORIO]
+git clone [https://github.com/acuaterra-app/acuaterra-app-web.git]
 cd acuaterra-app-web
 ```
 
@@ -306,6 +306,11 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 - **Proyecto**: Acuaterra App Web
 - **Institución**: SENA - 7mo Trimestre
 - **Tecnologías**: React + TypeScript + Vite
+
+### 👨‍💻 **Equipo de Desarrollo**
+- **Diego Alonso Ruiz** - Frontend Developer
+- **Duber Alberto Imbachi** - Frontend Developer  
+- **William David Perdigón** - Frontend Developer
 
 ---
 
