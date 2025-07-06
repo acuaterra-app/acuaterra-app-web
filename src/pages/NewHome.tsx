@@ -30,14 +30,29 @@ const cardGridVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
     },
   },
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { 
+    opacity: 0, 
+    y: 60,
+    scale: 0.8,
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 25,
+      duration: 0.6,
+    }
+  },
 };
 
 const LogoutButtonStyledWrapper = styled.div`
@@ -167,7 +182,7 @@ const NewHome: FC = () => {
   }, []);
   
   const SkeletonCard = () => (
-    <div className="rounded-xl p-6 shadow-lg w-full h-64 bg-gray-300 animate-pulse" />
+    <div className="rounded-2xl p-4 sm:p-6 shadow-lg w-full h-48 sm:h-56 lg:h-64 bg-gray-300 animate-pulse" />
   );
 
   useEffect(() => {
@@ -239,9 +254,12 @@ const NewHome: FC = () => {
       />
 
       {/* Main Content */}
-      <main
+      <motion.main
+        animate={{ opacity: 1 }}
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className={`
-          transition-all duration-300
+          transition-all duration-500 ease-in-out
           ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-700"}
           ${isMobile ? "pt-20" : ""}
           min-h-screen
@@ -252,17 +270,39 @@ const NewHome: FC = () => {
           filter: isMobile && isOpen ? "blur(2px)" : "none",
           pointerEvents: isMobile && isOpen ? "none" : "auto",
           marginLeft: isMobile ? undefined : sidebarWidth, 
-          background: darkMode ? "#111827" : "#fff",     
-          transition: "margin-left 0.5s cubic-bezier(.4,0,.2,1), background 0.3s cubic-bezier(.4,0,.2,1)",
+          background: darkMode 
+            ? "linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%)" 
+            : "linear-gradient(135deg, #ffffff 0%, #f9fafb 50%, #ffffff 100%)",     
+          transition: "margin-left 0.5s cubic-bezier(.4,0,.2,1), background 0.5s cubic-bezier(.4,0,.2,1), filter 0.3s ease",
         }}
       >
-        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 text-center">
+        <motion.h1 
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-5 text-center px-4"
+          initial={{ opacity: 0, y: -50, scale: 0.8 }}
+          transition={{ 
+            duration: 0.8, 
+            delay: 0.2,
+            type: "spring",
+            stiffness: 300,
+            damping: 20
+          }}
+        >
           Acuaterra
-        </h1>
-        <p className="mb-7 text-base sm:text-sm text-center">
+        </motion.h1>
+        <motion.p 
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 sm:mb-7 text-sm sm:text-base md:text-lg text-center px-4 max-w-4xl mx-auto leading-relaxed"
+          initial={{ opacity: 0, y: 30 }}
+          transition={{ 
+            duration: 0.6, 
+            delay: 0.4,
+            ease: "easeOut"
+          }}
+        >
           Acuaterra es una herramienta de software diseñada para sistematizar el
           proceso de monitoreo en módulos acuapónicos.
-        </p>
+        </motion.p>
 
         {isMobile ? (
           <MobileCarousel />
@@ -274,7 +314,7 @@ const NewHome: FC = () => {
         {stats && metrics ? (
           <motion.div
             animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-20 sm:mt-30 lg:mt-40 px-4"
             initial="hidden"
             variants={cardGridVariants}
           >
@@ -298,11 +338,11 @@ const NewHome: FC = () => {
             </motion.div>
           </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-40">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-20 sm:mt-30 lg:mt-40 px-4">
             {Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)}
           </div>
         )}
-      </main>
+      </motion.main>
     </div>
   );
 };
