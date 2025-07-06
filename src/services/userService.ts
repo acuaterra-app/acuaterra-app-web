@@ -85,3 +85,24 @@ export const updateUser = async (userId: number, userData: UserRequestV2): Promi
         throw new Error("Network response was not ok");
     }
 };
+
+// Función para obtener todos los usuarios (para búsqueda global)
+export const fetchAllUsers = async (): Promise<ResponseType<UserResponse>> => {
+    const token = localStorage.getItem("token");
+    // Usar un límite muy alto para obtener todos los usuarios
+    const response = await fetch(
+        `${API_BASE_URL}/admin/users?page=1&limit=10000`,
+        {
+            method: "GET",
+            headers: {
+                Authorization: `${token}`,
+                "Content-Type": "application/json",
+            },
+        }
+    );
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
+    }
+    const result: ResponseType<UserResponse> = await response.json() as ResponseType<UserResponse>;
+    return result;
+};

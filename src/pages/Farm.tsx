@@ -6,6 +6,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useFarms from "../hooks/useFarms";
+import useDebounce from "../hooks/useDebounce";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobile";
 import FarmModal from "../components/ui/modals/FarmModal";
@@ -124,7 +125,12 @@ const FarmsPage: FunctionComponent = () => {
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [userName, setUserName] = useState<string>("Usuario");
   const [darkMode, setDarkMode] = useState(false);
-  const [sidebarExpanded, setSidebarExpanded] = useState(true); // NUEVO
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [globalSearchTerm, setGlobalSearchTerm] = useState(''); // Término de búsqueda global
+  
+  // Debounce el término de búsqueda para mejorar la experiencia
+  const debouncedSearchTerm = useDebounce(globalSearchTerm, 300);
+  
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -171,6 +177,32 @@ const FarmsPage: FunctionComponent = () => {
     };
   }, []);
 
+  // Función para manejar búsqueda global
+  const handleGlobalSearch = (searchTerm: string): void => {
+    setGlobalSearchTerm(searchTerm);
+    // Al buscar, volver a la primera página para mostrar los resultados desde el inicio
+    if (searchTerm !== globalSearchTerm) {
+      setPage(1);
+    }
+  };
+
+  // Filtrar granjas basado en el término de búsqueda global (usando debounce)
+  const filteredFarms = debouncedSearchTerm
+    ? farms.filter((farm) => {
+        const searchLower = debouncedSearchTerm.toLowerCase();
+        return (
+          farm.name.toLowerCase().includes(searchLower) ||
+          farm.address.toLowerCase().includes(searchLower) ||
+          farm.latitude.toString().includes(searchLower) ||
+          farm.longitude.toString().includes(searchLower) ||
+          farm.users.some((user) => 
+            (user as User).name.toLowerCase().includes(searchLower) ||
+            (user as User).email.toLowerCase().includes(searchLower)
+          )
+        );
+      })
+    : farms;
+
   const handleAddFarm = async (farmData: FarmRequest): Promise<void> => {
     try {
       const isRegister = await addFarm(farmData);
@@ -216,6 +248,17 @@ const FarmsPage: FunctionComponent = () => {
   const handleNavigation = (path: string): void => {
     void navigate({ to: path });
     setIsOpen(false);
+  };
+
+  // Callbacks para las tablas
+  const handleAddNewFarm = (): void => {
+    setSelectedFarm(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditFarmFromTable = (farm: FarmRequest): void => {
+    setSelectedFarm(farm);
+    setIsModalOpen(true);
   };
 
   const sidebarWidth = isMobile ? undefined : (sidebarExpanded ? "16rem" : "4.5rem");
@@ -287,14 +330,16 @@ const FarmsPage: FunctionComponent = () => {
             >
               <TableWithActions
                 darkMode={darkMode}
-                data    ={farms}
-                error   ={error}
-                limit   ={limit}
-                loading ={loading}
-                page    ={page}
+                data={filteredFarms}
+                error={error}
+                limit={limit}
+                loading={loading}
+                page={page}
+                searchPlaceholder="🔍 Buscar granjas por nombre, dirección o usuarios..."
+                searchTerm={globalSearchTerm}
                 setLimit={setLimit}
-                setPage ={setPage}
-                total   ={total}
+                setPage={setPage}
+                total={debouncedSearchTerm ? filteredFarms.length : total}
                 columns={[
                   { header: "ID",        accessor: "id"        },
                   { header: "Name",      accessor: "name"      },
@@ -309,15 +354,10 @@ const FarmsPage: FunctionComponent = () => {
                       farm.users.map((user) => (user as User).name).join(", "),
                   },
                 ]}
+                onAdd={handleAddNewFarm}
                 onDelete={handleRemoveFarm}
-                onAdd={() => {
-                  setSelectedFarm(null);
-                  setIsModalOpen(true);
-                }}
-                onEdit={(farm: FarmRequest) => {
-                  setSelectedFarm(farm);
-                  setIsModalOpen(true);
-                }}
+                onEdit={handleEditFarmFromTable}
+                onGlobalSearch={handleGlobalSearch}
               />
             </div>
 
@@ -331,14 +371,16 @@ const FarmsPage: FunctionComponent = () => {
             >
               <TableWithActionsMobile
                 darkMode={darkMode}
-                data={farms}
+                data={filteredFarms}
                 error={error}
                 limit={limit}
                 loading={loading}
                 page={page}
+                searchPlaceholder="🔍 Buscar granjas..."
+                searchTerm={globalSearchTerm}
                 setLimit={setLimit}
                 setPage={setPage}
-                total={total}
+                total={debouncedSearchTerm ? filteredFarms.length : total}
                 columns={[
                   { header: "ID",        accessor: "id"        },
                   { header: "Name",      accessor: "name"      },
@@ -353,15 +395,10 @@ const FarmsPage: FunctionComponent = () => {
                       farm.users.map((user) => (user as User).name).join(", "),
                   },
                 ]}
+                onAdd={handleAddNewFarm}
                 onDelete={handleRemoveFarm}
-                onAdd={() => {
-                  setSelectedFarm(null);
-                  setIsModalOpen(true);
-                }}
-                onEdit={(farm: FarmRequest) => {
-                  setSelectedFarm(farm);
-                  setIsModalOpen(true);
-                }}
+                onEdit={handleEditFarmFromTable}
+                onGlobalSearch={handleGlobalSearch}
               />
             </div>
           </>

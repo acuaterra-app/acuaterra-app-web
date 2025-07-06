@@ -20,7 +20,9 @@ interface TableWithActionsProps<T extends TableItem> {
   setLimit: (limit: number) => void;
   isVisibleButton?: boolean ;
   isVisibleActions?: boolean;
-  darkMode?: boolean; // <-- Añade la prop
+  darkMode?: boolean;
+  onGlobalSearch?: (searchTerm: string) => void; 
+  searchTerm?: string; 
 }
 
 const TableWithActions = <T extends TableItem>({
@@ -39,15 +41,33 @@ const TableWithActions = <T extends TableItem>({
   setLimit, 
   isVisibleButton = true,
   isVisibleActions = true,
-  darkMode = false, // <-- Valor por defecto
+  darkMode = false,
+  onGlobalSearch,
+  searchTerm: controlledSearchTerm,
 }: TableWithActionsProps<T>): JSX.Element => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [localSearchTerm, setLocalSearchTerm] = useState('');
+  
+  // Usar el término de búsqueda controlado o el local
+  const currentSearchTerm = controlledSearchTerm !== undefined ? controlledSearchTerm : localSearchTerm;
+  
+  // Manejar cambios en el input de búsqueda
+  const handleSearchChange = (value: string): void => {
+    if (onGlobalSearch) {
+      // Si hay callback de búsqueda global, usarlo
+      onGlobalSearch(value);
+    } else {
+      // Si no, usar búsqueda local
+      setLocalSearchTerm(value);
+    }
+  };
 
+  // Filtrar solo los datos de la página actual para mostrar -
+  // El buscador ahora es más visual e intuitivo para el usuario
   const filteredData = data.filter((item) =>
     columns.some((column) =>
       String(item[column.accessor] ?? '')
         .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+        .includes(currentSearchTerm.toLowerCase())
     )
   );
 
@@ -69,15 +89,44 @@ const TableWithActions = <T extends TableItem>({
         <input
           placeholder={searchPlaceholder}
           type="text"
-          value={searchTerm}
-          className={`mb-4 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-200 border ${
+          value={currentSearchTerm}
+          className={`mb-4 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 border-2 ${
             darkMode
-              ? "bg-gray-900 border-gray-700 text-gray-100 placeholder-gray-400"
-              : "bg-white border-lightGray text-black"
-          }`}
+              ? "bg-gray-900 border-gray-600 text-gray-100 placeholder-gray-400 focus:border-cyan-400 focus:bg-gray-800"
+              : "bg-white border-gray-300 text-black placeholder-gray-500 focus:border-primary focus:bg-gray-50"
+          } ${currentSearchTerm ? 'ring-2 ring-opacity-30' : ''}`}
           // eslint-disable-next-line unicorn/prevent-abbreviations
-          onChange={(e) => { setSearchTerm(e.target.value); }}
+          onChange={(e) => { handleSearchChange(e.target.value); }}
         />
+        
+        {/* Visual feedback when searching */}
+        {currentSearchTerm && (
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className={`mb-3 p-2 rounded-lg text-sm ${
+              darkMode
+                ? "bg-cyan-900 text-cyan-200 border border-cyan-700"
+                : "bg-blue-50 text-blue-700 border border-blue-200"
+            }`}
+          >
+            <span className="font-medium">🔍 Buscando:</span> "{currentSearchTerm}" 
+            {onGlobalSearch ? (
+              <span className="ml-2 text-xs opacity-75">
+                (búsqueda en {total} elemento{total !== 1 ? 's' : ''} total{total !== 1 ? 'es' : ''})
+              </span>
+            ) : filteredData.length > 0 ? (
+              <span className="ml-2 text-xs opacity-75">
+                ({filteredData.length} resultado{filteredData.length !== 1 ? 's' : ''} en esta página)
+              </span>
+            ) : (
+              <span className="ml-2 text-xs opacity-75">
+                (Sin resultados en esta página)
+              </span>
+            )}
+          </motion.div>
+        )}
         {isVisibleButton && (
           <motion.button
             whileTap={{ scale: 0.95 }}
@@ -119,12 +168,16 @@ const TableWithActions = <T extends TableItem>({
           </thead>
           <tbody className={darkMode ? "text-gray-100 text-sm font-light" : "text-gray-600 text-sm font-light"}>
             {filteredData.map((item, index) => (
-              <tr
+              <motion.tr
                 key={item.id}
-                className={`transition-colors duration-200 border-b cursor-pointer ${
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2, delay: index * 0.03 }}
+                className={`transition-all duration-200 border-b cursor-pointer ${
                   darkMode
-                    ? `${index % 2 === 0 ? "bg-gray-800" : "bg-gray-700"} hover:bg-cyan-900`
-                    : `${index % 2 === 0 ? "bg-lightGray" : "bg-white"} hover:bg-cyan-100`
+                    ? `${index % 2 === 0 ? "bg-gray-800" : "bg-gray-700"} hover:bg-cyan-900 hover:shadow-lg`
+                    : `${index % 2 === 0 ? "bg-gray-50" : "bg-white"} hover:bg-cyan-50 hover:shadow-lg`
                 }`}
               >
                 {columns.map((column) => (
@@ -160,7 +213,7 @@ const TableWithActions = <T extends TableItem>({
                     </div>
                   </td>
                 )}
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>
@@ -170,7 +223,7 @@ const TableWithActions = <T extends TableItem>({
       <div className="md:hidden mt-4">
         <TableWithActionsMobile
           columns={columns}
-          darkMode={darkMode} // <-- Pasa la prop a la tabla móvil
+          darkMode={darkMode}
           data={data}
           error={error}
           isVisibleButton={isVisibleButton}
@@ -178,12 +231,14 @@ const TableWithActions = <T extends TableItem>({
           loading={loading}
           page={page}
           searchPlaceholder={searchPlaceholder}
+          searchTerm={controlledSearchTerm}
           setLimit={setLimit}
           setPage={setPage}
           total={total}
           onAdd={onAdd}
           onDelete={onDelete}
           onEdit={onEdit}
+          onGlobalSearch={onGlobalSearch}
         />
       </div>
 

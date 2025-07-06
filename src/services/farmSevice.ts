@@ -78,3 +78,67 @@ export const updateFarm = async (farmId: number, farmData: FarmRequest): Promise
     }
     return response.json() as Promise<ApiResponse>;
 };
+
+// Función para obtener todas las granjas disponibles (para selectores)
+export const fetchAllFarms = async (): Promise<{ data: Array<Farm>, total: number }> => {
+    const token = localStorage.getItem("token");
+    const limit = 50; // Límite seguro por página
+
+    // Primero obtenemos la primera página para conocer el total de páginas
+    const firstResponse = await fetch(`${API_BASE_URL}/admin/farms?page=1&limit=${limit}`, {
+        method: "GET",
+        headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!firstResponse.ok) {
+        throw new Error(`Error al obtener granjas: ${firstResponse.status} ${firstResponse.statusText}`);
+    }
+
+    const firstData = await firstResponse.json() as ApiResponse;
+    const totalPages = firstData.meta.pagination.totalPages;
+    let allFarms: Array<Farm> = [...firstData.data];
+
+    // Si hay más páginas, crear promesas para obtenerlas todas
+    if (totalPages > 1) {
+        const pagePromises: Array<Promise<Response>> = [];
+        
+        for (let page = 2; page <= totalPages; page++) {
+            pagePromises.push(
+                fetch(`${API_BASE_URL}/admin/farms?page=${page}&limit=${limit}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `${token}`,
+                        "Content-Type": "application/json",
+                    },
+                })
+            );
+        }
+
+        // Ejecutar todas las promesas en paralelo y procesar respuestas
+        const responses = await Promise.all(pagePromises);
+        const dataPromises = responses.map(async (response) => {
+            if (!response.ok) {
+                throw new Error(`Error al obtener página de granjas: ${response.status}`);
+            }
+            return response.json() as Promise<ApiResponse>;
+        });
+        
+        const pagesData = await Promise.all(dataPromises);
+        
+        // Agregar todos los datos de las páginas adicionales
+        for (const pageData of pagesData) {
+            allFarms = [...allFarms, ...pageData.data];
+        }
+    }
+
+    // Ordenar todas las granjas por ID
+    const sortedFarms = allFarms.sort((itema, itemb) => itema.id >= itemb.id ? 1 : -1);
+    
+    return { 
+        data: sortedFarms, 
+        total: firstData.meta.pagination.total 
+    };
+};
