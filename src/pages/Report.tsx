@@ -383,7 +383,7 @@ const Report: FC = () => {
 
                         {/* Report data display */}
                         <div className="mt-8">
-                            <SectionTitle darkMode={darkMode}>Reporte de Datos servicio</SectionTitle>
+                            <SectionTitle darkMode={darkMode}>Reporte de Datos servicio - Sensor Temperatura</SectionTitle>
                             <SensorChart
                                 color="rgba(75, 192, 192, 1)"
                                 data={
