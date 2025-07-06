@@ -19,7 +19,9 @@ interface TableWithActionsMobileProps<T extends TableItem> {
   setLimit: (limit: number) => void;
   isVisibleButton?: boolean;
   isVisibleActions?: boolean;
-  darkMode?: boolean; // <-- Añade esta prop
+  darkMode?: boolean;
+  onGlobalSearch?: (searchTerm: string) => void; 
+  searchTerm?: string; 
 }
 
 const TableWithActionsMobile = <T extends TableItem>({
@@ -37,13 +39,30 @@ const TableWithActionsMobile = <T extends TableItem>({
   setPage,
   isVisibleButton = true,
   isVisibleActions = true,
-  darkMode = false, // <-- Valor por defecto
+  darkMode = false,
+  onGlobalSearch,
+  searchTerm: controlledSearchTerm,
 }: TableWithActionsMobileProps<T>): JSX.Element => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [localSearchTerm, setLocalSearchTerm] = useState('');
+  
+  // Usar el término de búsqueda controlado o el local
+  const currentSearchTerm = controlledSearchTerm !== undefined ? controlledSearchTerm : localSearchTerm;
+  
+  // Manejar cambios en el input de búsqueda
+  const handleSearchChange = (value: string): void => {
+    if (onGlobalSearch) {
+      // Si hay callback de búsqueda global, usarlo
+      onGlobalSearch(value);
+    } else {
+      // Si no, usar búsqueda local
+      setLocalSearchTerm(value);
+    }
+  };
 
+  // Filtrar los datos de la página actual con mejor feedback visual
   const filteredData = data.filter((item) =>
     columns.some((column) =>
-      String(item[column.accessor] ?? '').toLowerCase().includes(searchTerm.toLowerCase())
+      String(item[column.accessor] ?? '').toLowerCase().includes(currentSearchTerm.toLowerCase())
     )
   );
 
@@ -64,15 +83,44 @@ const TableWithActionsMobile = <T extends TableItem>({
       <input
         placeholder={searchPlaceholder}
         type="text"
-        value={searchTerm}
-        className={`mb-4 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-200 ${
+        value={currentSearchTerm}
+        className={`mb-4 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 border-2 ${
           darkMode
-            ? "bg-gray-900 border-gray-700 text-gray-100 placeholder-gray-400"
-            : "bg-white border-gray-300 text-black"
-        }`}
+            ? "bg-gray-900 border-gray-600 text-gray-100 placeholder-gray-400 focus:border-cyan-400 focus:bg-gray-800"
+            : "bg-white border-gray-300 text-black placeholder-gray-500 focus:border-primary focus:bg-gray-50"
+        } ${currentSearchTerm ? 'ring-2 ring-opacity-30' : ''}`}
         // eslint-disable-next-line unicorn/prevent-abbreviations
-        onChange={(e) => { setSearchTerm(e.target.value); }}
+        onChange={(e) => { handleSearchChange(e.target.value); }}
       />
+
+      {/* Visual feedback when searching */}
+      {currentSearchTerm && (
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+          className={`mb-3 p-2 rounded-lg text-sm ${
+            darkMode
+              ? "bg-cyan-900 text-cyan-200 border border-cyan-700"
+              : "bg-blue-50 text-blue-700 border border-blue-200"
+          }`}
+        >
+          <span className="font-medium">🔍 Buscando:</span> "{currentSearchTerm}" 
+          {onGlobalSearch ? (
+            <span className="ml-2 text-xs opacity-75">
+              (búsqueda en {total} elemento{total !== 1 ? 's' : ''} total{total !== 1 ? 'es' : ''})
+            </span>
+          ) : filteredData.length > 0 ? (
+            <span className="ml-2 text-xs opacity-75">
+              ({filteredData.length} resultado{filteredData.length !== 1 ? 's' : ''})
+            </span>
+          ) : (
+            <span className="ml-2 text-xs opacity-75">
+              (Sin resultados en esta página)
+            </span>
+          )}
+        </motion.div>
+      )}
 
       {/* Button */}
       {isVisibleButton && (
