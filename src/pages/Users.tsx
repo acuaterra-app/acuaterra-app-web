@@ -7,10 +7,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import type { UserRequestV2, UserResponse } from "../common/types";
 import useUsers from "../hooks/useUsers";
+import useDebounce from "../hooks/useDebounce";
 import RegisterUserModal from "../components/ui/modals/registerUserModal";
 import UpdateUserModal from "../components/ui/modals/updateUserModalProps";
 import useRegisterUser from "../hooks/useRegisterUser";
-import { deleteUser, updateUser } from "../services/userService";
+import { deleteUser, updateUser, fetchAllUsers } from "../services/userService";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobile";
 import LoaderAcua from "../components/loaders/LoaderAcua";
@@ -124,6 +125,13 @@ export const Users: FunctionComponent = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [animateSidebar, setAnimateSidebar] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(true); 
+  const [globalSearchTerm, setGlobalSearchTerm] = useState(''); // Término de búsqueda global
+  const [allUsers, setAllUsers] = useState<Array<UserResponse>>([]); // Todos los usuarios para búsqueda global
+  const [isSearching, setIsSearching] = useState(false); // Estado de búsqueda activa
+  
+  // Debounce el término de búsqueda para mejorar la experiencia
+  const debouncedSearchTerm = useDebounce(globalSearchTerm, 300);
+  
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   // Check token validity and set user name
@@ -165,6 +173,25 @@ export const Users: FunctionComponent = () => {
     };
   }, []);
 
+  // Efecto para cargar todos los usuarios cuando se inicia una búsqueda
+  useEffect(() => {
+    const loadAllUsers = async (): Promise<void> => {
+      if (debouncedSearchTerm && allUsers.length === 0) {
+        try {
+          setIsSearching(true);
+          const response = await fetchAllUsers();
+          setAllUsers(response.data);
+        } catch (error) {
+          console.error("Error loading all users for search:", error);
+        } finally {
+          setIsSearching(false);
+        }
+      }
+    };
+
+    void loadAllUsers();
+  }, [debouncedSearchTerm, allUsers.length]);
+
   // Toggle dark mode and save state to localStorage
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
@@ -172,6 +199,36 @@ export const Users: FunctionComponent = () => {
     localStorage.setItem("darkMode", newDarkMode.toString());
     document.body.classList.toggle("dark-mode", newDarkMode);
   };
+
+  // Función para manejar búsqueda global
+  const handleGlobalSearch = (searchTerm: string): void => {
+    setGlobalSearchTerm(searchTerm);
+    // Al buscar, volver a la primera página para mostrar los resultados desde el inicio
+    if (searchTerm !== globalSearchTerm) {
+      setPage(1);
+    }
+  };
+
+  // Filtrar usuarios basado en el término de búsqueda global (usando debounce)
+  const filteredUsers = debouncedSearchTerm
+    ? (allUsers.length > 0 ? allUsers : users).filter((user) => {
+        const searchLower = debouncedSearchTerm.toLowerCase();
+        
+        // Función auxiliar para verificar si un campo contiene el término de búsqueda
+        const fieldContainsSearch = (field: string | null | undefined): boolean => {
+          return field ? field.toLowerCase().includes(searchLower) : false;
+        };
+        
+        return (
+          fieldContainsSearch(user.name) ||
+          fieldContainsSearch(user.email) ||
+          fieldContainsSearch(user.dni) ||
+          fieldContainsSearch(user.contact) ||
+          fieldContainsSearch(user.rol?.name) ||
+          fieldContainsSearch(user.address)
+        );
+      })
+    : users;
 
   const handleRegisterUser = async (userData: UserRequestV2): Promise<void> => {
     try {
@@ -240,6 +297,11 @@ export const Users: FunctionComponent = () => {
     setIsOpen(false);
   };
 
+  // Callbacks para las tablas
+  const handleAddNewUser = (): void => {
+    setShowModal(true);
+  };
+
   const sidebarWidth = isMobile ? undefined : (sidebarExpanded ? "16rem" : "4.5rem");
 
   return (
@@ -306,14 +368,16 @@ export const Users: FunctionComponent = () => {
               }`}>
                 <TableWithActions
                   darkMode={darkMode}
-                  data        ={users}
-                  error   ={error}
-                  limit   ={limit}
-                  loading ={loading}
-                  page    ={page}
+                  data={filteredUsers}
+                  error={error}
+                  limit={limit}
+                  loading={loading || isSearching}
+                  page={page}
+                  searchPlaceholder="🔍 Buscar usuarios por nombre, email, DNI, teléfono o rol..."
+                  searchTerm={globalSearchTerm}
                   setLimit={setLimit}
-                  setPage ={setPage}
-                  total   ={total}
+                  setPage={setPage}
+                  total={debouncedSearchTerm ? filteredUsers.length : total}
                   columns={[
                     { header: "ID",       accessor: "id"      },
                     { header: "Nombre",   accessor: "name"    },
@@ -338,11 +402,10 @@ export const Users: FunctionComponent = () => {
                         new Date(u.updatedAt).toLocaleDateString(),
                     },
                   ]}
+                  onAdd={handleAddNewUser}
                   onDelete={handleDeleteUser}
                   onEdit={handleOpenUpdateModal}
-                  onAdd={() => {
-                    setShowModal(true);
-                  }}
+                  onGlobalSearch={handleGlobalSearch}
                 />
               </div>
 
@@ -351,34 +414,35 @@ export const Users: FunctionComponent = () => {
                 darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-300 text-black"
               }`}>
                 <TableWithActionsMobile
-                  darkMode ={darkMode}
-                  data     ={users}
-                  error    ={error}
-                  limit    ={limit}
-                  loading  ={loading}
-                  page     ={page}
-                  setLimit ={setLimit}
-                  setPage  ={setPage}
-                  total    ={total}
-                  columns  ={[
-                    { header: "ID",    accessor: "id"    },
-                    { header: "Name",  accessor: "name"  },
-                    { header: "Email", accessor: "email" },
-                    { header: "DNI",   accessor: "dni"   },
+                  darkMode={darkMode}
+                  data={filteredUsers}
+                  error={error}
+                  limit={limit}
+                  loading={loading || isSearching}
+                  page={page}
+                  searchPlaceholder="🔍 Buscar usuarios por nombre, email, DNI, teléfono o rol..."
+                  searchTerm={globalSearchTerm}
+                  setLimit={setLimit}
+                  setPage={setPage}
+                  total={debouncedSearchTerm ? filteredUsers.length : total}
+                  columns={[
+                    { header: "ID",       accessor: "id"    },
+                    { header: "Nombre",   accessor: "name"  },
+                    { header: "Email",    accessor: "email" },
+                    { header: "DNI",      accessor: "dni"   },
                     {
-                      header: "Role",
+                      header: "Rol",
                       accessor: "rol",
                       render: (u: UserResponse) => u.rol.name,
                     },
-                    { header: "Address",    accessor: "address"   },
-                    { header: "Created At", accessor: "createdAt" },
-                    { header: "Updated At", accessor: "updatedAt" },
+                    { header: "Dirección",          accessor: "address"   },
+                    { header: "Fecha de creación",  accessor: "createdAt" },
+                    { header: "Fecha actualización", accessor: "updatedAt" },
                   ]}
+                  onAdd={handleAddNewUser}
                   onDelete={handleDeleteUser}
                   onEdit={handleOpenUpdateModal}
-                  onAdd={() => {
-                    setShowModal(true);
-                  }}
+                  onGlobalSearch={handleGlobalSearch}
                 />
               </div>
             </>
