@@ -10,7 +10,7 @@ import useDebounce from "../hooks/useDebounce";
 import TableWithActions from "../components/ui/table/tableWithActions";
 import TableWithActionsMobile from "../components/ui/table/TableWithActionsMobile";
 import FarmModal from "../components/ui/modals/FarmModal";
-import type { FarmRequest, User } from "../common/types";
+import type { FarmRequest, User, Farm } from "../common/types";
 import LogoutButton from "../components/ui/button/logoutButton";
 import acuaterraLogo from "../assets/images/logo.png";
 import reportIcon from "../assets/images/reporte.png";
@@ -127,6 +127,12 @@ const FarmsPage: FunctionComponent = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [globalSearchTerm, setGlobalSearchTerm] = useState(''); // Término de búsqueda global
+  const [allFarms, setAllFarms] = useState<Array<Farm>>([]); // Todos los datos para búsqueda
+  const [isSearchMode, setIsSearchMode] = useState(false); // Indica si estamos en modo búsqueda
+  const [searchResults, setSearchResults] = useState<Array<Farm>>([]); // Resultados de búsqueda
+  
+  // Estados adicionales para debug y control de búsqueda
+  const [isLoadingAllData, setIsLoadingAllData] = useState(false);
   
   // Debounce el término de búsqueda para mejorar la experiencia
   const debouncedSearchTerm = useDebounce(globalSearchTerm, 300);
@@ -148,6 +154,110 @@ const FarmsPage: FunctionComponent = () => {
     setDarkMode(savedDarkMode);
     document.body.classList.toggle("dark-mode", savedDarkMode);
   }, []);
+
+  // Efecto para cargar todos los datos para búsqueda completa (CORREGIDO)
+  useEffect(() => {
+    const loadAllFarms = async (): Promise<void> => {
+      const shouldActivateSearch = debouncedSearchTerm && debouncedSearchTerm.trim() !== '';
+      
+      if (shouldActivateSearch && !isSearchMode) {
+        console.log('🔍 ACTIVANDO búsqueda global para:', debouncedSearchTerm);
+        setIsLoadingAllData(true);
+        setIsSearchMode(true);
+        
+        try {
+          // Cargar TODOS los datos usando paginación múltiple (límite máximo: 100)
+          const { fetchFarms } = await import('../services/farmSevice');
+          let allData: Array<Farm> = [];
+          let currentPage = 1;
+          let hasMoreData = true;
+          const maxLimit = 100; // Límite máximo permitido por el API
+          
+         
+          while (hasMoreData) {
+            console.log(`📄 Cargando página ${currentPage} con límite ${maxLimit}`);
+            
+            // eslint-disable-next-line no-await-in-loop
+            const response = await fetchFarms(currentPage, maxLimit);
+            
+            if (response.data.length > 0) {
+              allData = [...allData, ...response.data];
+              console.log(`📊 Página ${currentPage}: ${response.data.length} granjas (Total acumulado: ${allData.length})`);
+              
+              // Si obtuvimos menos datos del límite, ya no hay más páginas
+              if (response.data.length < maxLimit) {
+                hasMoreData = false;
+              } else {
+                currentPage++;
+              }
+            } else {
+              hasMoreData = false;
+            }
+          }
+          
+          console.log(`✅ DATOS CARGADOS para búsqueda: ${allData.length} granjas totales`);
+          setAllFarms(allData);
+        } catch (error) {
+          console.error('❌ ERROR cargando datos para búsqueda:', error);
+          // Fallback: usar datos actuales
+          setAllFarms(farms);
+        } finally {
+          setIsLoadingAllData(false);
+        }
+      } 
+      else if (!shouldActivateSearch && isSearchMode) {
+        console.log('🔄 DESACTIVANDO búsqueda global');
+        setIsSearchMode(false);
+        setAllFarms([]);
+        setSearchResults([]);
+        setIsLoadingAllData(false);
+      }
+    };
+
+    void loadAllFarms();
+  }, [debouncedSearchTerm, isSearchMode, farms]);
+
+  // Efecto para realizar búsqueda GLOBAL (REFACTORIZADO)
+  useEffect(() => {
+    const performGlobalSearch = (): void => {
+      if (debouncedSearchTerm && debouncedSearchTerm.trim() !== '' && isSearchMode && allFarms.length > 0) {
+        console.log('🔎 EJECUTANDO búsqueda global:', {
+          termino: debouncedSearchTerm,
+          totalGranjas: allFarms.length,
+          modoActivo: isSearchMode
+        });
+        
+        const searchLower = debouncedSearchTerm.toLowerCase();
+        const results = allFarms.filter((farm) => {
+          // Búsqueda exhaustiva en todos los campos
+          const matchName = farm.name.toLowerCase().includes(searchLower);
+          const matchAddress = farm.address.toLowerCase().includes(searchLower);
+          const matchLat = farm.latitude.toString().toLowerCase().includes(searchLower);
+          const matchLng = farm.longitude.toString().toLowerCase().includes(searchLower);
+          const matchUsers = farm.users.some((user) => {
+            const u = user as User;
+            return u.name.toLowerCase().includes(searchLower) || 
+                   u.email.toLowerCase().includes(searchLower);
+          });
+          
+          const isMatch = matchName || matchAddress || matchLat || matchLng || matchUsers;
+          if (isMatch) {
+            console.log('✅ ENCONTRADO:', farm.name, 'en búsqueda de:', debouncedSearchTerm);
+          }
+          return isMatch;
+        });
+        
+        console.log('📋 RESULTADOS:', results.length, 'de', allFarms.length, 'granjas');
+        setSearchResults(results);
+      } 
+      else if (!debouncedSearchTerm || debouncedSearchTerm.trim() === '') {
+        console.log('🧹 LIMPIANDO resultados de búsqueda');
+        setSearchResults([]);
+      }
+    };
+
+    performGlobalSearch();
+  }, [debouncedSearchTerm, allFarms, isSearchMode]);
 
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
@@ -177,31 +287,32 @@ const FarmsPage: FunctionComponent = () => {
     };
   }, []);
 
-  // Función para manejar búsqueda global
+  // Función para manejar búsqueda global (MEJORADA)
   const handleGlobalSearch = (searchTerm: string): void => {
+    console.log('🎯 HANDLEGLOBLALSEARCH recibió:', searchTerm);
     setGlobalSearchTerm(searchTerm);
-    // Al buscar, volver a la primera página para mostrar los resultados desde el inicio
-    if (searchTerm !== globalSearchTerm) {
-      setPage(1);
-    }
+    // NO forzamos regresar a la página 1 - búsqueda desde cualquier página
+    // La búsqueda se realizará sobre TODOS los datos de la tabla
   };
 
-  // Filtrar granjas basado en el término de búsqueda global (usando debounce)
-  const filteredFarms = debouncedSearchTerm
-    ? farms.filter((farm) => {
-        const searchLower = debouncedSearchTerm.toLowerCase();
-        return (
-          farm.name.toLowerCase().includes(searchLower) ||
-          farm.address.toLowerCase().includes(searchLower) ||
-          farm.latitude.toString().includes(searchLower) ||
-          farm.longitude.toString().includes(searchLower) ||
-          farm.users.some((user) => 
-            (user as User).name.toLowerCase().includes(searchLower) ||
-            (user as User).email.toLowerCase().includes(searchLower)
-          )
-        );
-      })
-    : farms;
+  // Determinar qué datos mostrar (REFACTORIZADO con logs detallados)
+  const isInSearchMode = isSearchMode && debouncedSearchTerm && debouncedSearchTerm.trim() !== '';
+  const displayData = isInSearchMode ? searchResults : farms;
+  const displayTotal = isInSearchMode ? searchResults.length : total;
+  
+  // Debug detallado
+  console.log('🐛 ESTADO BÚSQUEDA:', {
+    globalSearchTerm,
+    debouncedSearchTerm,
+    isSearchMode,
+    isInSearchMode,
+    allFarmsCount: allFarms.length,
+    searchResultsCount: searchResults.length,
+    farmsCount: farms.length,
+    displayDataCount: displayData.length,
+    displayTotal,
+    currentPage: page
+  });
 
   const handleAddFarm = async (farmData: FarmRequest): Promise<void> => {
     try {
@@ -316,6 +427,27 @@ const FarmsPage: FunctionComponent = () => {
           Aquí puedes gestionar las granjas acuapónicas.
         </p>
 
+        {/* Indicador de búsqueda global mejorado */}
+        {isInSearchMode && (
+          <div className={`mb-4 p-3 rounded-lg border text-center ${
+            darkMode 
+              ? "bg-blue-900 border-blue-700 text-blue-100" 
+              : "bg-blue-50 border-blue-200 text-blue-800"
+          }`}>
+            <p className="text-sm">
+              🔍 <strong>Búsqueda global activa:</strong> "{debouncedSearchTerm}" 
+              {isLoadingAllData ? (
+                <span className="ml-2">⏳ Cargando datos...</span>
+              ) : (
+                <>
+                  - {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''} encontrado{searchResults.length !== 1 ? 's' : ''} 
+                  en toda la tabla ({allFarms.length} granjas totales)
+                </>
+              )}
+            </p>
+          </div>
+        )}
+
         {loading ? (
           <LoaderAcua darkMode={darkMode} />
         ) : (
@@ -330,7 +462,7 @@ const FarmsPage: FunctionComponent = () => {
             >
               <TableWithActions
                 darkMode={darkMode}
-                data={filteredFarms}
+                data={displayData}
                 error={error}
                 limit={limit}
                 loading={loading}
@@ -339,7 +471,7 @@ const FarmsPage: FunctionComponent = () => {
                 searchTerm={globalSearchTerm}
                 setLimit={setLimit}
                 setPage={setPage}
-                total={debouncedSearchTerm ? filteredFarms.length : total}
+                total={displayTotal}
                 columns={[
                   { header: "ID",        accessor: "id"        },
                   { header: "Name",      accessor: "name"      },
@@ -350,8 +482,10 @@ const FarmsPage: FunctionComponent = () => {
                   {
                     header: "Users",
                     accessor: "users",
-                    render: (farm) =>
-                      farm.users.map((user) => (user as User).name).join(", "),
+                    render: (farm) => {
+                      console.log('🔧 RENDER farm:', farm.name, 'para búsqueda:', globalSearchTerm);
+                      return farm.users.map((user) => (user as User).name).join(", ");
+                    },
                   },
                 ]}
                 onAdd={handleAddNewFarm}
@@ -371,7 +505,7 @@ const FarmsPage: FunctionComponent = () => {
             >
               <TableWithActionsMobile
                 darkMode={darkMode}
-                data={filteredFarms}
+                data={displayData}
                 error={error}
                 limit={limit}
                 loading={loading}
@@ -380,7 +514,7 @@ const FarmsPage: FunctionComponent = () => {
                 searchTerm={globalSearchTerm}
                 setLimit={setLimit}
                 setPage={setPage}
-                total={debouncedSearchTerm ? filteredFarms.length : total}
+                total={displayTotal}
                 columns={[
                   { header: "ID",        accessor: "id"        },
                   { header: "Name",      accessor: "name"      },

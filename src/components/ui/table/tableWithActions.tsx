@@ -61,15 +61,17 @@ const TableWithActions = <T extends TableItem>({
     }
   };
 
-  // Filtrar solo los datos de la página actual para mostrar -
-  // El buscador ahora es más visual e intuitivo para el usuario
-  const filteredData = data.filter((item) =>
-    columns.some((column) =>
-      String(item[column.accessor] ?? '')
-        .toLowerCase()
-        .includes(currentSearchTerm.toLowerCase())
-    )
-  );
+  // Filtrar datos solo si NO hay búsqueda global configurada
+  // Si hay búsqueda global, los datos ya vienen pre-filtrados desde el componente padre
+  const filteredData = onGlobalSearch 
+    ? data  // Usar datos tal como vienen (ya filtrados globalmente)
+    : data.filter((item) => // Aplicar filtro local solo si no hay búsqueda global
+        columns.some((column) =>
+          String(item[column.accessor] ?? '')
+            .toLowerCase()
+            .includes(currentSearchTerm.toLowerCase())
+        )
+      );
 
   const totalPages = Math.ceil(total / limit);
 
