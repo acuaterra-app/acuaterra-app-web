@@ -213,7 +213,195 @@ npm run setup           # Configuración inicial del proyecto
 4. **Local State**: Estado de componentes
 5. **Cache Layer**: TanStack Query para optimización
 
-## 🌐 Internacionalización
+## �️ Metodología de Estructura de Código
+
+### **Filosofía: Lógica → Presentación → Estilos**
+
+Acuaterra implementa una metodología consistente para la organización de código en páginas y componentes, siguiendo el principio de **cohesión y separación clara de responsabilidades**.
+
+### **📄 Estructura de Páginas**
+
+Cada página del proyecto sigue esta estructura estándar:
+
+```tsx
+// 1. IMPORTS Y DEPENDENCIAS
+import { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import styled from "styled-components";
+import CustomHook from "../hooks/useCustomHook";
+
+// 2. STYLED COMPONENTS (Estilos encapsulados)
+const PageWrapper = styled.div`
+  display: flex;
+  min-height: 100vh;
+  background: ${props => props.darkMode ? '#111827' : '#fff'};
+`;
+
+const ContentContainer = styled.main`
+  flex: 1;
+  padding: 2rem;
+  transition: all 0.3s ease;
+`;
+
+// 3. LÓGICA DEL COMPONENTE
+const MyPage: FunctionComponent = () => {
+  // Estados locales
+  const [loading, setLoading] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  
+  // Hooks personalizados
+  const { data, error } = useCustomHook();
+  const navigate = useNavigate();
+  
+  // Effects y funciones de negocio
+  useEffect(() => {
+    // Lógica de inicialización
+    loadData();
+  }, []);
+  
+  const handleAction = async () => {
+    // Lógica de acciones
+  };
+  
+  // 4. RENDER (PRESENTACIÓN)
+  return (
+    <PageWrapper darkMode={darkMode}>
+      <ContentContainer>
+        <h1>Mi Página</h1>
+        {/* JSX estructurado */}
+      </ContentContainer>
+    </PageWrapper>
+  );
+};
+
+export default MyPage;
+```
+
+### **🧩 Estructura de Componentes**
+
+Los componentes siguen la misma metodología con énfasis en la **encapsulación**:
+
+```tsx
+// 1. IMPORTS
+import React from 'react';
+import styled from 'styled-components';
+
+// 2. STYLED COMPONENTS
+const ButtonWrapper = styled.button`
+  background: ${props => props.variant === 'primary' ? '#3CACAC' : '#gray'};
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+`;
+
+// 3. LÓGICA
+interface ButtonProps {
+  variant: 'primary' | 'secondary';
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+const CustomButton: React.FC<ButtonProps> = ({ 
+  variant = 'primary', 
+  onClick, 
+  children 
+}) => {
+  const handleClick = () => {
+    // Lógica antes del click
+    onClick();
+  };
+  
+  // 4. RENDER
+  return (
+    <ButtonWrapper variant={variant} onClick={handleClick}>
+      {children}
+    </ButtonWrapper>
+  );
+};
+
+export default CustomButton;
+```
+
+### **✅ Ventajas de esta Metodología**
+
+#### **🎯 Cohesión Alta**
+- Todo lo relacionado con un componente/página está en un lugar
+- Fácil mantenimiento y debugging
+- Modificaciones rápidas sin buscar en múltiples archivos
+
+#### **🔍 Legibilidad**
+- Estructura predecible en todos los archivos
+- Separación clara entre lógica y presentación
+- Estilos encapsulados y reutilizables
+
+#### **🛠️ Mantenibilidad**
+- Cambios aislados a un solo archivo
+- Menos conflictos en trabajo en equipo
+- Testing más directo y enfocado
+
+#### **🎨 Styled Components Benefits**
+- **Props Dinámicas**: Estilos que responden a estado (`darkMode`, `isActive`)
+- **Encapsulación**: No hay conflictos de CSS globales
+- **IntelliSense**: Autocompletado de props y estilos
+- **Performance**: CSS crítico inline, resto lazy-loaded
+
+### **📁 Ejemplos Reales en Acuaterra**
+
+#### **Página Farm.tsx**
+```tsx
+// ✅ Estructura real implementada:
+// 1. Imports (líneas 1-25)
+// 2. Styled Components (líneas 30-85)  
+// 3. Lógica del componente (líneas 90-350)
+// 4. Return con JSX (líneas 370-556)
+```
+
+#### **Componente TableWithActions**
+```tsx
+// ✅ Sigue la misma metodología:
+// - Imports y types
+// - Styled components para tabla responsive
+// - Lógica de paginación, búsqueda y acciones
+// - Render final con tabla estructurada
+```
+
+### **🔧 Integración con Herramientas**
+
+#### **Con Styled Components**
+- Temas dinámicos (`theme.colors.primary`)
+- Props reactivas (`${props => props.active}`)
+- Media queries encapsuladas
+- Animaciones CSS-in-JS
+
+#### **Con TypeScript**
+- Props tipadas en styled components
+- Interfaces claras para componentes
+- Autocompletado en estilos dinámicos
+
+#### **Con ESLint/Prettier**
+- Formato consistente automático
+- Reglas específicas para styled-components
+- Organización automática de imports
+
+### **📝 Guías para Sustentación**
+
+**Pregunta**: *"¿Por qué no separaron estilos en archivos CSS?"*
+
+**Respuesta**: *"Usamos CSS-in-JS con styled-components porque nos permite tener estilos encapsulados, dinámicos y cerca de la lógica que los utiliza. Esto elimina problemas de CSS globales, permite estilos reactivos basados en props (como darkMode), y mejora la mantenibilidad al tener todo en un solo archivo."*
+
+**Pregunta**: *"¿Cómo manejan la reutilización de estilos?"*
+
+**Respuesta**: *"Tenemos un sistema de design tokens y componentes base reutilizables. Los styled-components pueden extenderse y recibir props para variaciones. Además, usamos temas globales para colores y espaciados consistentes."*
+
+## �🌐 Internacionalización
 
 La aplicación soporta múltiples idiomas mediante `i18next`:
 
