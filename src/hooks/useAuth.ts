@@ -35,10 +35,17 @@ handleLogin: () => Promise<void>
                 await navigate({ to: "/request-password-reset" });
                 return;
             }
-            localStorage.setItem("token", token);
-            console.log("Login successful", token);
+            if (data.data[0]?.user?.id_rol == 1 || data.data[0]?.user?.rol == "ADMIN") {
+                localStorage.setItem("token", token);
+                localStorage.setItem("userName", data.data[0]?.user?.name);
+                await navigate({ to: "/newHome" });
+            }else {
+                setError("You do not have permission to access this application");
+                await navigate({ to: "/auth" });
+                return;
+            }
 
-            await navigate({ to: "/newHome" });
+            
         } catch (error) {
             setError("Invalid email or password");
             console.error(error);

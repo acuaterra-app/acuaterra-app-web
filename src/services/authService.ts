@@ -37,9 +37,8 @@ export const login = async (email: string, password: string): Promise<LoginRespo
     // Guardar el token y el nombre del usuario en localStorage
     const token = result.data?.[0]?.token;
     const userName = result.data?.[0]?.user?.name;
-    const isAdmin = result.data?.[0]?.user?.id_rol == 1 || result.data?.[0]?.user.rol == "ADMIN" || false;
 
-    if (!token || !userName || !isAdmin) {
+    if (!token || !userName) {
         throw new Error("Invalid login response: Missing token or user name");
     }
     localStorage.setItem("userName", userName);
