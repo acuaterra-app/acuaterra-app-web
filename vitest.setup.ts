@@ -1,9 +1,24 @@
-import { expect, afterEach } from "vitest";
+import { expect, afterEach, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
-import matchers from "@testing-library/jest-dom/matchers";
+import '@testing-library/jest-dom/vitest';
 
-// extends Vitest's expect method with methods from react-testing-library
-expect.extend(matchers);
+// Global mocks setup
+Object.defineProperty(window, 'localStorage', {
+  value: {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+  },
+  writable: true,
+});
+
+Object.defineProperty(window, 'confirm', {
+  value: vi.fn(),
+  writable: true,
+});
+
+global.fetch = vi.fn();
 
 // runs a cleanup after each test case (e.g. clearing jsdom)
 afterEach(() => {
