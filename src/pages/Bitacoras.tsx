@@ -13,9 +13,7 @@ import closeSessionIcon from "../assets/images/cerrar-sesion.png";
 import userIcon from "../assets/images/userlogo.png";
 import moduleIcon from "../assets/images/module.png";
 import homeIcon from "../assets/images/home.png";
-import acuaterraLogo from "../assets/images/logo.png";
-import reportIcon from "../assets/images/reporte.png";
-import binnacleIcon from "../assets/images/bitacora.png";
+// borramos importaciones innecesarias
 
 
 export const Bitacoras: FunctionComponent = () => {
